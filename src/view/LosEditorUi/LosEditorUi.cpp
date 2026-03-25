@@ -166,6 +166,7 @@ void LosEditorUi::initConnect() {
   L_timer->setSingleShot(true);
   LOS_completer = new LosView::LosCompleterUi(this);
   LOS_completer->setWidget(this);
+  LOS_highlighter = new LosCore::LosHighlighter(this->document());
 
   // activated 有两种
   connect(LOS_completer, QOverload<const QString &>::of(&QCompleter::activated),

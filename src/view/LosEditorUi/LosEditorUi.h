@@ -2,8 +2,10 @@
 
 #pragma once
 #include "common/constants/ConstantsClass.h"
+#include "core/LosHighlighter/LosHighlighter.h"
 #include "models/LosFilePath/LosFilePath.h"
 #include "view/LosCompleterUi/LosCompleterUi.h"
+
 #include <QObject>
 #include <QScrollBar>
 #include <QTextBlock>
@@ -68,6 +70,7 @@ private: // param
   LosModel::LosFileContext *LOS_context = nullptr;
   LosModel::LosFilePath *LOS_filePath = nullptr;
   LosView::LosCompleterUi *LOS_completer;
+  LosCore::LosHighlighter * LOS_highlighter = nullptr;
 
 signals:
   void _editorDirty(bool is_dirty);
