@@ -17,6 +17,7 @@
 
 #include "common/constants/ConstantsStr.h"
 #include "common/constants/ConstantsClass.h"
+#include "core/log/LosLog/LosLog.h"
 
 namespace LosCore {
 

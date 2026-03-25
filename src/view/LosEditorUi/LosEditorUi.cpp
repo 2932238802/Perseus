@@ -170,13 +170,9 @@ void LosEditorUi::initConnect() {
   // activated 有两种
   connect(LOS_completer, QOverload<const QString &>::of(&QCompleter::activated),
           this, &LosEditorUi::insertCompletion);
-  connect(this, &QPlainTextEdit::textChanged, this,
+  connect(this->document(), &QTextDocument::contentsChanged, this,
           &LosEditorUi::onTextChanged);
-  connect(L_timer, &QTimer::timeout, this, [=]() {
-    if (LOS_filePath && LOS_context) {
-      emit _textChangedForLsp(LOS_filePath->getFilePath(), this->toPlainText());
-    }
-  });
+  connect(L_timer, &QTimer::timeout, this, &LosEditorUi::onDebounceTimeout);
 }
 
 void LosEditorUi::initStyle() {
@@ -195,24 +191,32 @@ void LosEditorUi::onTextChanged() {
     LOS_context->setDirty(true);
     emit _editorDirty(true);
   }
-  L_timer->start(500);
+  L_timer->start(200);
+}
+
+/**
+- 防抖
+*/
+void LosEditorUi::onDebounceTimeout() {
   QTextCursor cursor = this->textCursor();
   int line = cursor.blockNumber();
   int col = cursor.positionInBlock();
-  if (col > 0) {
-    QString currentLineText = cursor.block().text();
-    QString lastChar = currentLineText.mid(col - 1, 1);
-    QString lastTwoChars = col > 1 ? currentLineText.mid(col - 2, 2) : "";
-
-    if (lastChar == "." || lastTwoChars == "->" || lastTwoChars == "::") {
-      qDebug() << "[Editor Radar] 探测到补全触发符，坐标 -> 行:" << line
-               << " 列:" << col;
-
-      L_timer->stop();
-      emit _textChangedForLsp(LOS_filePath->getFilePath(), this->toPlainText());
-      emit _completionRequest(LOS_filePath->getFilePath(), line, col);
-    }
-  }
+  if (col == 0)
+    return;
+  QString currentLineText = cursor.block().text();
+  QChar lastChar = currentLineText.at(col - 1);
+  bool isTriggerChar = lastChar.isLetterOrNumber() || lastChar == '_' ||
+                       lastChar == '.' || lastChar == '>' || lastChar == ':' ||
+                       lastChar == '#' || lastChar == '/' || lastChar == '"' ||
+                       lastChar == '<';
+  if (!isTriggerChar)
+    return;
+  if (lastChar == '>' && (col < 2 || currentLineText.at(col - 2) != '-'))
+    return;
+  if (lastChar == ':' && (col < 2 || currentLineText.at(col - 2) != ':'))
+    return;
+  emit _textChangedForLsp(LOS_filePath->getFilePath(), this->toPlainText());
+  emit _completionRequest(LOS_filePath->getFilePath(), line, col);
 }
 
 /**

@@ -38,7 +38,7 @@ LosLspClient::~LosLspClient() {
 */
 void LosLspClient::start() {
   if (L_process) {
-    qDebug() << "lsp start...";
+    INF("lsp start...","LosLspClient");
     L_process->start("clangd", QStringList());
   }
 }
@@ -95,7 +95,7 @@ void LosLspClient::sendMsg(const QString &method, const QJsonObject &param) {
   QByteArray header = LosCommon::CONTENT_LENGTH +
                       QByteArray::number(jb.size()) + LosCommon::LSP_RNRN;
   L_process->write(header + jb);
-  qDebug() << "[lsp]: " << method;
+  INF("[lsp]: " + method, "LosLspClient");
 }
 
 /**
@@ -215,6 +215,9 @@ void LosLspClient::processRawData(const QByteArray &data) {
   }
 }
 
+/**
+- 真正处理 LSP json 数据的
+*/
 void LosLspClient::dealLspMessage(const QJsonObject &obj) {
   if (obj.contains("id")) {
     int id = obj["id"].toInt();
@@ -261,7 +264,7 @@ void LosLspClient::dealLspMessage(const QJsonObject &obj) {
     }
     }
   }
-  
+
   if (obj.contains("method")) {
     QString method = obj["method"].toString();
     if (method == "textDocument/publishDiagnostics") {

@@ -33,7 +33,8 @@ private: // construct
 public: // tool
   static LosEditorUi *create(QWidget *parent = nullptr);
   void showCompletion(const QStringList &list);
-  void showDiagnostic(const QString& file_path,const QList<LosCommon::LosDiagnostic>&);
+  void showDiagnostic(const QString &file_path,
+                      const QList<LosCommon::LosDiagnostic> &);
 
 public: // get
   bool isDirty() const;
@@ -51,6 +52,7 @@ private: // init
 
 private slots: // chs
   void onTextChanged();
+  void onDebounceTimeout();
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
@@ -62,9 +64,9 @@ signals:
   void _openFileForLsp(const QString &file_path, const QString &file_content);
 
 private: // param
+  QTimer *L_timer = nullptr;
   LosModel::LosFileContext *LOS_context = nullptr;
   LosModel::LosFilePath *LOS_filePath = nullptr;
-  QTimer *L_timer = nullptr;
   LosView::LosCompleterUi *LOS_completer;
 
 signals:
