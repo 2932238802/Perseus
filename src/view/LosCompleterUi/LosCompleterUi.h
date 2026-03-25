@@ -4,7 +4,7 @@
 #include <QStringListModel>
 #include <qobject.h>
 #include <qtmetamacros.h>
-
+#include "common/constants/ConstantsNum.h"
 #include "view/style/LosCompleterUi_style.h"
 
 namespace LosView {

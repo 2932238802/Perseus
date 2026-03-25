@@ -60,6 +60,7 @@ public slots:
   void onDiagnostics(const QString &file_path,
                      const QList<LosCommon::LosDiagnostic> &);
   void onLog(const QString &log);
+  void onDoubleClickedIssuesUi(const QString &file_path, int line);
 
 private:
   Ui::Perseus *ui;

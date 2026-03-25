@@ -3,6 +3,7 @@
 #include "core/log/LosLog/LosLog.h"
 #include "core/lsp/LosLspManager/LosLspManager.h"
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
+#include "view/LosIssuesUi/LosIssuesUi.h"
 
 /**
 构造
@@ -148,10 +149,19 @@ void Perseus::onDiagnostics(const QString &file_path,
   auto curWidget = LOS_tabUi->getCurEditor();
   if (nullptr != curWidget)
     curWidget->showDiagnostic(file_path, diags);
+  ui->tab_problems->updateTable(file_path, diags);
 }
 
 void Perseus::onLog(const QString &log) {
   ui->output_plaintextedit->appendHtml(log);
+}
+
+void Perseus::onDoubleClickedIssuesUi(const QString &file_path, int line) {
+  LOS_tabUi->openFile(file_path);
+  auto editor = LOS_tabUi->getCurEditor();
+  if (editor) {
+    editor->gotoLine(line);
+  }
 }
 
 /**
@@ -172,6 +182,8 @@ void Perseus::initConnect() {
           &Perseus::onCompletionTips);
   connect(LOS_lspMgr, &LosCore::LosLspManager::_diagnostics, this,
           &Perseus::onDiagnostics);
+  connect(ui->tab_problems, &LosView::LosIssuesUi::_gotoFile, this,
+          &Perseus::onDoubleClickedIssuesUi);
   connect(LOS_tabUi, &LosView::LosEditorTabUi::_textChangedForLsp, this,
           &Perseus::onTextChange_LSP);
   connect(LOS_tabUi, &LosView::LosEditorTabUi::_completionRequest, this,

@@ -48,15 +48,19 @@ void LosEditorUi::showCompletion(const QStringList &list) {
   LOS_completer->complete(r);
 }
 
+/**
+展示错误
+*/
 void LosEditorUi::showDiagnostic(const QString &file_path,
                                  const QList<LosCommon::LosDiagnostic> &dias) {
   if (file_path != LOS_filePath->getFilePath())
     return;
 
-  QList<QTextEdit::ExtraSelection> selectionsList; // 如何理解？ ExtraSelection
+  QList<QTextEdit::ExtraSelection> selectionsList;
 
   for (const auto &a : dias) {
-    QTextCharFormat format; // 如何理解？
+    QTextCharFormat format;
+    // 波浪线
     format.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
     QTextEdit::ExtraSelection selections;
     switch (a.ds) {
@@ -93,11 +97,30 @@ void LosEditorUi::showDiagnostic(const QString &file_path,
     QTextCursor cursor(doc);
     cursor.setPosition(startPos);
     cursor.setPosition(endPos, QTextCursor::KeepAnchor);
-
     selections.cursor = cursor;
+
     selectionsList.append(selections);
   }
   this->setExtraSelections(selectionsList);
+}
+
+/**
+跳转到指定的行
+*/
+void LosEditorUi::gotoLine(int line) {
+  QTextDocument * qtd = this->document();
+  // line findBlockByLineNumber 可能对于 视觉行 会有问题
+  QTextBlock block = qtd->findBlockByNumber(line);
+  if(block.isValid())
+  {
+    QTextCursor cursor(qtd);
+    cursor.setPosition(block.position());
+    this->setTextCursor(cursor);
+    // 定位到中间
+    this->centerCursor();
+    // 拿到焦点
+    this->setFocus();
+  }
 }
 
 /**
@@ -176,6 +199,9 @@ void LosEditorUi::initConnect() {
   connect(L_timer, &QTimer::timeout, this, &LosEditorUi::onDebounceTimeout);
 }
 
+/**
+- 初始化样式
+*/
 void LosEditorUi::initStyle() {
   QFontMetrics met(this->font());
   int tab = 4 * met.horizontalAdvance(" ");

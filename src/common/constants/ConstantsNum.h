@@ -1,5 +1,5 @@
 
-
+#pragma once
 namespace LosCommon{
 
     enum BottomTabWidget{
@@ -7,4 +7,6 @@ namespace LosCommon{
         PROBLEMS = 1,
         TERMINAL = 2
     };
+
+    inline const int MAX_VISIBLE_COMPLETION = 10;
 }

@@ -37,6 +37,7 @@ public: // tool
   void showCompletion(const QStringList &list);
   void showDiagnostic(const QString &file_path,
                       const QList<LosCommon::LosDiagnostic> &);
+  void gotoLine(int line);
 
 public: // get
   bool isDirty() const;
@@ -70,7 +71,7 @@ private: // param
   LosModel::LosFileContext *LOS_context = nullptr;
   LosModel::LosFilePath *LOS_filePath = nullptr;
   LosView::LosCompleterUi *LOS_completer;
-  LosCore::LosHighlighter * LOS_highlighter = nullptr;
+  LosCore::LosHighlighter *LOS_highlighter = nullptr;
 
 signals:
   void _editorDirty(bool is_dirty);

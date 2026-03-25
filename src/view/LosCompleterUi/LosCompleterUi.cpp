@@ -1,9 +1,5 @@
 
 #include "view/LosCompleterUi/LosCompleterUi.h"
-#include <qcompleter.h>
-#include <qnamespace.h>
-#include <qobject.h>
-#include <qstringlistmodel.h>
 
 namespace LosView {
 /**
@@ -12,7 +8,7 @@ const
 LosCompleterUi::LosCompleterUi(QObject *parent) : QCompleter{parent} {
   L_model = new QStringListModel(this);
   this->setModel(L_model);
-  setMaxVisibleItems(10);
+  setMaxVisibleItems(LosCommon::MAX_VISIBLE_COMPLETION);
   setCompletionMode(QCompleter::PopupCompletion);
   // 大小写不敏感
   setCaseSensitivity(Qt::CaseInsensitive);

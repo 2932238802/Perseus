@@ -209,7 +209,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_problems">
+        <widget class="LosView::LosIssuesUi" name="tab_problems">
          <attribute name="title">
           <string/>
          </attribute>
@@ -226,6 +226,14 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LosView::LosIssuesUi</class>
+   <extends>QWidget</extends>
+   <header location="global">view/LosIssuesUi/LosIssuesUi.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
