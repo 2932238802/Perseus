@@ -16,11 +16,13 @@ public: // tool
   void openFile(const QString &file_path, const QString &file_context);
   void changeFile(const QString &file_path, const QString &file_context);
   void requestCompletion(const QString &file_path, int line, int col);
+  void toDefineRequest(int line,int col,const QString& file_path);
 
 signals:
   void _completion(const QStringList &words);
   void _diagnostics(const QString &file_path,
                     const QList<LosCommon::LosDiagnostic> &diags);
+  void _definitionResult(const QString &file_name, int line);
 
 private:
   void initConnect();

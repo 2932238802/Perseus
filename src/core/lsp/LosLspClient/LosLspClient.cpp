@@ -38,7 +38,7 @@ LosLspClient::~LosLspClient() {
 */
 void LosLspClient::start() {
   if (L_process) {
-    INF("lsp start...","LosLspClient");
+    INF("lsp start...", "LosLspClient");
     L_process->start("clangd", QStringList());
   }
 }
@@ -129,6 +129,58 @@ void LosLspClient::didChange(const QString &file_path, const QString &text) {
   params["textDocument"] = textDocument;
   params["contentChanges"] = contentChanges;
   sendMsg("textDocument/didChange", params);
+}
+
+/**
+定位 定位
+请求：
+{
+  "jsonrpc": "2.0",
+  "id": 101,
+  "method": "textDocument/definition",
+  "params": {
+    "textDocument": {
+      "uri": "file:///home/losangelous/LosAngelous/Pro/Perseus/main.cpp"
+    },
+    "position": {
+      "line": 15,
+      "character": 12
+    }
+  }
+}
+
+答复:
+{
+  "jsonrpc": "2.0",
+  "id": 101,
+  "result": [
+    {
+      "uri": "file:///home/losangelous/LosAngelous/Pro/Perseus/utils.h",
+      "range": {
+        "start": {
+          "line": 42,
+          "character": 4
+        },
+        "end": {
+          "line": 42,
+          "character": 18
+        }
+      }
+    }
+  ]
+}
+
+*/
+void LosLspClient::defineRequest(int line, int col, const QString &file_path) {
+  QJsonObject params;
+  QJsonObject textDocument;
+  textDocument["uri"] = QUrl::fromLocalFile(file_path).toString(); ;
+  QJsonObject position;
+  position["line"] = line;
+  position["character"] = col;
+  params["textDocument"] = textDocument;
+  params["position"] = position;
+  sendRequest("textDocument/definition", params, LosLspType::REQ_DIFINE);
 }
 
 /**
@@ -257,6 +309,22 @@ void LosLspClient::dealLspMessage(const QJsonObject &obj) {
       break;
     }
     case LosLspType::REQ_HOVER: {
+      break;
+    }
+    case LosLspType::REQ_DIFINE :{
+      if(obj.contains("result") && obj["result"].isArray())
+      {
+        QJsonArray arr = obj["result"].toArray();
+        if(arr.empty()) break;
+        QJsonObject target = arr[0].toObject();
+            QString targetUri = target["uri"].toString();
+            QString targetFilePath = QUrl(targetUri).toLocalFile(); 
+            QJsonObject range = target["range"].toObject();
+            QJsonObject start = range["start"].toObject();
+            int targetLine = start["line"].toInt();
+            emit _definitionResult(targetFilePath, targetLine);
+      }
+
       break;
     }
     default: {

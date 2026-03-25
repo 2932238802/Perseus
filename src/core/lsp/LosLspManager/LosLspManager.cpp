@@ -48,6 +48,11 @@ void LosLspManager::requestCompletion(const QString &file_path, int line,
   LOS_client->sendRequestForCompletion(file_path, line, col);
 }
 
+void LosLspManager::toDefineRequest(int line, int col,
+                                    const QString &file_path) {
+  LOS_client->defineRequest(line, col, file_path);
+}
+
 /**
 初始化链接
 */
@@ -56,6 +61,8 @@ void LosLspManager::initConnect() {
           &LosLspManager::_completion);
   connect(LOS_client, &LosLspClient::_diagnostics, this,
           &LosLspManager::_diagnostics);
+  connect(LOS_client, &LosLspClient::_definitionResult, this,
+          &LosLspManager::_definitionResult);
 }
 
 } // namespace LosCore

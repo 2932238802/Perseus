@@ -16,7 +16,8 @@
 #include <qglobal.h>
 #include <qmessagebox.h>
 #include <qplaintextedit.h>
-#include <qtimer.h>
+#include <QTimer>
+#include <QApplication>
 namespace LosModel {
 class LosFileContext;
 }
@@ -59,12 +60,14 @@ private slots: // chs
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
 
 signals:
   void _completionRequest(const QString &file_path, int line, int col);
   void _textChangedForLsp(const QString &file_path,
                           const QString &file_content);
   void _openFileForLsp(const QString &file_path, const QString &file_content);
+  void _whereDefine(int line, int col,const QString& file_path);
 
 private: // param
   QTimer *L_timer = nullptr;

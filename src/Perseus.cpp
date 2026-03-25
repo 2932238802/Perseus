@@ -139,8 +139,12 @@ void Perseus::onCompletionRequest_LSP(const QString &filePath, int line,
 
 void Perseus::onOpenFile_LSP(const QString &file_path,
                              const QString &file_content) {
-  qDebug() << "open file for lsp";
+  INF("open file for lsp", "Perseus");
   LOS_lspMgr->openFile(file_path, file_content);
+}
+
+void Perseus::onWhereDefine_LSP(int line, int col, const QString &file_path) {
+  LOS_lspMgr->toDefineRequest(line, col, file_path);
 }
 
 void Perseus::onDiagnostics(const QString &file_path,
@@ -156,7 +160,21 @@ void Perseus::onLog(const QString &log) {
   ui->output_plaintextedit->appendHtml(log);
 }
 
+/**
+- 双击错误 定位
+*/
 void Perseus::onDoubleClickedIssuesUi(const QString &file_path, int line) {
+  LOS_tabUi->openFile(file_path);
+  auto editor = LOS_tabUi->getCurEditor();
+  if (editor) {
+    editor->gotoLine(line);
+  }
+}
+
+/**
+- 跳转定义的逻辑 和 上面类似
+*/
+void Perseus::onDefinitionResult(const QString &file_path, int line) {
   LOS_tabUi->openFile(file_path);
   auto editor = LOS_tabUi->getCurEditor();
   if (editor) {
@@ -182,6 +200,8 @@ void Perseus::initConnect() {
           &Perseus::onCompletionTips);
   connect(LOS_lspMgr, &LosCore::LosLspManager::_diagnostics, this,
           &Perseus::onDiagnostics);
+  connect(LOS_lspMgr, &LosCore::LosLspManager::_definitionResult, this,
+          &Perseus::onDefinitionResult);
   connect(ui->tab_problems, &LosView::LosIssuesUi::_gotoFile, this,
           &Perseus::onDoubleClickedIssuesUi);
   connect(LOS_tabUi, &LosView::LosEditorTabUi::_textChangedForLsp, this,
@@ -190,6 +210,8 @@ void Perseus::initConnect() {
           &Perseus::onCompletionRequest_LSP);
   connect(LOS_tabUi, &LosView::LosEditorTabUi::_openFileForLsp, this,
           &Perseus::onOpenFile_LSP);
+  connect(LOS_tabUi, &LosView::LosEditorTabUi::_whereDefine, this,
+          &Perseus::onWhereDefine_LSP);
   connect(&LosCore::LosLog::instance(), &LosCore::LosLog::_sendLog, this,
           &Perseus::onLog);
 }

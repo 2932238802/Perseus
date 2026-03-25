@@ -40,10 +40,11 @@ signals:
                           const QString &file_content);
   void _completionRequest(const QString &file_path, int line, int col);
   void _openFileForLsp(const QString &file_path, const QString &file_content);
+  void _whereDefine(int line, int col,const QString& file_path);
 
 private: // init
   void initConnect();
-  void initEditor(LosEditorUi*);
+  void initEditor(LosEditorUi *);
 
 private: // params
   QTabWidget *L_tabWidget;

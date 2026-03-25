@@ -21,7 +21,6 @@ LosEditorTabUi::~LosEditorTabUi() {}
 */
 void LosEditorTabUi::closeTab(int index) {}
 
-
 /**
 保存标签页
 */
@@ -37,7 +36,6 @@ void LosEditorTabUi::saveTab() {
     QMessageBox::critical(this, "error", "failed to save file");
   }
 }
-
 
 /**
 保存所有的标签页
@@ -173,7 +171,6 @@ void LosEditorTabUi::onCtrlSToSaveCurFile() {
   }
 }
 
-
 /**
 初始化
 */
@@ -192,6 +189,8 @@ void LosEditorTabUi::initEditor(LosEditorUi *editor) {
           &LosEditorTabUi::_openFileForLsp);
   connect(editor, &LosEditorUi::_textChangedForLsp, this,
           &LosEditorTabUi::_textChangedForLsp);
+  connect(editor, &LosEditorUi::_whereDefine, this,
+          &LosEditorTabUi::_whereDefine);
 }
 
 } // namespace LosView

@@ -15,8 +15,8 @@
 #include <qobject.h>
 #include <qprocess.h>
 
-#include "common/constants/ConstantsStr.h"
 #include "common/constants/ConstantsClass.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/log/LosLog/LosLog.h"
 
 namespace LosCore {
@@ -32,7 +32,8 @@ public: // enum
     REQ_COMPLETION,
     // 语法报错
     REQ_CHECK,
-    REQ_HOVER
+    REQ_HOVER,
+    REQ_DIFINE,
   };
 
 public: // const
@@ -48,6 +49,7 @@ public: // tool
   void sendMsg(const QString &method, const QJsonObject &param);
   void didOpen(const QString &file_path, const QString &text);
   void didChange(const QString &file_path, const QString &text);
+  void defineRequest(int line, int col, const QString &file_path);
 
 public: // init
   void initConnect();
@@ -58,9 +60,11 @@ private: // tool
   void processRawData(const QByteArray &data);
   void dealLspMessage(const QJsonObject &obj);
 
-signals:
+signals: // 补全 诊断 定位位置
   void _completion(const QStringList &words);
-  void _diagnostics(const QString&file_path,const QList<LosCommon::LosDiagnostic>& diags);
+  void _diagnostics(const QString &file_path,
+                    const QList<LosCommon::LosDiagnostic> &diags);
+  void _definitionResult(const QString &file_name, int line);
 
 private:
   std::atomic<int> L_id{1};

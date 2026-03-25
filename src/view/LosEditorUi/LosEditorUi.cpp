@@ -2,9 +2,13 @@
 #include "common/constants/ConstantsClass.h"
 #include "models/LosFileContext/LosFileContext.h"
 #include "view/LosCompleterUi/LosCompleterUi.h"
+#include <qapplication.h>
 #include <qcompleter.h>
+#include <qevent.h>
 #include <qfontmetrics.h>
 #include <qglobal.h>
+#include <qnamespace.h>
+#include <qplaintextedit.h>
 #include <qtextcursor.h>
 #include <qtextdocument.h>
 #include <qtextedit.h>
@@ -108,11 +112,10 @@ void LosEditorUi::showDiagnostic(const QString &file_path,
 跳转到指定的行
 */
 void LosEditorUi::gotoLine(int line) {
-  QTextDocument * qtd = this->document();
+  QTextDocument *qtd = this->document();
   // line findBlockByLineNumber 可能对于 视觉行 会有问题
   QTextBlock block = qtd->findBlockByNumber(line);
-  if(block.isValid())
-  {
+  if (block.isValid()) {
     QTextCursor cursor(qtd);
     cursor.setPosition(block.position());
     this->setTextCursor(cursor);
@@ -266,6 +269,22 @@ void LosEditorUi::keyPressEvent(QKeyEvent *event) {
     }
   }
   QPlainTextEdit::keyPressEvent(event);
+}
+
+/**
+按键拦截
+*/
+void LosEditorUi::mousePressEvent(QMouseEvent *event) {
+  // QApplication::keyboardModifiers()  获取当前所有 被 按住的键
+  if (event->button() == Qt::LeftButton &&
+      (QApplication::keyboardModifiers() & Qt::ControlModifier)) {
+    QTextCursor cur = this->cursorForPosition(event->pos());
+    int line = cur.blockNumber();
+    int col = cur.positionInBlock();
+    emit _whereDefine(line, col,LOS_filePath->getFilePath());
+    return;
+  }
+  QPlainTextEdit::mousePressEvent(event);
 }
 
 } // namespace LosView
