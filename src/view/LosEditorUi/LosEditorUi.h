@@ -44,12 +44,9 @@ class LosEditorUi : public QPlainTextEdit
 
   public: // construct
     ~LosEditorUi() override;
-
-  private: // construct
     explicit LosEditorUi(QWidget *parent = nullptr);
 
   public: // tool
-    static LosEditorUi *create(QWidget *parent = nullptr);
     void showCompletion(const QStringList &list);
     void showDiagnostic(const QString &file_path, const QList<LosCommon::LosDiagnostic> &);
     void gotoLine(int line);
@@ -78,6 +75,7 @@ class LosEditorUi : public QPlainTextEdit
 
   signals:
   private: // param
+    QString L_oldWord                     = "";
     QTimer *L_timer                       = nullptr;
     LosModel::LosFileContext *LOS_context = nullptr;
     LosModel::LosFilePath *LOS_filePath   = nullptr;

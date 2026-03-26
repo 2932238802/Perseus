@@ -2,7 +2,12 @@
 
 namespace LosCommon
 {
-inline constexpr const char *GXX            = "g++";
+#ifdef Q_OS_WIN
+inline constexpr const char *GXX = "g++.exe";
+#else
+inline constexpr const char *GXX = "g++";
+#endif
+
 inline constexpr const char *CXX_17         = "-std=c++17";
 inline constexpr const char *CMD_OBJECT     = "-o";
 inline constexpr const char *LINUX_EXE      = ".out";
@@ -10,6 +15,9 @@ inline constexpr const char *WIN_EXE        = ".exe";
 inline constexpr const char *CONTENT_LENGTH = "Content-Length: ";
 inline constexpr const char *LSP_RNRN       = "\r\n\r\n";
 
+/**
+- 快捷键的设置
+*/
 namespace ShortCut
 {
 inline constexpr const char *FILE_SAVE           = "Ctrl+S";         // 保存当前文件
@@ -38,6 +46,10 @@ inline constexpr const char *FOCUS_TERMINAL      = "Ctrl+`";       // 聚焦到�
 } // namespace ShortCut
 
 
+/**
+格式化文本的 format 内容
+TODO: 之后 可以 自定义
+*/
 namespace LLVM_formatStyle
 {
 inline constexpr const char *FORMAT_STYLE = R"({
@@ -58,5 +70,19 @@ inline constexpr const char *FORMAT_STYLE = R"({
     BreakBeforeBraces: Allman
 })";
 } // namespace LLVM_formatStyle
+
+
+namespace LosFormatManage_Constants
+{
+inline constexpr const char *ASSUME_FILENAME_ASRS = "-assume-filename=";
+inline constexpr const char *STYLE_ASRS           = "-style=";
+#ifdef Q_OS_WIN
+inline constexpr const char *CLANG_FORMAT = "clang-format.exe";
+#else
+inline constexpr const char *CLANG_FORMAT = "clang-format";
+#endif
+
+} // namespace LosFormatManage_Constants
+
 
 } // namespace LosCommon

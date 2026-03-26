@@ -18,11 +18,6 @@ LosEditorUi::~LosEditorUi()
     }
 }
 
-LosEditorUi *LosEditorUi::create(QWidget *parent)
-{
-    LosEditorUi *editor = new LosEditorUi(parent); // 补充
-    return editor;
-}
 
 /**
 展示弹窗
@@ -31,25 +26,37 @@ void LosEditorUi::showCompletion(const QStringList &list)
 {
     if (list.empty() || nullptr == LOS_completer)
         return;
-
+    QString prefix = getWordUnderCursor();
+    if (prefix != LOS_completer->completionPrefix())
+    {
+        LOS_completer->setCompletionPrefix(prefix);
+    }
     LOS_completer->updateCompletionList(list);
-
-    QRect r           = cursorRect(); // 如何理解 cursorRect
-    int idealWidth    = LOS_completer->popup()->sizeHintForColumn(0);
-    int idealVertical = LOS_completer->popup()->verticalScrollBar()->sizeHint().width();
-    r.setWidth(idealWidth + idealVertical);
-    LOS_completer->setCompletionPrefix(getWordUnderCursor());
+    QRect r = cursorRect();
+    QFontMetrics fm(this->font());
+    int prefixPixelWidth = fm.horizontalAdvance(prefix);
+    r.translate(-prefixPixelWidth, 0);                             // 移动到当前 单词的开头
+    int idealWidth = LOS_completer->popup()->sizeHintForColumn(0); // 设置
+    int padding    = 25;
+    int finalWidth = qMin(idealWidth + padding, 500);
+    r.setWidth(finalWidth);
     LOS_completer->complete(r);
 }
+
+
 
 /**
 展示错误
 */
 void LosEditorUi::showDiagnostic(const QString &file_path, const QList<LosCommon::LosDiagnostic> &dias)
 {
+    if (getWordUnderCursor() != L_oldWord)
+    {
+        return;
+    }
+
     if (file_path != LOS_filePath->getFilePath())
         return;
-
     QList<QTextEdit::ExtraSelection> selectionsList;
 
     for (const auto &a : dias)
@@ -169,8 +176,6 @@ void LosEditorUi::insertCompletion(const QString &completion)
 {
     QTextCursor qtc = textCursor();
     int needLenth   = completion.size() - LOS_completer->completionPrefix().size();
-    qtc.movePosition(QTextCursor::Left);
-    qtc.movePosition(QTextCursor::EndOfWord);
     qtc.insertText(completion.right(needLenth));
     setTextCursor(qtc); // 为什么 这里还要 setTextCursor
 }
@@ -205,9 +210,18 @@ get
 */
 QString LosEditorUi::getWordUnderCursor() const
 {
-    QTextCursor qtc = textCursor();
-    qtc.select(QTextCursor::WordUnderCursor);
-    return qtc.selectedText();
+     QTextCursor cursor = this->textCursor();
+    QString text = cursor.block().text();
+    int col = cursor.positionInBlock();
+    int start = col;
+    while (start > 0) {
+        QChar c = text.at(start - 1);
+        if (!c.isLetterOrNumber() && c != '_') {
+            break;
+        }
+        start--;
+    }
+    return text.mid(start, col - start);
 }
 
 /**
@@ -260,7 +274,7 @@ void LosEditorUi::onDebounceTimeout()
 {
     QTextCursor cursor = this->textCursor();
     int line           = cursor.blockNumber();
-    int col            = cursor.positionInBlock();
+    int col            = cursor.positionInBlock(); // 这个从 0 开始
     if (col == 0)
         return;
     QString currentLineText = cursor.block().text();
@@ -273,6 +287,7 @@ void LosEditorUi::onDebounceTimeout()
         return;
     if (lastChar == ':' && (col < 2 || currentLineText.at(col - 2) != ':'))
         return;
+    L_oldWord = getWordUnderCursor();
     emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(),
                                                                      this->toPlainText());
     emit LosCore::LosRouter::instance()._cmd_lsp_request_completeion(LOS_filePath -> getFilePath(), line, col);
@@ -314,6 +329,7 @@ void LosEditorUi::mousePressEvent(QMouseEvent *event)
         int line        = cur.blockNumber();
         int col         = cur.positionInBlock();
         emit LosCore::LosRouter::instance()._cmd_whereDefine(line, col, LOS_filePath -> getFilePath());
+        event->accept();
         return;
     }
     QPlainTextEdit::mousePressEvent(event);

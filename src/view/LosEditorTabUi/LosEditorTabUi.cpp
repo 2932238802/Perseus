@@ -80,7 +80,7 @@ void LosEditorTabUi::openFile(const QString &file_path)
         L_tabWidget->setCurrentWidget(editor);
         return;
     }
-    LosEditorUi *editor = LosEditorUi::create(this);
+    LosEditorUi *editor = new LosEditorUi(this);
     // 自己 处理 标签
     initEditor(editor);
     LosModel::LosFileContext *context = LosModel::LosFileContext::create();

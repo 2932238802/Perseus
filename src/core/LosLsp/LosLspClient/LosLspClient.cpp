@@ -242,7 +242,6 @@ void LosLspClient::sendInitializedMsg()
 */
 void LosLspClient::processRawData(const QByteArray &data)
 {
-
     L_rawData.append(data);
 
     while (true)
@@ -318,17 +317,12 @@ void LosLspClient::dealLspMessage(const QJsonObject &obj)
             {
                 QJsonObject result = obj["result"].toObject();
                 QJsonArray items   = result["items"].toArray();
-
                 QStringList completionWords;
-
                 for (int i = 0; i < items.size(); i++)
                 {
                     QJsonObject item = items[i].toObject();
                     completionWords.append(item["insertText"].toString());
                 }
-
-                qDebug() << "[lsp] Successfully parsed " << completionWords.size() << "completion words";
-
                 // QStringList 这个可以删除重复的
                 completionWords.removeDuplicates();
                 emit LosRouter::instance()._cmd_lsp_result_completion(completionWords);
