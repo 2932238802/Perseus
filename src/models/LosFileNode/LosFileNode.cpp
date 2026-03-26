@@ -9,9 +9,6 @@ LosFileNode::LosFileNode(const QString &filePath, LosFileNode *parent) : LOS_par
     if (parent)
         parent->appendChild(this);
 }
-
-/**
- */
 LosFileNode::~LosFileNode()
 {
     clear();
@@ -20,11 +17,11 @@ LosFileNode::~LosFileNode()
 
 
 /**
-
+- QDir::fromNativeSeparators 标准化
 */
 LosFileNode *LosFileNode::create(const QString &filePath, LosFileNode *parent)
 {
-    LosFileNode *node = new LosFileNode(filePath, parent);
+    LosFileNode *node = new LosFileNode(QDir::fromNativeSeparators(filePath), parent);
     return node;
 }
 

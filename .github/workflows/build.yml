@@ -38,7 +38,7 @@ jobs:
     - name: 上传最终的压缩包
       uses: actions/upload-artifact@v4
       with:
-        name: Perseus-Windows-Portable
+        name: Perseus-1.02
         path: |
           build/Perseus.exe
           build/*.dll

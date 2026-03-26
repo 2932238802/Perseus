@@ -1,10 +1,13 @@
 #pragma once
 #include "common/enum/LosFileType.h"
+#include "core/log/LosLog/LosLog.h"
+
+#include <QDebug>
+#include <QDir>
+#include <QObject>
 #include <QString>
 #include <QStringList>
-#include <qdebug.h>
 #include <qglobal.h>
-#include <qobject.h>
 #include <qtmetamacros.h>
 
 namespace LosModel

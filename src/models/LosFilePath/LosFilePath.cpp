@@ -1,6 +1,7 @@
 
 #include "LosFilePath.h"
 #include <qdebug.h>
+#include <qdir.h>
 #include <qfileinfo.h>
 
 namespace LosModel
@@ -22,7 +23,7 @@ LosFilePath::LosFilePath(const QString &file_path)
 */
 void LosFilePath::loadFile(const QString &file_path)
 {
-    L_filePath = file_path;
+    L_filePath = QDir::fromNativeSeparators(file_path);
     QFileInfo fileInfo(file_path);
     L_fileName = QFileInfo(file_path).fileName();
 
@@ -36,7 +37,7 @@ void LosFilePath::loadFile(const QString &file_path)
     }
     else
     {
-        qWarning() << "LosFilePath::loadFile: unrecognized file type -> " << file_path;
+        WAR("unrecognized file type ->" + file_path, "LosFilePath");
     }
 }
 
@@ -110,7 +111,8 @@ QDebug operator<<(QDebug debug, const LosFilePath &path)
     QDebugStateSaver saver(debug);
     debug.nospace();
     debug << "LosFilePath(" << "Name: \"" << path.getFileName() << "\", " << "Path: \"" << path.getFilePath() << "\", "
-          << "Type: " << (path.isDir() ? "Folder" : "File") << ", " << "Exists: " << (path.isExist() ? "True" : "False") << ")";
+          << "Type: " << (path.isDir() ? "Folder" : "File") << ", " << "Exists: " << (path.isExist() ? "True" : "False")
+          << ")";
     return debug;
 }
 
