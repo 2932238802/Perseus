@@ -4,6 +4,19 @@
 
 namespace LosModel
 {
+
+LosFileContext::LosFileContext(const QString &file_path)
+{
+    load(file_path);
+}
+LosFileContext::LosFileContext(const LosModel::LosFilePath &path)
+{
+    load(path.getFilePath());
+}
+
+LosFileContext::LosFileContext() {}
+
+
 LosFileContext *LosFileContext::create()
 {
     LosFileContext *text = new LosFileContext();
@@ -55,5 +68,16 @@ void LosFileContext::setDirty(bool dirty)
 {
     L_isDirty = dirty;
 }
+
+bool LosFileContext::isEmpty() const
+{
+    return L_content.isEmpty();
+}
+
+const QString& LosFileContext::getContent() const
+{
+    return L_content;
+}
+
 
 }; // namespace LosModel

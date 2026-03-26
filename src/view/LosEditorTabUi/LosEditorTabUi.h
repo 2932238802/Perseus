@@ -32,11 +32,13 @@ class LosEditorTabUi : public QWidget
     void saveTab();
     void saveAllTabs();
     void openFile(const QString &file_path);
+    void formatTab();
 
   public: // get
     LosEditorUi *getCurEditor();
     int tabCount() const;
     QString getCurFilePath() const;
+
 
   private slots: // chs
     void onTabCloseRequested(int index);

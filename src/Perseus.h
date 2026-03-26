@@ -1,11 +1,11 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
 #include "common/constants/ConstantsNum.h"
-#include "core/LosShortcutManager/LosShortcutManager.h"
-#include "core/log/LosLog/LosLog.h"
 #include "core/LosLsp/LosLspClient/LosLspClient.h"
 #include "core/LosLsp/LosLspManager/LosLspManager.h"
 #include "core/LosRunner/LosRunManager/LosRunManager.h"
+#include "core/LosShortcutManager/LosShortcutManager.h"
+#include "core/log/LosLog/LosLog.h"
 #include "models/LosFileNode/LosFileNode.h"
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
@@ -50,9 +50,9 @@ class Perseus : public QMainWindow
 
   public slots:
     void OnFileLoaded(bool isc);
-    void onFilesBtnClicked();
-    void onExplorerFileDoubleClicked(const QModelIndex &index);
-    void onRunSingleFileBtnClicked();
+    void onFilesBtnClicked();                                   // 打开本地文件夹
+    void onExplorerFileDoubleClicked(const QModelIndex &index); // 打开本地文件夹
+    void onRunSingleFileBtnClicked();                           // 运行一个文本
     void onAppendErr(const QString &);
     void onAppendLog(const QString &);
     void onBuildOver(bool);

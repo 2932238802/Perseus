@@ -33,5 +33,6 @@ class LosRouter : public QObject
     void _cmd_lsp_result_definition(const QString &file_name, int line);
 
     void _cmd_gotoFile(const QString &file_path, int line);
+    void _cmd_codeFormat();
 };
 } // namespace LosCore

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "models/LosFilePath/LosFilePath.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -18,9 +19,16 @@ class LosFileContext
     bool isDirty() const;
     void setDirty(bool dirty);
     bool isLoaded() const;
+    bool isEmpty() const;
+    const QString& getContent() const;
     [[nodiscard]] static LosFileContext *create();
 
   public:
+    ~LosFileContext() = default;
+    LosFileContext(const QString &file_path);
+    LosFileContext(const LosModel::LosFilePath &path);
+    LosFileContext();
+
   private:
     QString L_content = "";
     bool L_isDirty    = false;

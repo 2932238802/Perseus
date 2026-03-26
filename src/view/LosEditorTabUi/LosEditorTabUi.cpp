@@ -1,7 +1,11 @@
 
 #include "LosEditorTabUi.h"
+#include "core/LosFormatManager/LosFormatManager.h"
 #include "core/LosRouter/LosRouter.h"
+#include "core/log/LosLog/LosLog.h"
 #include "view/LosEditorUi/LosEditorUi.h"
+#include <qstringliteral.h>
+#include <qtextcursor.h>
 
 
 namespace LosView
@@ -88,6 +92,14 @@ void LosEditorTabUi::openFile(const QString &file_path)
     L_tabWidget->setCurrentWidget(editor); // 补充 直接 把界面切过去
 }
 
+
+void LosEditorTabUi::formatTab()
+{
+    if (getCurEditor())
+        getCurEditor()->format();
+}
+
+
 /**
 get
 获取当前编辑器
@@ -139,7 +151,7 @@ void LosEditorTabUi::onTabCloseRequested(int index)
         {
             if (!editor->save())
             {
-                QMessageBox::critical(this, "error", "save failed, unable to close the tab!");
+                ERR(QStringLiteral("error") + "save failed, unable to close the tab!", "LosEditorTabUi");
                 return;
             }
         }
@@ -160,7 +172,6 @@ void LosEditorTabUi::onTabCloseRequested(int index)
 */
 void LosEditorTabUi::onEditDirty(bool is_dirty)
 {
-
     LosView::LosEditorUi *edit = qobject_cast<LosView::LosEditorUi *>(sender());
     if (!edit)
         return;
@@ -218,7 +229,6 @@ void LosEditorTabUi::onCompletionResult(const QStringList &list)
 
 void LosEditorTabUi::onDiagnosticsResult(const QString &file_path, const QList<LosCommon::LosDiagnostic> &diags)
 {
-
     auto curWidget = getCurEditor();
     if (nullptr != curWidget)
         curWidget->showDiagnostic(file_path, diags);
@@ -254,9 +264,11 @@ void LosEditorTabUi::initConnect()
 
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_lsp_result_diagnostics, this,
             &LosEditorTabUi::onDiagnosticsResult);
-            
+
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_gotoFile, this,
             &LosEditorTabUi::onDoubleClickedOnIssue);
+
+    connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_codeFormat, this, &LosEditorTabUi::formatTab);
 }
 
 void LosEditorTabUi::initEditor(LosEditorUi *editor)

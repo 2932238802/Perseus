@@ -2,22 +2,34 @@
 
 #pragma once
 #include "common/constants/ConstantsClass.h"
+#include "core/LosFormatManager/LosFormatManager.h"
 #include "core/LosHighlighter/LosHighlighter.h"
+#include "core/LosRouter/LosRouter.h"
+#include "models/LosFileContext/LosFileContext.h"
 #include "models/LosFilePath/LosFilePath.h"
 #include "view/LosCompleterUi/LosCompleterUi.h"
 
 #include <QApplication>
+#include <QCompleter>
+#include <QDebug>
+#include <QEvent>
+#include <QFileInfo>
 #include <QObject>
 #include <QScrollBar>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTimer>
-#include <qdebug.h>
-#include <qevent.h>
-#include <qfileinfo.h>
+#include <qfontmetrics.h>
 #include <qglobal.h>
-#include <qmessagebox.h>
+#include <qnamespace.h>
 #include <qplaintextedit.h>
+#include <qtextcursor.h>
+#include <qtextdocument.h>
+#include <qtextedit.h>
+#include <qtextformat.h>
+#include <qtextobject.h>
+#include <qvariant.h>
+
 namespace LosModel
 {
 class LosFileContext;
@@ -41,6 +53,7 @@ class LosEditorUi : public QPlainTextEdit
     void showCompletion(const QStringList &list);
     void showDiagnostic(const QString &file_path, const QList<LosCommon::LosDiagnostic> &);
     void gotoLine(int line);
+    void format();
 
   public: // get
     bool isDirty() const;
@@ -59,12 +72,12 @@ class LosEditorUi : public QPlainTextEdit
     void onTextChanged();
     void onDebounceTimeout();
 
-  protected:
+  protected: // override
     void keyPressEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
 
   signals:
-    private: // param
+  private: // param
     QTimer *L_timer                       = nullptr;
     LosModel::LosFileContext *LOS_context = nullptr;
     LosModel::LosFilePath *LOS_filePath   = nullptr;

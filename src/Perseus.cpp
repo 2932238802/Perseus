@@ -1,5 +1,6 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/LosLsp/LosLspManager/LosLspManager.h"
 #include "core/LosRouter/LosRouter.h"
 #include "core/LosShortcutManager/LosShortcutManager.h"
@@ -158,6 +159,7 @@ void Perseus::onLog(const QString &log)
     ui->output_plaintextedit->appendHtml(log);
 }
 
+
 /**
 初始化连接
 */
@@ -201,6 +203,9 @@ void Perseus::initShotcut()
         LosCommon::ShortCut::RUN_SINGLE_FILE, this, [=]() { onRunSingleFileBtnClicked(); }, "run single file");
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::FILE_OPEN, this, [=]() { onFilesBtnClicked(); }, "open folder");
+    LosCore::LosShortcutManager::instance().reg(
+        LosCommon::ShortCut::CODE_FORMAT, this, [=]() { emit LosCore::LosRouter::instance()._cmd_codeFormat(); },
+        "format text");
 }
 
 /**

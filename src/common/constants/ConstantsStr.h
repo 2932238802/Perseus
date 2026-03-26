@@ -37,4 +37,26 @@ inline constexpr const char *TOGGLE_BOTTOM_PANEL = "Ctrl+J";       // 显示/隐
 inline constexpr const char *FOCUS_TERMINAL      = "Ctrl+`";       // 聚焦到底部终端
 } // namespace ShortCut
 
+
+namespace LLVM_formatStyle
+{
+inline constexpr const char *FORMAT_STYLE = R"({
+    Language: Cpp,
+    BasedOnStyle: LLVM,
+    ColumnLimit: 120,
+    MaxEmptyLinesToKeep: 3,
+    AlignConsecutiveAssignments: true,
+    AlignTrailingComments: true,
+    AlignConsecutiveMacros: true,
+    PointerAlignment: Right,
+    IndentWidth: 4,
+    TabWidth: 4,
+    UseTab: Never,
+    AllowShortBlocksOnASingleLine: true,
+    AllowShortFunctionsOnASingleLine: Inline,
+    SortIncludes: true,
+    BreakBeforeBraces: Allman
+})";
+} // namespace LLVM_formatStyle
+
 } // namespace LosCommon

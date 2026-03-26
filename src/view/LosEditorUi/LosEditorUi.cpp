@@ -1,21 +1,5 @@
 #include "LosEditorUi.h"
-#include "common/constants/ConstantsClass.h"
-#include "core/LosRouter/LosRouter.h"
-#include "models/LosFileContext/LosFileContext.h"
-#include "view/LosCompleterUi/LosCompleterUi.h"
-#include <qapplication.h>
-#include <qcompleter.h>
-#include <qevent.h>
-#include <qfontmetrics.h>
-#include <qglobal.h>
-#include <qnamespace.h>
-#include <qplaintextedit.h>
-#include <qtextcursor.h>
-#include <qtextdocument.h>
-#include <qtextedit.h>
-#include <qtextformat.h>
-#include <qtextobject.h>
-#include <qvariant.h>
+
 
 namespace LosView
 {
@@ -140,6 +124,26 @@ void LosEditorUi::gotoLine(int line)
         this->setFocus();
     }
 }
+
+
+void LosEditorUi::format()
+{
+    QString out{""};
+    if (!LosCore::LosFormatManager::instance().format(&out, LOS_filePath->getFilePath(), toPlainText()))
+    {
+        return;
+    }
+    QTextCursor cur = textCursor();
+    int outPos      = cur.position();
+    cur.beginEditBlock();
+    cur.select(QTextCursor::Document); // 全选
+    cur.insertText(out);
+    cur.endEditBlock();
+    cur.setPosition(qMin(outPos, out.length()));
+    this->setTextCursor(cur);
+}
+
+
 
 /**
 导入内容
