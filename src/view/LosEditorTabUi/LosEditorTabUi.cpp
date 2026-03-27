@@ -150,6 +150,7 @@ void LosEditorTabUi::onTabCloseRequested(int index)
     if (!wi)
         return;
     LosEditorUi *editor = qobject_cast<LosEditorUi *>(wi);
+    
     // 补充
     if (editor->isDirty())
     {
@@ -181,16 +182,17 @@ void LosEditorTabUi::onTabCloseRequested(int index)
 /**
 如果编辑器 修改
 */
-void LosEditorTabUi::onEditDirty(bool is_dirty)
+void LosEditorTabUi::onEditDirty(const QString &file_path, bool is_dirty)
 {
-    LosView::LosEditorUi *edit = qobject_cast<LosView::LosEditorUi *>(sender());
-    if (!edit)
+    if (nullptr == LOS_pathToUi[file_path])
         return;
 
-    int index = L_tabWidget->indexOf(edit);
+    int index = L_tabWidget->indexOf(LOS_pathToUi[file_path]);
     if (index == -1)
         return;
     QString currentTitle = L_tabWidget->tabText(index);
+
+
     if (is_dirty && !currentTitle.endsWith("*"))
     {
         L_tabWidget->setTabText(index, currentTitle + " *");

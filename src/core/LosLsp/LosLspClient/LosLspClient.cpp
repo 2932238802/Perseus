@@ -1,18 +1,7 @@
 
 
 #include "core/LosLsp/LosLspClient/LosLspClient.h"
-#include "common/constants/ConstantsClass.h"
-#include "core/LosRouter/LosRouter.h"
-#include <qcoreapplication.h>
-#include <qglobal.h>
-#include <qjsonarray.h>
-#include <qjsondocument.h>
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qprocess.h>
-#include <qregularexpression.h>
-#include <qsharedpointer.h>
-#include <qurl.h>
+
 
 namespace LosCore
 {
@@ -121,7 +110,6 @@ void LosLspClient::sendMsg(const QString &method, const QJsonObject &param)
     QByteArray header = LosCommon::LosLsp_Constants::CONTENT_LENGTH + QByteArray::number(jb.size()) +
                         LosCommon::LosLsp_Constants::LSP_RNRN;
     L_process->write(header + jb);
-    INF("[lsp]: " + method, "LosLspClient");
 }
 
 
@@ -337,7 +325,7 @@ void LosLspClient::dealLspMessage(const QJsonObject &obj)
         int id = obj["id"].toInt();
         if (!L_idToType.contains(id))
         {
-            qDebug() << "[lsp] Received a reply with an unknown ID";
+            qDebug() << "[lsp] received a reply with an unknown ID";
             return;
         }
 

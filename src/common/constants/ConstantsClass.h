@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <functional>
 #include <qglobal.h>
 
@@ -66,6 +67,9 @@ struct ConfigItem
 } // namespace LosConfig_Constants
 
 
+/**
+- 保留 会话 的固定字段
+*/
 namespace LosSession_Constants
 {
 struct Config
@@ -76,4 +80,27 @@ struct Config
 
 } // namespace LosSession_Constants
 
+
+namespace LosToolChain_Constants
+{
+enum class LosLanguage
+{
+    CXX,
+    LUA,
+    RUST,
+    JAVA,
+    PYTHON,
+};
+
+struct ToolChainConfig
+{
+    LosLanguage LOS_language;
+    QString L_name;
+    QStringList L_exeName;
+    QString L_version;
+    QString L_validateKey;
+    QString L_downUrl;
+};
+
+} // namespace LosToolChain_Constants
 } // namespace LosCommon

@@ -41,7 +41,7 @@ class LosEditorTabUi : public QWidget
 
   private slots: // chs
     void onTabCloseRequested(int index);
-    void onEditDirty(bool is_dirty);
+    void onEditDirty(const QString& file_path,bool is_dirty);
     void onDefineResult(const QString &file_path, int line);
     void onDoubleClickedOnIssue(const QString &file_path, int line);
 

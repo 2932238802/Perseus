@@ -37,7 +37,7 @@ class LosRouter : public QObject
 
     void _cmd_gotoFile(const QString &file_path, int line);
     void _cmd_codeFormat();
-    void _cmd_fileDirty(bool dirty);
+    void _cmd_fileDirty(const QString& file_path, bool dirty);
 
     void _cmd_fileTreeDone();   // filetree 建立完毕 发送信号 就是左侧的文件树
 

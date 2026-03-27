@@ -223,7 +223,7 @@ bool LosEditorUi::save()
     if (ok)
     {
         L_dirty = false;
-        emit LosCore::LosRouter::instance()._cmd_fileDirty(false);
+        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath->getFilePath(),false);
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
     }
     return ok;
@@ -308,7 +308,7 @@ void LosEditorUi::onTextChanged()
     if (!L_dirty)
     {
         L_dirty = true;
-        emit LosCore::LosRouter::instance()._cmd_fileDirty(true);
+        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath->getFilePath(),true);
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
     }
     LOS_completer->popup()->hide();
