@@ -37,8 +37,10 @@ std::optional<QString> LosFileContext::load(const QString &file_path)
     QFile file(file_path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        WAR("the file is empty","LosFileContext");
         return std::nullopt;
     }
+    INF("load ... :" + file_path,"LosFileContext");
     QTextStream in(&file);
     in.setEncoding(QStringConverter::Utf8);
     L_content = in.readAll();
@@ -49,22 +51,26 @@ std::optional<QString> LosFileContext::load(const QString &file_path)
 
 
 
+/**
+- 保存逻辑
+
+*/
 bool LosFileContext::save(const QString &content, const QString &file_path)
 {
     if (file_path.isEmpty())
         return false;
     QFile file(file_path);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly))
     {
         return false;
     }
     QTextStream out(&file);
+    // QStringConverter
     out.setEncoding(QStringConverter::Utf8);
     out << content;
     file.close();
     return true;
 }
-
 
 
 
@@ -76,7 +82,7 @@ bool LosFileContext::isLoaded() const
 
 
 /**
-
+空的
 */
 bool LosFileContext::isEmpty() const
 {

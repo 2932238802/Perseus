@@ -172,7 +172,7 @@ void LosEditorUi::loadContextAndPath(LosModel::LosFileContext *context, LosModel
     QString text = "";
     if (op)
     {
-        QString text = *op;
+        text = *op;
     }
     else
     {
@@ -241,10 +241,14 @@ QString LosEditorUi::getWordUnderCursor() const
 }
 
 
+
+
 bool LosEditorUi::isDirty() const
 {
     return L_dirty;
 }
+
+
 
 /**
 - 文字稍微 变动 就变脏
