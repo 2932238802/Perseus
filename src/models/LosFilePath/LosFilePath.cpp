@@ -1,8 +1,4 @@
-
 #include "LosFilePath.h"
-#include <qdebug.h>
-#include <qdir.h>
-#include <qfileinfo.h>
 
 namespace LosModel
 {

@@ -1,12 +1,5 @@
-
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
-#include "models/LosFileNode/LosFileNode.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include <QAbstractItemModel>
-#include <QFileIconProvider>
-#include <QVariant>
-#include <qnamespace.h>
-#include <qobject.h>
+
 
 namespace LosModel
 {

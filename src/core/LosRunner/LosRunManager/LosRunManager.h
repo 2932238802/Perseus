@@ -1,8 +1,11 @@
 #pragma once
 
 #include "core/LosRunner/LosAbstractRunner/LosAbstractRunner.h"
+#include "core/LosRunner/LosSingleCppRunner/LosSingleCppRunner.h"
+#include "models/LosFilePath/LosFilePath.h"
 #include <QObject>
 #include <qtmetamacros.h>
+
 namespace LosCore
 {
 

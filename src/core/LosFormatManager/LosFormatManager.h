@@ -1,7 +1,5 @@
 #pragma once
-
-
-
+#include "common/constants/ConstantsNum.h"
 #include "common/constants/ConstantsStr.h"
 #include "core/log/LosLog/LosLog.h"
 #include "models/LosFileContext/LosFileContext.h"
@@ -24,7 +22,7 @@ class LosFormatManager : public QObject
 
   public:
     static LosFormatManager &instance();
-    bool format(QString *out, const QString &file_path,const QString& raw_content);
+    bool format(QString *out, const QString &file_path, const QString &raw_content);
 };
 
 

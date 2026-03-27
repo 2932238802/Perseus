@@ -1,7 +1,10 @@
 #pragma once
 
 #include "core/LosConfig/LosConfig/LosConfig.h"
+#include "core/LosConfig/LosConfigFactory/LosConfigFactory.h"
 #include <qobject.h>
+#include <qstringliteral.h>
+
 namespace LosCore
 {
 
@@ -11,7 +14,7 @@ class LosConfigManager : public QObject
   public:                                       // tool
     void analyse(const QString &absolute_path); // absolute_path 项目的路径 也就是文件夹路径
     void create(const QString &file_path);
-    bool isInFiles(const QString& file_name);
+    bool isInFiles(const QString &file_name);
 
   public:
     explicit LosConfigManager(QObject *parent = nullptr);

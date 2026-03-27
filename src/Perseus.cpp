@@ -1,16 +1,5 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
-#include "common/constants/ConstantsClass.h"
-#include "common/constants/ConstantsStr.h"
-#include "core/LosConfig/LosConfigManager/LosConfigManager.h"
-#include "core/LosLsp/LosLspManager/LosLspManager.h"
-#include "core/LosRouter/LosRouter.h"
-#include "core/LosShortcutManager/LosShortcutManager.h"
-#include "core/log/LosLog/LosLog.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include "view/LosEditorTabUi/LosEditorTabUi.h"
-#include "view/LosIssuesUi/LosIssuesUi.h"
-#include <qapplication.h>
 
 /**
 构造

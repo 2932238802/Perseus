@@ -1,11 +1,6 @@
 
 #include "LosSingleCppRunner.h"
-#include "common/constants/ConstantsStr.h"
-#include "core/LosRunner/LosAbstractRunner/LosAbstractRunner.h"
-#include <qglobal.h>
-#include <qobject.h>
-#include <qprocess.h>
-#include <qtmetamacros.h>
+
 
 namespace LosCore
 {

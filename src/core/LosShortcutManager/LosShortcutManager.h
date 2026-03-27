@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QString>
 #include <functional>
+#include <qnamespace.h>
+#include <qobject.h>
 #include <qshortcut.h>
 #include <qwidget.h>
 

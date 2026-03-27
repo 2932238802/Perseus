@@ -1,6 +1,5 @@
 
 #include "LosAbstractRunner.h"
-#include <qobject.h>
 
 namespace LosCore
 {

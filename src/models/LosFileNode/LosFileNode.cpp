@@ -1,10 +1,4 @@
 #include "LosFileNode.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include <functional>
-#include <qfuture.h>
-#include <qfuturewatcher.h>
-#include <qobject.h>
-#include <qtconcurrentrun.h>
 
 namespace LosModel
 {
