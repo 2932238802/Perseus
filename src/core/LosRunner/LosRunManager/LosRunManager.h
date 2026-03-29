@@ -1,5 +1,4 @@
 #pragma once
-
 #include "common/constants/ConstantsClass.h"
 #include "common/util/CheckLang.h"
 #include "core/LosLog/LosLog.h"
@@ -9,6 +8,7 @@
 #include "models/LosFilePath/LosFilePath.h"
 #include <qsharedpointer.h>
 
+#include "common/constants/ConstantsClass.h"
 #include <QObject>
 #include <qtmetamacros.h>
 
@@ -28,16 +28,19 @@ class LosRunManager : public QObject
     void stop();
 
   private slots:
-    void onToolChainReady(LosCommon::LosToolChain_Constants::LosLanguage, const QString &);
+    void onToolChainReady(LosCommon::LosToolChain_Constants::LosLanguage,
+                          LosCommon::LosToolChain_Constants::LosTool tool, const QString &);
+    void onBuildToolReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
+                          const QStringList &args);
 
   private: // init
     void initConnect();
 
   private: // tool
-    LosAbstractRunner *getCurRunner(const QString &file_path);
+    LosAbstractRunner *getCurRunner(const QString &file_path, bool is_project);
 
   private: // param
     QString L_mainEntryFilePath = "";
-    QMap<LosCommon::LosToolChain_Constants::LosLanguage, LosAbstractRunner *> LOS_runners;
+    QMap<LosCommon::LosToolChain_Constants::LosTool, LosAbstractRunner *> LOS_runners;
 };
 } // namespace LosCore

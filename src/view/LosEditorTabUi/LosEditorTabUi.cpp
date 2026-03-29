@@ -1,12 +1,8 @@
 
 #include "LosEditorTabUi.h"
+#include "common/constants/ConstantsClass.h"
 #include "common/util/CheckLang.h"
-#include "core/LosFormatManager/LosFormatManager.h"
 #include "core/LosRouter/LosRouter.h"
-#include "core/log/LosLog/LosLog.h"
-#include "view/LosEditorUi/LosEditorUi.h"
-#include <qstringliteral.h>
-#include <qtextcursor.h>
 
 
 namespace LosView
@@ -81,8 +77,7 @@ tool
 void LosEditorTabUi::openFile(const QString &file_path)
 {
     // 呼叫 解释器 呼叫 运行其
-    emit LosCore::LosRouter::instance()._cmd_checkLspTool(LosCommon::CheckLang(file_path));
-    emit LosCore::LosRouter::instance()._cmd_checkToolchain(LosCommon::CheckLang(file_path));
+    checkLspAnsFormat(file_path);
 
     if (LOS_pathToUi.contains(file_path))
     {
@@ -108,6 +103,7 @@ void LosEditorTabUi::formatTab()
 }
 
 
+
 /**
 get
 获取当前编辑器
@@ -121,6 +117,8 @@ LosEditorUi *LosEditorTabUi::getCurEditor()
     return nullptr;
 }
 
+
+
 /**
 get
 */
@@ -128,6 +126,8 @@ int LosEditorTabUi::tabCount() const
 {
     return L_tabWidget->count();
 }
+
+
 
 /**
 get
@@ -239,6 +239,22 @@ void LosEditorTabUi::onDoubleClickedOnIssue(const QString &file_path, int line)
 
 
 /**
+- 重新 检查
+*/
+void LosEditorTabUi::onResetCheck(LosCommon::LosToolChain_Constants::LosLanguage lan, const QString &curFile)
+{
+    if (L_checkedLanguage.contains(lan))
+    {
+        L_checkedLanguage.remove(lan);
+        if (!curFile.isEmpty())
+        {
+            checkLspAnsFormat(curFile);
+        }
+    }
+}
+
+
+/**
 初始化
 */
 void LosEditorTabUi::initConnect()
@@ -255,4 +271,33 @@ void LosEditorTabUi::initConnect()
 
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileDirty, this, &LosEditorTabUi::onEditDirty);
 }
+
+
+
+/**
+检查 语法 和 自行
+*/
+void LosEditorTabUi::checkLspAnsFormat(const QString &file_path)
+{
+    auto lang = LosCommon::CheckLang(file_path);
+    if (L_checkedLanguage.contains(lang))
+        return;
+
+    switch (lang)
+    {
+    case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
+    {
+        emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
+            lang, LosCommon::LosToolChain_Constants::LosTool::CLANGD);
+        emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
+            lang, LosCommon::LosToolChain_Constants::LosTool::CLANG_FORMAT);
+        L_checkedLanguage.insert(LosCommon::LosToolChain_Constants::LosLanguage::CXX);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+
 } // namespace LosView

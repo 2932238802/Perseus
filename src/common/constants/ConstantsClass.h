@@ -13,6 +13,10 @@ class LosConfig;
 
 namespace LosCommon
 {
+
+/**
+寻找文件的标识
+*/
 enum class FindFileType
 {
     SYSTEM_TOOLCHAIN_CONFIG_JSON = 1,
@@ -24,9 +28,9 @@ enum class FindFileType
 namespace LosCommon
 {
 
-
 /**
 LosLsp 就是 识别 一些语法 和 补全
+diagnotisc DiagnosticSeverity 程度
 */
 namespace LosLsp_Constants
 {
@@ -122,6 +126,17 @@ enum class LosLanguage
     PYTHON,
     CSHARP,
     UNKNOWN,
+};
+
+enum class LosTool
+{
+    CMAKE,
+    NINJA,
+    GIT,
+    G_PLUS_PLUS,
+    CLANGD,
+    CLANG_FORMAT,
+    UNKNOWN
 };
 
 enum class ToolCategory

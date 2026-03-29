@@ -1,5 +1,5 @@
 #include "LosEditorUi.h"
-#include "core/LosRouter/LosRouter.h"
+
 
 
 namespace LosView
@@ -29,12 +29,13 @@ LosEditorUi::~LosEditorUi()
 */
 void LosEditorUi::showCompletion(const QStringList &list)
 {
-    if (!this->hasFocus()) 
+    if (!this->hasFocus())
         return;
 
     if (list.empty() || nullptr == LOS_completer)
     {
-        if (LOS_completer && LOS_completer->popup()) {
+        if (LOS_completer && LOS_completer->popup())
+        {
             LOS_completer->popup()->hide();
         }
         return;
@@ -48,7 +49,7 @@ void LosEditorUi::showCompletion(const QStringList &list)
     QRect r = cursorRect();
     QFontMetrics fm(this->font());
     int prefixPixelWidth = fm.horizontalAdvance(prefix);
-    r.translate(-prefixPixelWidth, 0);                           
+    r.translate(-prefixPixelWidth, 0);
     int idealWidth = LOS_completer->popup()->sizeHintForColumn(0);
     int padding    = 25;
     int finalWidth = qMin(idealWidth + padding, 500);
@@ -56,7 +57,6 @@ void LosEditorUi::showCompletion(const QStringList &list)
     LOS_completer->complete(r);
     L_showComplete = true;
 }
-
 
 
 
@@ -223,7 +223,7 @@ bool LosEditorUi::save()
     if (ok)
     {
         L_dirty = false;
-        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath->getFilePath(),false);
+        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath -> getFilePath(), false);
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
     }
     return ok;
@@ -308,7 +308,7 @@ void LosEditorUi::onTextChanged()
     if (!L_dirty)
     {
         L_dirty = true;
-        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath->getFilePath(),true);
+        emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath -> getFilePath(), true);
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
     }
     LOS_completer->popup()->hide();
@@ -347,7 +347,9 @@ void LosEditorUi::onDebounceTimeout()
 
 
 /**
-光标拦截
+- 光标拦截
+    - 弹出 语法补全
+- 同时 支持 括号补全
 */
 void LosEditorUi::keyPressEvent(QKeyEvent *event)
 {
@@ -373,6 +375,8 @@ void LosEditorUi::keyPressEvent(QKeyEvent *event)
             break;
         }
     }
+    // 这个是 括号补全
+    LosCore::LosBracketFormat::dealEvent(this, event);
     QPlainTextEdit::keyPressEvent(event);
 }
 

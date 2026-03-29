@@ -1,12 +1,10 @@
 
 #pragma once
-
 #include <QRegularExpression>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
-#include <qfont.h>
+#include <QFont>
 #include <qnamespace.h>
-#include <qregularexpression.h>
 #include <qtextdocument.h>
 #include <qtextformat.h>
 namespace LosCore

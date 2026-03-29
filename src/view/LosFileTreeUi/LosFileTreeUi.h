@@ -1,22 +1,29 @@
+#pragma once
 #include "core/LosLog/LosLog.h"
+#include "core/LosRouter/LosRouter.h"
 #include "models/LosFileNode/LosFileNode.h"
+#include "models/LosFilePath/LosFilePath.h"
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
+#include <QAction>
 #include <QClipboard>
+#include <QDir>
+#include <QFileInfo>
 #include <QGuiApplication>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
 #include <QObject>
-#include <qabstractitemmodel.h>
-#include <qaction.h>
+#include <QPoint>
+#include <qevent.h>
 #include <qfiledialog.h>
-#include <qpoint.h>
+#include <qguiapplication.h>
+#include <qlineedit.h>
+#include <qmimedata.h>
 #include <qtmetamacros.h>
 #include <qtreeview.h>
 #include <qurl.h>
 #include <qwidget.h>
-
 
 namespace LosView
 {

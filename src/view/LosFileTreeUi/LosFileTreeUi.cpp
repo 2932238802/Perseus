@@ -1,20 +1,4 @@
 #include "LosFileTreeUi.h"
-#include "core/LosRouter/LosRouter.h"
-#include "core/log/LosLog/LosLog.h"
-#include "models/LosFileNode/LosFileNode.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include "models/LosFileTreeModel/LosFileTreeModel.h"
-#include <qabstractitemmodel.h>
-#include <qabstractitemview.h>
-#include <qaction.h>
-#include <qdir.h>
-#include <qevent.h>
-#include <qfileinfo.h>
-#include <qguiapplication.h>
-#include <qlineedit.h>
-#include <qmimedata.h>
-
-
 
 namespace LosView
 {
@@ -261,7 +245,6 @@ bool LosFileTreeUi::expandToFile(const QString &file_path)
     QModelIndex index               = findAndExpand(rootNode, file_path, QModelIndex());
     if (!index.isValid())
     {
-        ERR("the specified file was not found", "LosFileTreeUi");
         return false;
     }
     scrollTo(index, QAbstractItemView::EnsureVisible);

@@ -113,4 +113,14 @@ inline constexpr const char *COMPILE_COMMANDS_OPTION = "-DCMAKE_EXPORT_COMPILE_C
 inline constexpr const char *COMPILE_COMMANDS_FILE   = "compile_commands.json";
 } // namespace LosConfig_Constants
 
+
+namespace LosState_Constants
+{  
+enum class SG_STR{
+    PROJECT_DIR,
+};
+
+}
+
+
 } // namespace LosCommon

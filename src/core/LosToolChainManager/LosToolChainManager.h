@@ -1,24 +1,25 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
+#include "common/util/GetFilePath.h"
 #include "common/util/GetSettingKey.h"
-
+#include "core/LosRouter/LosRouter.h"
+#include "models/LosFilePath/LosFilePath.h"
+#include <QDir>
+#include <QFileInfo>
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonParseError>
+#include <QList>
 #include <QObject>
+#include <qcoreapplication.h>
+#include <qglobal.h>
 #include <qjsonobject.h>
+#include <qsettings.h>
+#include <qstandardpaths.h>
 #include <qtmetamacros.h>
 
 namespace LosCore
 {
-/**
-  LSP,       // 语言服务器
-  Compiler,  // 编译器
-  Formatter, // 格式化工具
-  Linter,    // 静态分析
-  Debugger   // 调试器
-
-*/
 class LosToolChainManager : public QObject
 {
     Q_OBJECT
@@ -27,10 +28,11 @@ class LosToolChainManager : public QObject
     explicit LosToolChainManager(QObject *parent = nullptr);
     ~LosToolChainManager() = default;
 
+
   public slots:
-    void onCheckToolchain(LosCommon::LosToolChain_Constants::LosLanguage);
-    void onCheckLspTool(LosCommon::LosToolChain_Constants::LosLanguage);
-    void onCheckBuildTool(LosCommon::LosToolChain_Constants::LosLanguage language);
+    void onCheckLanguageToolchain(LosCommon::LosToolChain_Constants::LosLanguage lang,
+                                  LosCommon::LosToolChain_Constants::LosTool tool);
+    void onCheckSingleTool(LosCommon::LosToolChain_Constants::LosTool tool);
 
   private:
     void initConfig();
@@ -38,23 +40,16 @@ class LosToolChainManager : public QObject
     bool validateExecutable(const QString &lastSavePath, const LosCommon::LosToolChain_Constants::ToolChainConfig &);
 
   private:
-    LosCommon::LosToolChain_Constants::ToolChainConfig parseToolNode(const QJsonObject &, const QString &,
-                                                                     LosCommon::LosToolChain_Constants::LosLanguage);
-
+    LosCommon::LosToolChain_Constants::ToolChainConfig parseToolNode(const QJsonObject &, const QString &);
     LosCommon::LosToolChain_Constants::LosLanguage stringToLanguage(const QString &str);
     LosCommon::LosToolChain_Constants::ToolCategory stringToCategory(const QString &str);
+    LosCommon::LosToolChain_Constants::LosTool stringToTool(const QString &str);
 
   private:
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage,
-          QHash<QString, LosCommon::LosToolChain_Constants::ToolChainConfig>>
-        LOS_availableTools;
-
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_LSP;       // clangd
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_Formatter; // clang-format
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_Compiler;  // g++, cargo, python
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_Linter;
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_Debugger;
-    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QString> LOS_BuildTool; // cmake
-    QHash<QString, QString> L_activeToolPath;
+    QHash<LosCommon::LosToolChain_Constants::LosLanguage, QList<LosCommon::LosToolChain_Constants::LosTool>>
+        LOS_languageToolMap;
+    QHash<LosCommon::LosToolChain_Constants::LosTool, LosCommon::LosToolChain_Constants::ToolChainConfig>
+        LOS_toolConfigs;
+    QHash<LosCommon::LosToolChain_Constants::LosTool, QString> L_activeToolPath;
 };
 } // namespace LosCore

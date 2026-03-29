@@ -1,5 +1,6 @@
 
 #include "LosConfigCMake.h"
+#include "common/constants/ConstantsStr.h"
 
 namespace LosCore
 {
@@ -14,12 +15,17 @@ LosConfigCMake::LosConfigCMake(QObject *parent) : LosConfig(parent) {}
 */
 void LosConfigCMake::analyse(const QString &projectPath)
 {
+
+    QString buildPath = QDir(projectPath).filePath(LosCommon::LosConfig_Constants::BUILD_NAME);
+    makeCMakeQueryDir(buildPath);
     QProcess *pro = new QProcess(this);
     pro->setWorkingDirectory(projectPath);
     QStringList args;
     args << LosCommon::LosConfig_Constants::CMD_SOURCE << LosCommon::LosConfig_Constants::SRC_DIR
          << LosCommon::LosConfig_Constants::CMD_TARGET << LosCommon::LosConfig_Constants::BUILD_NAME
          << LosCommon::LosConfig_Constants::COMPILE_COMMANDS_OPTION;
+    // cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
     connect(pro, &QProcess::readyReadStandardOutput, this,
             [=]()
             {
@@ -89,4 +95,17 @@ bool LosConfigCMake::can(const QString &absolute_path)
 }
 
 
+/**
+- 建立 cmake 查询目录
+*/
+void LosConfigCMake::makeCMakeQueryDir(const QString &build_path)
+{
+    QString queryDir = build_path + "/.cmake/api/v1/query";
+    QDir().mkpath(queryDir);
+    QFile queryFile(queryDir + "/codemodel-v2");
+    if (queryFile.open(QIODevice::WriteOnly))
+    {
+        queryFile.close();
+    }
+}
 } // namespace LosCore

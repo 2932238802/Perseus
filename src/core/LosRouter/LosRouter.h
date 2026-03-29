@@ -67,14 +67,24 @@ class LosRouter : public QObject
     void _cmd_changeLang(const QString &file_path);
 
     // 启动ui 督促 下载
-    void _cmd_toolChainMissing(LosCommon::LosToolChain_Constants::ToolChainConfig);
+    void _cmd_toolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig&);
 
-    // 第一个参数就是 哪个语言
-    // 第一个就是 exe 就是 可执行程序 所在位置
-    // 第三个 参数 就是运行时候的参数
-    void _cmd_lspReady(LosCommon::LosToolChain_Constants::LosLanguage, const QString &, const QStringList &);
-    void _cmd_toolChainReady(LosCommon::LosToolChain_Constants::LosLanguage, const QString &);
-    void _cmd_checkToolchain(LosCommon::LosToolChain_Constants::LosLanguage);
-    void _cmd_checkLspTool(LosCommon::LosToolChain_Constants::LosLanguage);
+    // lsp
+    void _cmd_lspReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
+                       const QStringList &args);
+
+    //
+    void _cmd_buildToolReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
+                             const QStringList &args);
+
+    void _cmd_toolChainReady(LosCommon::LosToolChain_Constants::LosLanguage lang,
+                             LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath);
+
+    void _cmd_checkLanguageToolchain(LosCommon::LosToolChain_Constants::LosLanguage lang,
+                                     LosCommon::LosToolChain_Constants::LosTool tool);
+
+    void _cmd_checkSingleTool(LosCommon::LosToolChain_Constants::LosTool tool);
+
+    void _cmd_manuallySet(const LosCommon::LosToolChain_Constants::ToolChainConfig& config);
 };
 } // namespace LosCore

@@ -13,6 +13,7 @@
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
 #include "view/LosEditorUi/LosEditorUi.h"
 #include "view/style/perseus_style.h"
+#include "view/LosToolMissUi/LosToolMissUi.h"
 
 #include "common/constants/ConstantsClass.h"
 #include "core/LosRouter/LosRouter.h"
@@ -29,8 +30,8 @@
 #include <QList>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QPointer>
 #include <QShortcut>
-#include <qradiobutton.h>
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -63,18 +64,19 @@ class Perseus : public QMainWindow
     void onFilesBtnClicked();                                   // 打开本地文件夹
     void onExplorerFileDoubleClicked(const QModelIndex &index); // 打开本地文件夹
     void onRunSingleFileBtnClicked();                           // 运行一个文本
-    void onProjectBtnClicked();
+    void onProjectBtnClicked(bool checked);                     // 是否开启 项目 模式
     void onLog(const QString &log);
     void onZoomUi(int delta);
+    void onToolChainMissing(const  LosCommon::LosToolChain_Constants::ToolChainConfig&);
 
   private:
     Ui::Perseus *ui;
-    LosModel::LosFilePath LOS_projectFilepath;
-    LosModel::LosFileNode *LOS_rootNode       = nullptr;
-    LosModel::LosFileTreeModel *LOS_treeModel = nullptr;
-    LosView::LosEditorTabUi *LOS_tabUi        = nullptr;
-    LosCore::LosRunManager *LOS_runMgr        = nullptr;
-    LosCore::LosLspManager *LOS_lspMgr        = nullptr;
-    LosCore::LosConfigManager *LOS_configMgr  = nullptr;
-    LosCore::LosToolChainManager *LOS_manager = nullptr;
+    bool L_project                                 = false;
+    LosModel::LosFileNode *LOS_rootNode            = nullptr;
+    LosModel::LosFileTreeModel *LOS_treeModel      = nullptr;
+    LosView::LosEditorTabUi *LOS_tabUi             = nullptr;
+    LosCore::LosRunManager *LOS_runMgr             = nullptr;
+    LosCore::LosLspManager *LOS_lspMgr             = nullptr;
+    LosCore::LosConfigManager *LOS_configMgr       = nullptr;
+    LosCore::LosToolChainManager *LOS_toolChainMgr = nullptr;
 };

@@ -1,10 +1,5 @@
 #include "LosLspManager.h"
-#include "common/constants/ConstantsClass.h"
-#include "core/LosLsp/LosLspClangd/LosLspClangd.h" // 必须引入派生类才能 new
-#include "core/LosLsp/LosLspClient/LosLspClient.h"
-#include "core/LosRouter/LosRouter.h"
-#include <QFileInfo>
-#include <qlist.h>
+
 
 namespace LosCore
 {
@@ -22,11 +17,11 @@ LosLspManager::~LosLspManager() {}
 /**
 - start
 */
-void LosLspManager::start(const QString &file_path)
-{
-    LosCommon::LosToolChain_Constants::LosLanguage lang = LosCommon::CheckLang(file_path);
-    emit LosCore::LosRouter::instance()._cmd_checkLspTool(lang);
-}
+// void LosLspManager::start(const QString &file_path)
+// {
+//     LosCommon::LosToolChain_Constants::LosLanguage lang = LosCommon::CheckLang(file_path);
+//     emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(lang);
+// }
 
 
 //
@@ -68,7 +63,7 @@ void LosLspManager::didChangeWatchedFiles(const QString &file_path, int type)
 {
     if (file_path.contains("compile_commands.json"))
     {
-        if (auto client = LOS_clients.value(LosCommon::LosToolChain_Constants::LosLanguage::CXX, nullptr))
+        if (auto client = LOS_clients.value(LosCommon::LosToolChain_Constants::LosTool::CLANGD, nullptr))
         {
             client->didChangeWatchedFiles(
                 file_path, static_cast<LosCommon::LosLsp_Constants::LspJson_didChangeWatchedFiles_changes_type>(type));
@@ -110,24 +105,28 @@ QString LosLspManager::getLangId(LosCommon::LosToolChain_Constants::LosLanguage 
 LosLspClient *LosLspManager::getClient(const QString &file_path)
 {
     auto lang = LosCommon::CheckLang(file_path);
-    if (LOS_clients.contains(lang))
+    if (lang == LosCommon::LosToolChain_Constants::LosLanguage::CXX)
     {
-        return LOS_clients[lang];
+        if (LOS_clients.contains(LosCommon::LosToolChain_Constants::LosTool::CLANGD))
+        {
+            return LOS_clients[LosCommon::LosToolChain_Constants::LosTool::CLANGD];
+        }
     }
+
     return nullptr;
 }
 
 
-void LosLspManager::onLspReady(LosCommon::LosToolChain_Constants::LosLanguage lan, const QString &exePath,
+void LosLspManager::onLspReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
                                const QStringList &asgs)
 {
-    if (!LOS_clients.contains(lan))
+    if (!LOS_clients.contains(tool))
     {
-        switch (lan)
+        switch (tool)
         {
-        case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
+        case LosCommon::LosToolChain_Constants::LosTool::CLANGD:
         {
-            LOS_clients[lan] = new LosLspClangd(this);
+            LOS_clients[tool] = new LosLspClangd(this);
             break;
         }
         default:
@@ -137,7 +136,7 @@ void LosLspManager::onLspReady(LosCommon::LosToolChain_Constants::LosLanguage la
         }
         }
     }
-    LOS_clients[lan]->start(asgs, exePath);
+    LOS_clients[tool]->start(asgs, exePath);
 }
 
 

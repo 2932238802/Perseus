@@ -2,7 +2,8 @@
 
 #pragma once
 #include "common/constants/ConstantsClass.h"
-#include "core/LosFormatManager/LosFormatManager.h"
+#include "core/LosFormat/LosBracketFormat/LosBracketFormat.h"
+#include "core/LosFormat/LosFormatManager/LosFormatManager.h"
 #include "core/LosHighlighter/LosHighlighter.h"
 #include "core/LosRouter/LosRouter.h"
 #include "models/LosFileContext/LosFileContext.h"

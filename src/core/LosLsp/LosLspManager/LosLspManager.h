@@ -1,11 +1,12 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
 #include "common/util/CheckLang.h"
-
+#include "core/LosLsp/LosLspClangd/LosLspClangd.h" // 必须引入派生类才能 new
 #include "core/LosLsp/LosLspClient/LosLspClient.h"
+#include "core/LosRouter/LosRouter.h"
 #include "core/LosToolChainManager/LosToolChainManager.h"
 
-
+#include <QFileInfo>
 #include <QObject>
 #include <qlist.h>
 #include <qtmetamacros.h>
@@ -21,7 +22,7 @@ class LosLspManager : public QObject
 
 
   public: // tool
-    void start(const QString &);
+    // void start(const QString &); 
 
   private: // init
     void initConnect();
@@ -36,11 +37,11 @@ class LosLspManager : public QObject
     LosLspClient *getClient(const QString &);
 
   private slots:
-    void onLspReady(LosCommon::LosToolChain_Constants::LosLanguage, const QString &, const QStringList &);
+    void onLspReady(LosCommon::LosToolChain_Constants::LosTool, const QString &, const QStringList &);
 
   private:
     // 一个语言对应一个解释器
-    QMap<LosCommon::LosToolChain_Constants::LosLanguage, LosLspClient *> LOS_clients;
+    QMap<LosCommon::LosToolChain_Constants::LosTool, LosLspClient *> LOS_clients;
 };
 
 } // namespace LosCore

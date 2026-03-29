@@ -1,14 +1,10 @@
 
 #include "LosRunManager.h"
 #include "common/constants/ConstantsClass.h"
-#include "common/util/CheckLang.h"
-
 #include "core/LosRouter/LosRouter.h"
-#include "core/LosRunner/LosAbstractRunner/LosAbstractRunner.h"
-#include "core/LosRunner/LosSingleCppRunner/LosSingleCppRunner.h"
-#include "core/log/LosLog/LosLog.h"
-
-#include <qsharedpointer.h>
+#include "core/LosRunner/LosCmakeRunner/LosCmakeRunner.h"
+#include "core/LosState/LosState.h"
+#include "models/LosFilePath/LosFilePath.h"
 
 namespace LosCore
 {
@@ -20,7 +16,11 @@ LosRunManager::LosRunManager(QObject *parent) : QObject{parent}
 {
     initConnect();
 }
-LosRunManager::~LosRunManager() {}
+
+LosRunManager::~LosRunManager()
+{
+    stop();
+}
 
 /**
 执行函数
@@ -28,19 +28,39 @@ LosRunManager::~LosRunManager() {}
 void LosRunManager::execute(const QString &file_path, bool is_project)
 {
     auto lang = LosCommon::CheckLang(file_path);
-    if (!LOS_runners.contains(lang))
-    {
+    if (lang != LosCommon::LosToolChain_Constants::LosLanguage::UNKNOWN)
         L_mainEntryFilePath = file_path;
-        emit LosCore::LosRouter::instance()._cmd_checkToolchain(lang);
-        WAR("runner is not init!", "LosRunManager");
-        return;
-    }
-    if (auto runner = getCurRunner(file_path))
+
+    switch (lang)
     {
-        runner->start(file_path);
+    case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
+    {
+        if (is_project)
+        {
+            if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::CMAKE))
+            {
+                emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
+                    lang, LosCommon::LosToolChain_Constants::LosTool::CMAKE);
+                return;
+            }
+        }
+        else
+        {
+            if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS))
+            {
+                emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
+                    lang, LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS);
+                return;
+            }
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
     }
 }
-
 
 
 void LosRunManager::stop()
@@ -55,41 +75,89 @@ void LosRunManager::stop()
 }
 
 
-void LosRunManager::onToolChainReady(LosCommon::LosToolChain_Constants::LosLanguage lan, const QString &exePath)
+void LosRunManager::onToolChainReady(LosCommon::LosToolChain_Constants::LosLanguage lan,
+                                     LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath)
 {
-    if (!LOS_runners.contains(lan))
+    switch (tool)
     {
-        switch (lan)
+    case LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS:
+    {
+        if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS))
         {
-        case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
-        {
-            // 这里 可以 之后 加一个 是不是 项目模式 项目模式 可以用户手动 调
-            LOS_runners[lan] = new LosSingleCppRunner(this);
-            auto runner      = qobject_cast<LosSingleCppRunner *>(LOS_runners[lan]);
-            runner->setExePath(exePath);
-            execute(L_mainEntryFilePath);
-            break;
+            LOS_runners[LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS] = new LosSingleCppRunner(this);
         }
-        case LosCommon::LosToolChain_Constants::LosLanguage::PYTHON:
-        {
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }
+        auto runner =
+            qobject_cast<LosSingleCppRunner *>(LOS_runners[LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS]);
+        runner->setExePath(exePath);
+        runner->start(L_mainEntryFilePath);
+        break;
+    }
+    default:
+    {
+        break;
+    }
     }
 }
+
+
+
+/**
+-
+*/
+void LosRunManager::onBuildToolReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
+                                     const QStringList &args)
+{
+    if (LOS_runners.contains(tool))
+    {
+        return;
+    }
+
+    switch (tool)
+    {
+    case LosCommon::LosToolChain_Constants::LosTool::CMAKE:
+    {
+        LOS_runners[tool] = new LosCmakeRunner(this);
+        auto runner       = qobject_cast<LosCmakeRunner *>(LOS_runners[tool]);
+        runner->setCMakeExe(exePath);
+        LosModel::LosFilePath porjectDir =
+            LosState::instance().get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
+        if (porjectDir.isExist())
+        {
+            runner->start(porjectDir.getFilePath() + QDir::separator() + LosCommon::LosConfig_Constants::BUILD_NAME);
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 
 
 /**
 获取 当前的 执行器
 */
-LosAbstractRunner *LosRunManager::getCurRunner(const QString &file_path)
+LosAbstractRunner *LosRunManager::getCurRunner(const QString &file_path, bool is_project)
 {
     auto lang = LosCommon::CheckLang(file_path);
-    return LOS_runners.value(lang, nullptr);
+    switch (lang)
+    {
+    case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
+    {
+        if (is_project)
+        {
+            return LOS_runners.value(LosCommon::LosToolChain_Constants::LosTool::CMAKE, nullptr);
+        }
+        else
+        {
+            return LOS_runners.value(LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS, nullptr);
+        }
+    }
+    default:
+        break;
+    }
+
+    return nullptr;
 }
 
 /**
@@ -99,6 +167,7 @@ void LosRunManager::initConnect()
 {
     auto &router = LosCore::LosRouter::instance();
     connect(&router, &LosCore::LosRouter::_cmd_toolChainReady, this, &LosRunManager::onToolChainReady);
+    connect(&router, &LosCore::LosRouter::_cmd_buildToolReady, this, &LosRunManager::onBuildToolReady);
 }
 
 

@@ -1,13 +1,10 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
-#include "common/constants/ConstantsClass.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/LosRouter/LosRouter.h"
-#include "core/LosSesssion/LosSesssion.h"
-#include "core/LosToolChainManager/LosToolChainManager.h"
-#include "core/log/LosLog/LosLog.h"
+#include "core/LosState/LosState.h"
 #include "models/LosFilePath/LosFilePath.h"
-#include <qradiobutton.h>
-
+#include "view/LosToolMissUi/LosToolMissUi.h"
 
 /**
 构造
@@ -50,10 +47,16 @@ void Perseus::OnFileLoaded(bool isc)
     if (isc)
     {
         // 左侧的文件树
-        QString curPath = LOS_projectFilepath.getFilePath();
+        LosModel::LosFilePath projectPath = LosCore::LosState::instance().get<LosModel::LosFilePath>(
+            LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
+        if (!projectPath.isExist())
+        {
+            ERR("project path does not exist in global state!", "Perseus");
+            return;
+        }
+        QString curPath{projectPath.getFilePath()};
         if (LOS_treeModel != nullptr)
         {
-            // 修复
             ui->explorer_treeview->setModel(nullptr);
             LOS_treeModel->deleteLater();
             LOS_treeModel = nullptr;
@@ -99,9 +102,12 @@ void Perseus::onFilesBtnClicked()
     {
         QString filePathChoose = dialog.selectedFiles().first();
         LosModel::LosFilePath path(filePathChoose);
-        QString projectDirOfPath = path.getAbsolutePath();
-        LOS_projectFilepath.loadFile(projectDirOfPath);
-        bool isSuc = LOS_projectFilepath.isExist();
+        QString projectDirOfPath = path.isFile() ? path.getAbsolutePath() : path.getFilePath();
+        INF(projectDirOfPath,"Perseus");
+        LosModel::LosFilePath projectFilepath(projectDirOfPath);
+        bool isSuc = projectFilepath.isExist();
+        LosCore::LosState::instance().set<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR,
+                                                                 projectFilepath);
         this->OnFileLoaded(isSuc);
     }
 }
@@ -141,16 +147,24 @@ void Perseus::onRunSingleFileBtnClicked()
     ui->bottom_tabwidget->setCurrentIndex(LosCommon::BottomTabWidget::OUTPUT);
     ui->output_plaintextedit->clear();
     INF("starting compilation ...", "Perseus");
-    LOS_runMgr->execute(curPath);
+    LOS_runMgr->execute(curPath, L_project);
 }
 
 
-    void Perseus::onProjectBtnClicked()
-    {
 
-    }
+/**
+- 项目 按钮的点击
+*/
+void Perseus::onProjectBtnClicked(bool checked)
+{
+    L_project = checked;
+}
 
 
+
+/**
+- 打印日志
+*/
 void Perseus::onLog(const QString &log)
 {
     ui->output_plaintextedit->appendHtml(log);
@@ -176,25 +190,36 @@ void Perseus::onZoomUi(int delta)
 }
 
 
+void Perseus::onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig &config)
+{
+    LosView::LosToolMissUi dialog(config, this);
+    dialog.exec();
+}
+
+
 /**
 初始化连接
 */
 void Perseus::initConnect()
 {
-    LOS_tabUi     = new LosView::LosEditorTabUi(ui->editor_tabwidget, this);
-    LOS_runMgr    = new LosCore::LosRunManager(this);
-    LOS_lspMgr    = new LosCore::LosLspManager(this);
-    LOS_configMgr = new LosCore::LosConfigManager(this);
-    LOS_manager   = new LosCore::LosToolChainManager(this);
+    connect(&LosCore::LosLog::instance(), &LosCore::LosLog::_sendLog, this, &Perseus::onLog);
+
+    LOS_tabUi        = new LosView::LosEditorTabUi(ui->editor_tabwidget, this);
+    LOS_runMgr       = new LosCore::LosRunManager(this);
+    LOS_lspMgr       = new LosCore::LosLspManager(this);
+    LOS_configMgr    = new LosCore::LosConfigManager(this);
+    LOS_toolChainMgr = new LosCore::LosToolChainManager(this);
     connect(ui->files_btn, &QPushButton::clicked, this, &Perseus::onFilesBtnClicked);
     // enter 自动触发 actived
     connect(ui->explorer_treeview, &QTreeView::activated, this, &Perseus::onExplorerFileDoubleClicked);
     connect(ui->run_singleFile_btn, &QPushButton::clicked, this, &Perseus::onRunSingleFileBtnClicked);
-    connect(&LosCore::LosLog::instance(), &LosCore::LosLog::_sendLog, this, &Perseus::onLog);
     connect(
         &LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileSystemChanged, this,
         [=]() { OnFileLoaded(true); }, Qt::QueuedConnection);
-        connect(ui->project_btn,&QRadioButton::toggle,this,&Perseus::onProjectBtnClicked);
+    connect(ui->project_btn, &QRadioButton::toggled, this, &Perseus::onProjectBtnClicked);
+
+    connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_toolChainMissing, this,
+            &Perseus::onToolChainMissing);
 }
 
 /**
@@ -272,24 +297,26 @@ void Perseus::initSession()
     LosCommon::LosSession_Constants::Config conf;
     if (!LosCore::LosSession::instance().loadConfig(&conf))
         return;
-
-    LOS_projectFilepath.loadFile(conf.L_curProDir);
-    bool isSuc = LOS_projectFilepath.isExist();
+    LosModel::LosFilePath file(conf.L_curProDir);
+    bool isSuc = file.isExist();
+    LosCore::LosState::instance().set<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR, file);
     OnFileLoaded(isSuc);
     if (!LOS_tabUi)
         return;
 
-    connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileTreeDone, this,
-            [=]()
+    connect(
+        &LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileTreeDone, this,
+        [=]()
+        {
+            for (const auto &file : conf.L_curFilePaths)
             {
-                for (const auto &file : conf.L_curFilePaths)
-                {
-                    LOS_tabUi->openFile(file);
-                }
-                if (conf.L_curProDir.isEmpty())
-                    return;
-                ui->explorer_treeview->expandToFile(conf.L_curFilePaths.first());
-            });
+                LOS_tabUi->openFile(file);
+            }
+            if (conf.L_curProDir.isEmpty())
+                return;
+            ui->explorer_treeview->expandToFile(conf.L_curFilePaths.first());
+        },
+        Qt::SingleShotConnection);
 }
 
 
@@ -304,6 +331,8 @@ LosCommon::LosSession_Constants::Config Perseus::collectConfig()
     {
         conf.L_curFilePaths.append(path);
     }
-    conf.L_curProDir = LOS_projectFilepath.getFilePath();
+    conf.L_curProDir = LosCore::LosState::instance()
+                           .get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR)
+                           .getFilePath();
     return conf;
 }

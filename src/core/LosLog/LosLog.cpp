@@ -1,6 +1,5 @@
 
-#include "core/log/LosLog/LosLog.h"
-#include <qobject.h>
+#include "core/LosLog/LosLog.h"
 namespace LosCore {
 
 LosLog &LosLog::instance() {
