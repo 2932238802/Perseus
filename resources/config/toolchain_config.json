@@ -1,43 +1,62 @@
 {
     "version": "1.0",
     "description": "Los IDE ToolChain Configuration",
-    
     "sharedTools": {
         "cmake": {
             "category": "BuildTool",
             "name": "CMake",
-            "executables": ["cmake.exe", "cmake"],
+            "executables": [
+                "cmake.exe",
+                "cmake"
+            ],
             "startupArgs": [],
             "requireNodeJs": false,
             "versionArgs": "--version",
             "downloadUrl": "https://cmake.org/download/",
             "validateKey": "cmake version",
-            "supportedLanguages": ["CXX", "CSHARP", "CUDA"]
+            "supportedLanguages": [
+                "CXX",
+                "CSHARP",
+                "CUDA"
+            ]
         },
         "ninja": {
             "category": "BuildTool",
             "name": "Ninja Build",
-            "executables": ["ninja.exe", "ninja"],
+            "executables": [
+                "ninja.exe",
+                "ninja"
+            ],
             "startupArgs": [],
             "requireNodeJs": false,
             "versionArgs": "--version",
             "downloadUrl": "https://ninja-build.org/",
             "validateKey": "ninja",
-            "supportedLanguages": ["CXX", "RUST"]
+            "supportedLanguages": [
+                "CXX",
+                "RUST"
+            ]
         },
         "git": {
             "category": "BuildTool",
             "name": "Git",
-            "executables": ["git.exe", "git"],
+            "executables": [
+                "git.exe",
+                "git"
+            ],
             "startupArgs": [],
             "requireNodeJs": false,
             "versionArgs": "--version",
             "downloadUrl": "https://git-scm.com/",
             "validateKey": "git version",
-            "supportedLanguages": ["CXX", "RUST", "PYTHON", "CSHARP"]
+            "supportedLanguages": [
+                "CXX",
+                "RUST",
+                "PYTHON",
+                "CSHARP"
+            ]
         }
     },
-    
     "toolchains": {
         "CXX": {
             "defaults": {
@@ -49,7 +68,12 @@
                 "g++": {
                     "category": "Compiler",
                     "name": "C++ (g++ / clang++)",
-                    "executables": ["g++.exe", "g++", "clang++.exe", "clang++"],
+                    "executables": [
+                        "g++.exe",
+                        "g++",
+                        "clang++.exe",
+                        "clang++"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -59,8 +83,14 @@
                 "clangd": {
                     "category": "LSP",
                     "name": "clangd",
-                    "executables": ["clangd.exe", "clangd"],
-                    "startupArgs": ["--background-index", "--clang-tidy"],
+                    "executables": [
+                        "clangd.exe",
+                        "clangd"
+                    ],
+                    "startupArgs": [
+                        "--background-index",
+                        "--clang-tidy"
+                    ],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
                     "downloadUrl": "https://github.com/clangd/clangd/releases",
@@ -69,7 +99,10 @@
                 "clang-format": {
                     "category": "Formatter",
                     "name": "clang-format",
-                    "executables": ["clang-format.exe", "clang-format"],
+                    "executables": [
+                        "clang-format.exe",
+                        "clang-format"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -78,7 +111,6 @@
                 }
             }
         },
-        
         "RUST": {
             "defaults": {
                 "compiler": "cargo",
@@ -89,7 +121,10 @@
                 "cargo": {
                     "category": "Compiler",
                     "name": "Rust (cargo)",
-                    "executables": ["cargo.exe", "cargo"],
+                    "executables": [
+                        "cargo.exe",
+                        "cargo"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -99,7 +134,10 @@
                 "rust-analyzer": {
                     "category": "LSP",
                     "name": "rust-analyzer",
-                    "executables": ["rust-analyzer.exe", "rust-analyzer"],
+                    "executables": [
+                        "rust-analyzer.exe",
+                        "rust-analyzer"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -108,7 +146,6 @@
                 }
             }
         },
-        
         "PYTHON": {
             "defaults": {
                 "compiler": "python",
@@ -119,7 +156,12 @@
                 "python": {
                     "category": "Compiler",
                     "name": "Python 3",
-                    "executables": ["python.exe", "python3.exe", "python3", "python"],
+                    "executables": [
+                        "python.exe",
+                        "python3.exe",
+                        "python3",
+                        "python"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -129,8 +171,13 @@
                 "pyright": {
                     "category": "LSP",
                     "name": "Pyright",
-                    "executables": ["pyright-langserver.cmd", "pyright-langserver"],
-                    "startupArgs": ["--stdio"],
+                    "executables": [
+                        "pyright-langserver.cmd",
+                        "pyright-langserver"
+                    ],
+                    "startupArgs": [
+                        "--stdio"
+                    ],
                     "requireNodeJs": true,
                     "versionArgs": "--version",
                     "downloadUrl": "https://github.com/microsoft/pyright",
@@ -139,7 +186,10 @@
                 "black": {
                     "category": "Formatter",
                     "name": "Black",
-                    "executables": ["black.exe", "black"],
+                    "executables": [
+                        "black.exe",
+                        "black"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
@@ -148,7 +198,6 @@
                 }
             }
         },
-        
         "CSHARP": {
             "defaults": {
                 "compiler": "csc",
@@ -159,7 +208,10 @@
                 "csc": {
                     "category": "Compiler",
                     "name": "C# Compiler",
-                    "executables": ["csc.exe", "csc"],
+                    "executables": [
+                        "csc.exe",
+                        "csc"
+                    ],
                     "startupArgs": [],
                     "requireNodeJs": false,
                     "versionArgs": "-version",
@@ -169,12 +221,41 @@
                 "omnisharp": {
                     "category": "LSP",
                     "name": "OmniSharp",
-                    "executables": ["OmniSharp.exe", "omnisharp"],
-                    "startupArgs": ["--languageserver"],
+                    "executables": [
+                        "OmniSharp.exe",
+                        "omnisharp"
+                    ],
+                    "startupArgs": [
+                        "--languageserver"
+                    ],
                     "requireNodeJs": false,
                     "versionArgs": "--version",
                     "downloadUrl": "https://github.com/OmniSharp/omnisharp-roslyn",
                     "validateKey": "OmniSharp"
+                }
+            }
+        },
+        "CMAKE": {
+            "defaults": {
+                "compiler": "",
+                "lsp": "neocmakelsp",
+                "buildTool": ""
+            },
+            "tools": {
+                "neocmakelsp": {
+                    "category": "LSP",
+                    "name": "NeoCMakeLSP",
+                    "executables": [
+                        "neocmakelsp.exe",
+                        "neocmakelsp"
+                    ],
+                    "startupArgs": [
+                        "--stdio"
+                    ],
+                    "requireNodeJs": false,
+                    "versionArgs": "--version",
+                    "downloadUrl": "https://github.com/Decodetalkers/neocmakelsp/releases",
+                    "validateKey": "neocmakelsp"
                 }
             }
         }

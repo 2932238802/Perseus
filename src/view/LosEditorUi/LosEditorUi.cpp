@@ -231,6 +231,9 @@ bool LosEditorUi::save()
         format();
         L_dirty = false;
         emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath -> getFilePath(), false);
+       
+        // 保存的时候 还要 检查一下 是不是
+        // diag 报错机制 再次显示
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
     }
     return ok;

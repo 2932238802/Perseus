@@ -76,7 +76,7 @@ class LosEditorUi : public QPlainTextEdit
     void copyCurrentLine();
 
   private slots: // chs
-    void onTextChanged();
+    void onTextChanged(); 
     void onDebounceTimeout();
     void onHover_Clangd(const QString &markdownContent);
 

@@ -47,7 +47,6 @@ class LosLspClient : public QObject
   protected:
     bool L_isinit = false;
     QList<LosCommon::LosLsp_Constants::PendingRequest> L_pendings;
-
     QProcess *L_process;
     QByteArray L_rawData;
     std::atomic<int> L_id;

@@ -6,13 +6,14 @@ namespace LosView
 LosFileTreeUi::LosFileTreeUi(QWidget *parent) : QTreeView{parent}
 {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
-
     initStyle();
     initConnect();
     setHeaderHidden(true);
     setAnimated(true);
     setIndentation(15);
 }
+
+
 
 /**
 更新视图
@@ -22,6 +23,7 @@ void LosFileTreeUi::updateExplorer(LosModel::LosFileTreeModel *model)
     if (model)
         setModel(model);
 }
+
 
 
 /**

@@ -23,6 +23,11 @@ LosIssuesUi::LosIssuesUi(QWidget *parent) : QWidget(parent)
 }
 LosIssuesUi::~LosIssuesUi() {}
 
+
+
+/**
+- 更新下册的
+*/
 void LosIssuesUi::onUpdateTable(const QString &file_path,
                                 const QList<LosCommon::LosLsp_Constants::LosDiagnostic> &diags)
 {
@@ -51,6 +56,11 @@ void LosIssuesUi::onUpdateTable(const QString &file_path,
     }
 }
 
+
+
+/**
+-
+*/
 void LosIssuesUi::onTableDoubleClicked(int row, int colume)
 {
     int targetLine     = L_table->item(row, 2)->data(Qt::UserRole).toInt();
@@ -60,6 +70,9 @@ void LosIssuesUi::onTableDoubleClicked(int row, int colume)
 
 
 
+/**
+- 初始化
+*/
 void LosIssuesUi::initUi()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -78,14 +91,25 @@ void LosIssuesUi::initUi()
     L_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
 }
 
+
+
+/**
+- 样式
+*/
 void LosIssuesUi::initStyle()
 {
     this->L_table->setStyleSheet(LosStyle::LosIssuesUi_getStyle());
 }
 
+
+
+/**
+- 连接
+*/
 void LosIssuesUi::initConnect()
 {
-    connect(L_table, &QTableWidget::cellDoubleClicked, this, &LosIssuesUi::onTableDoubleClicked);
+    if (L_table)
+        connect(L_table, &QTableWidget::cellDoubleClicked, this, &LosIssuesUi::onTableDoubleClicked);
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_lsp_result_diagnostics, this,
             &LosIssuesUi::onUpdateTable);
 }

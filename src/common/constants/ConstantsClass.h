@@ -56,7 +56,7 @@ enum LosLspType
     // 语法报错
     REQ_CHECK,
     REQ_HOVER,
-    REQ_DIFINE,
+    REQ_DEFINE,
 };
 
 
@@ -150,6 +150,7 @@ enum class LosTool
     G_PLUS_PLUS,
     CLANGD,
     CLANG_FORMAT,
+    NEOCMAKELSP,
     UNKNOWN
 };
 

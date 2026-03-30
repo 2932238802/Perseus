@@ -57,6 +57,12 @@ void LosToolChainManager::onCheckSingleTool(LosCommon::LosToolChain_Constants::L
             emit LosCore::LosRouter::instance()._cmd_lspReady(tool, foundPath, config.L_startupArgs);
             break;
         }
+        case LosTool::NEOCMAKELSP:
+        {
+            INF("need neocmakelsp...", "LosToolChainManager");
+            emit LosCore::LosRouter::instance()._cmd_lspReady(tool, foundPath, config.L_startupArgs);
+            break;
+        }
         case LosTool::CMAKE:
         {
             INF("need cmake...", "LosToolChainManager");
@@ -197,34 +203,13 @@ bool LosToolChainManager::validateExecutable(const QString &expectedDir,
                                              const LosCommon::LosToolChain_Constants::ToolChainConfig &config)
 {
     auto toolEnum = stringToTool(config.L_name);
-
     for (const auto &exeName : config.L_exeName)
     {
-        QString sysPath = QStandardPaths::findExecutable(exeName);
-        if (!sysPath.isEmpty())
+        auto pathOpt = LosCommon::FindExePath(exeName);
+        if (pathOpt.has_value())
         {
-#ifdef Q_OS_LINUX
-            if (sysPath.startsWith("/mnt/c/") || sysPath.startsWith("/mnt/d/") || sysPath.startsWith("/mnt/"))
-            {
-                WAR(QString("skipping Windows tool in WSL: %1").arg(sysPath), "LosToolChainManager");
-                continue;
-            }
-#endif
-            L_activeToolPath[toolEnum] = sysPath;
+            L_activeToolPath[toolEnum] = pathOpt.value();
             return true;
-        }
-        if (!expectedDir.isEmpty())
-        {
-
-            QDir dir(expectedDir);
-            QString fullPath = dir.absoluteFilePath(exeName);
-            QFileInfo fileInfo(fullPath);
-
-            if (fileInfo.exists() && fileInfo.isExecutable())
-            {
-                L_activeToolPath[toolEnum] = fullPath;
-                return true;
-            }
         }
     }
     return false;
@@ -320,6 +305,8 @@ LosCommon::LosToolChain_Constants::LosTool LosToolChainManager::stringToTool(con
         return LosTool::CLANGD;
     if (s == "clang-format" || s == "clang_format")
         return LosTool::CLANG_FORMAT;
+    if (s == "neocmakelsp" || s == "neocmakelsp.exe")
+        return LosTool::NEOCMAKELSP;
     return LosTool::UNKNOWN;
 }
 

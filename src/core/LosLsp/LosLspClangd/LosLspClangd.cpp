@@ -29,9 +29,11 @@ void LosLspClangd::start(const QStringList &start_up_args, const QString &exe_pa
 void LosLspClangd::initConnect()
 {
     auto &router = LosRouter::instance();
+    // 开始的时候 发送 初始化 信息先
     connect(L_process, &QProcess::started, this, &LosLspClangd::sendInitializeRequest);
     connect(L_process, &QProcess::readyReadStandardError, this,
             [=]() { INF(QString::fromUtf8(L_process->readAllStandardError()), "LosLspClangd"); });
+
     connect(&router, &LosRouter::_cmd_whereDefine, this,
             [=](int line, int col, const QString &file_path) { this->requestDefinition(file_path, line, col); });
     connect(&router, &LosRouter::_cmd_lsp_msg_didChangeWatchedFiles, this,
@@ -77,9 +79,7 @@ void LosLspClangd::dealLspMessage(const QJsonObject &obj)
         int id = obj["id"].toInt();
         if (!L_idToType.contains(id))
             return;
-
         LosLspType type = L_idToType.take(id);
-
         switch (type)
         {
         case LosLspType::REQ_COMPLETION:
@@ -99,6 +99,7 @@ void LosLspClangd::dealLspMessage(const QJsonObject &obj)
             }
             break;
         }
+        // 有 id 的请求 就 一定会返回 有id 的回复
         case LosLspType::REQ_INITIALIZE:
         {
             SUC("handshake successful", "LosLspClangd");
@@ -111,7 +112,7 @@ void LosLspClangd::dealLspMessage(const QJsonObject &obj)
             L_pendings.clear();
             break;
         }
-        case LosLspType::REQ_DIFINE:
+        case LosLspType::REQ_DEFINE:
         {
             if (obj.contains("result") && obj["result"].isArray())
             {
@@ -122,7 +123,6 @@ void LosLspClangd::dealLspMessage(const QJsonObject &obj)
                 QJsonObject target     = arr[0].toObject();
                 QString targetFilePath = QUrl(target["uri"].toString()).toLocalFile();
                 int targetLine         = target["range"].toObject()["start"].toObject()["line"].toInt();
-
                 emit LosRouter::instance()._cmd_lsp_result_definition(targetFilePath, targetLine);
             }
             break;
@@ -134,6 +134,8 @@ void LosLspClangd::dealLspMessage(const QJsonObject &obj)
                 QJsonObject result   = obj["result"].toObject();
                 QJsonObject contents = result["contents"].toObject();
                 QString hoverText    = contents["value"].toString();
+
+                // 悬停 提示 前端 ui 进行渲染
                 emit LosRouter::instance()._cmd_lsp_result_hover(hoverText);
             }
             else

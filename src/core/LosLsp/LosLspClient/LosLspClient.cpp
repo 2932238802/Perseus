@@ -31,7 +31,7 @@ LosLspClient::~LosLspClient()
 
 
 /**
--
+- 发送请求
 */
 void LosLspClient::sendRequest(const QString &method, const QJsonObject &params, LosLspType type)
 {
@@ -72,7 +72,7 @@ void LosLspClient::sendNotification(const QString &method, const QJsonObject &pa
 
 
 /**
-
+- 处理原始数据
 */
 void LosLspClient::processRawData()
 {
@@ -204,7 +204,7 @@ void LosLspClient::requestDefinition(const QString &file_path, int line, int cha
     QJsonObject params;
     params["textDocument"] = textDocument;
     params["position"]     = position;
-    sendRequest("textDocument/definition", params, LosLspType::REQ_DIFINE);
+    sendRequest("textDocument/definition", params, LosLspType::REQ_DEFINE);
 }
 
 

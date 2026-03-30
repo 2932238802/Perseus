@@ -1,11 +1,6 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
-#include "common/constants/ConstantsNum.h"
-#include "common/constants/ConstantsStr.h"
-#include "core/LosRouter/LosRouter.h"
-#include "core/LosState/LosState.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include "view/LosToolMissUi/LosToolMissUi.h"
+
 
 /**
 构造
@@ -230,6 +225,12 @@ void Perseus::initConnect()
 
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_toolChainMissing, this,
             &Perseus::onToolChainMissing);
+    connect(ui->setting_btn, &QPushButton::clicked, this,
+            [=]()
+            {
+                LosView::LosSettingsUi settingDialog(this);
+                settingDialog.exec();
+            });
 }
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
+#include "common/util/FindExePath.h"
 #include "common/util/GetFilePath.h"
 #include "common/util/GetSettingKey.h"
 #include "core/LosRouter/LosRouter.h"

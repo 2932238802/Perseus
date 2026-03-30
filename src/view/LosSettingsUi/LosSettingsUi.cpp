@@ -1,0 +1,54 @@
+#include "LosSettingsUi.h"
+#include "ui_LosSettingsUi.h"
+#include <qdialogbuttonbox.h>
+
+namespace LosView
+{
+LosSettingsUi::LosSettingsUi(QWidget *parent) : QDialog(parent), ui(new Ui::LosSettingsUi)
+{
+    ui->setupUi(this);
+    initStyle();
+    initConnect();
+}
+LosSettingsUi::~LosSettingsUi()
+{
+    delete ui;
+}
+
+
+
+/**
+- 设置样式
+*/
+void LosSettingsUi::initStyle()
+{
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+}
+
+
+
+/**
+- 初始化 连接
+*/
+void LosSettingsUi::initConnect()
+{
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [=]() { accept(); });
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, [=]() { reject(); });
+    QPushButton *applyBtn = ui->buttonBox->button(QDialogButtonBox::Apply);
+    if (applyBtn)
+    {
+        connect(applyBtn, &QPushButton::clicked, this, &LosSettingsUi::onSaveSettings);
+    }
+}
+
+
+
+/**
+- 保存 设置
+*/
+void LosSettingsUi::onSaveSettings()
+{
+    INF("保存", "LosSettingsUi");
+}
+
+} // namespace LosView

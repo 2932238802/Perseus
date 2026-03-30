@@ -31,7 +31,7 @@ inline const QString perseus_getStyle()
             border-bottom: 1px solid #313244;
         }
 
-        #icon_btn, #files_btn, #run_singleFile_btn {
+        #icon_btn, #files_btn, #run_singleFile_btn, #setting_btn{
             border: 1px solid transparent; 
             background-color: rgba(255, 255, 255, 0.01);
             color: #cdd6f4; 
@@ -50,12 +50,13 @@ inline const QString perseus_getStyle()
             font-size: 1.15em; 
         }
 
-        #icon_btn:hover, #files_btn:hover, #run_singleFile_btn:hover {
+        #icon_btn:hover, #files_btn:hover, #run_singleFile_btn:hover, #setting_btn:hover {
             background-color: #313244;
             border: 1px solid #313244;
             color: #ffffff; 
         }
-        #icon_btn:pressed, #files_btn:pressed, #run_singleFile_btn:pressed {
+
+        #icon_btn:pressed, #files_btn:pressed, #run_singleFile_btn:pressed, #setting_btn:pressed{
             background-color: #45475a;
             border: 1px solid #45475a;
         }
@@ -253,6 +254,104 @@ inline const QString perseus_getStyle()
         }
         QScrollBar::add-page, QScrollBar::sub-page {
             background-color: transparent; 
+        }
+
+
+
+
+        QDialog#LosSettingsUi {
+            background-color: #1e1e2e;
+        }
+
+        #category_list {
+            background-color: #181825;  /* 比主背景稍微深一点，制造层次感 */
+            border: none;
+            border-right: 1px solid #313244; /* 右侧分割线 */
+            padding-top: 10px;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            outline: none; 
+        }
+
+        #category_list::item {
+            color: #bac2de;
+            padding: 10px 15px;
+            border-left: 3px solid transparent; 
+        }
+
+        #category_list::item:hover {
+            background-color: #313244;
+            color: #cdd6f4;
+        }
+
+        #category_list::item:selected {
+            background-color: #1e1e2e; /* 选中时背景色和右侧主区域融为一体 */
+            color: #89b4fa;            /* 选中的文字变成主题蓝 */
+            font-weight: bold;
+            border-left: 3px solid #89b4fa; /* 左侧蓝色高亮粗线条 */
+        }
+
+        #pages_stack {
+            background-color: #1e1e2e;
+            border: none;
+        }
+
+        #label_title_build {
+            color: #cdd6f4;
+            border-bottom: 1px solid #313244; /* 标题下方的华丽分割线 */
+            padding-bottom: 5px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        #label_cmake {
+            color: #a6adc8;
+            font-size: 14px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        #edit_cmake_path {
+            background-color: #11111b; /* 最深的底色，制造凹陷感 */
+            color: #cdd6f4;
+            border: 1px solid #313244;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-family: "JetBrains Mono", "Consolas", monospace; /* 路径使用等宽字体更专业 */
+            font-size: 13px;
+        }
+        #edit_cmake_path:hover {
+            border: 1px solid #45475a;
+        }
+        #edit_cmake_path:focus {
+            border: 1px solid #89b4fa; /* 获取焦点时，边框变成亮蓝色 */
+            background-color: #181825;
+        }
+
+        #buttonBox QPushButton {
+            background-color: #313244;
+            color: #cdd6f4;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 6px 16px;
+            min-width: 60px;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+        }
+        #buttonBox QPushButton:hover {
+            background-color: #45475a;
+            color: #ffffff;
+        }
+        #buttonBox QPushButton:pressed {
+            background-color: #585b70;
+            border: 1px solid #89b4fa; /* 按下时给个蓝边反馈 */
+        }
+
+        #buttonBox QPushButton[text="OK"] {
+            background-color: #89b4fa;
+            color: #11111b;
+            font-weight: bold;
+        }
+        #buttonBox QPushButton[text="OK"]:hover {
+            background-color: #74c7ec; /* 悬停时稍微变亮 */
         }
 
     )");

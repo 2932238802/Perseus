@@ -1,4 +1,9 @@
 #include "LosLspManager.h"
+#include "common/constants/ConstantsClass.h"
+#include "core/LosLsp/LosLspCMake/LosLspCMake.h"
+#include "core/LosLsp/LosLspClangd/LosLspClangd.h"
+#include "core/LosRunner/LosCmakeRunner/LosCmakeRunner.h"
+#include "models/LosFilePath/LosFilePath.h"
 
 
 namespace LosCore
@@ -100,6 +105,11 @@ QString LosLspManager::getLangId(LosCommon::LosToolChain_Constants::LosLanguage 
     }
 }
 
+
+
+/**
+-
+*/
 LosLspClient *LosLspManager::getClient(const QString &file_path)
 {
     auto lang = LosCommon::CheckLang(file_path);
@@ -110,7 +120,10 @@ LosLspClient *LosLspManager::getClient(const QString &file_path)
             return LOS_clients[LosCommon::LosToolChain_Constants::LosTool::CLANGD];
         }
     }
-
+    else if (LosModel::LosFilePath(file_path).getFileName() == "CMakeLists.txt")
+    {
+        return LOS_clients[LosCommon::LosToolChain_Constants::LosTool::NEOCMAKELSP];
+    }
     return nullptr;
 }
 
@@ -125,6 +138,11 @@ void LosLspManager::onLspReady(LosCommon::LosToolChain_Constants::LosTool tool, 
         case LosCommon::LosToolChain_Constants::LosTool::CLANGD:
         {
             LOS_clients[tool] = new LosLspClangd(this);
+            break;
+        }
+        case LosCommon::LosToolChain_Constants::LosTool::NEOCMAKELSP:
+        {
+            LOS_clients[tool] = new LosLspCMake(this);
             break;
         }
         default:

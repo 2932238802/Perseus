@@ -1,25 +1,25 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
 #include "common/constants/ConstantsNum.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/LosConfig/LosConfigManager/LosConfigManager.h"
 #include "core/LosLsp/LosLspClient/LosLspClient.h"
 #include "core/LosLsp/LosLspManager/LosLspManager.h"
+#include "core/LosRouter/LosRouter.h"
 #include "core/LosRunner/LosRunManager/LosRunManager.h"
 #include "core/LosSesssion/LosSesssion.h"
 #include "core/LosShortcutManager/LosShortcutManager.h"
+#include "core/LosState/LosState.h"
 #include "core/LosToolChainManager/LosToolChainManager.h"
 #include "models/LosFileNode/LosFileNode.h"
+#include "models/LosFilePath/LosFilePath.h"
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
 #include "view/LosEditorUi/LosEditorUi.h"
+#include "view/LosSettingsUi/LosSettingsUi.h"
 #include "view/LosToolMissUi/LosToolMissUi.h"
 #include "view/style/perseus_style.h"
 
-#include "common/constants/ConstantsClass.h"
-#include "core/LosRouter/LosRouter.h"
-#include "core/LosSesssion/LosSesssion.h"
-#include "core/LosToolChainManager/LosToolChainManager.h"
-#include "models/LosFilePath/LosFilePath.h"
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
@@ -32,6 +32,8 @@
 #include <QMessageBox>
 #include <QPointer>
 #include <QShortcut>
+#include <qpushbutton.h>
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {

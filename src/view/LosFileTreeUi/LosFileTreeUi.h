@@ -7,23 +7,20 @@
 #include <QAction>
 #include <QClipboard>
 #include <QDir>
+#include <QEvent>
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QGuiApplication>
 #include <QInputDialog>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
 #include <QObject>
 #include <QPoint>
-#include <qevent.h>
-#include <qfiledialog.h>
-#include <qguiapplication.h>
-#include <qlineedit.h>
-#include <qmimedata.h>
-#include <qtmetamacros.h>
-#include <qtreeview.h>
-#include <qurl.h>
-#include <qwidget.h>
+#include <QTreeView>
+#include <QUrl>
+#include <QWidget>
 
 namespace LosView
 {
