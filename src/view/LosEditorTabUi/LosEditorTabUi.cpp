@@ -25,11 +25,11 @@ void LosEditorTabUi::closeTab(int index) {}
 
 
 /**
-保存标签页
+- 保存标签页
 */
 void LosEditorTabUi::saveTab()
 {
-    if (nullptr == L_tabWidget)
+    if (L_tabWidget == nullptr)
     {
         return;
     }
@@ -41,6 +41,7 @@ void LosEditorTabUi::saveTab()
     if (!widget->save())
     {
         ERR("failed to save file", "LosEditorTabUi");
+        return;
     }
 }
 
@@ -102,6 +103,7 @@ void LosEditorTabUi::openFile(const LosModel::LosFilePath &file)
     LOS_pathToUi.insert(filePath, editor);
     L_tabWidget->setCurrentWidget(editor);
 }
+
 
 
 void LosEditorTabUi::formatTab()

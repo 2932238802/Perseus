@@ -227,6 +227,8 @@ bool LosEditorUi::save()
     bool ok = LOS_context->save(this->toPlainText(), filePath);
     if (ok)
     {
+        // 保存的时候 自动格式化
+        format();
         L_dirty = false;
         emit LosCore::LosRouter::instance()._cmd_fileDirty(LOS_filePath -> getFilePath(), false);
         emit LosCore::LosRouter::instance()._cmd_lsp_request_textChanged(LOS_filePath -> getFilePath(), toPlainText());
