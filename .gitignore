@@ -45,3 +45,6 @@ _build/
 
 .cache
 .cache/*
+
+.vscode/
+.vscode
