@@ -57,7 +57,7 @@ void LosSingleCppRunner::start(const QString &file_path)
 
 
 #ifdef Q_OS_WIN
-    L_outPutPath = LOS_filePath.ge tAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
+    L_outPutPath = LOS_filePath.getAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
                    LosCommon::LosRunner_Constants::WIN_EXE;
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     L_outPutPath = LOS_filePath.getAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
