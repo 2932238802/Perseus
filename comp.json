@@ -1,1 +1,0 @@
-{"jsonrpc":"2.0","id":2,"method":"textDocument/completion","params":{"textDocument":{"uri":"file:///tmp/CMakeLists.txt"},"position":{"line":0,"character":4}}}
