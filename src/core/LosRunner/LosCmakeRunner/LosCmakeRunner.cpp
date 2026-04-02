@@ -85,16 +85,16 @@ void LosCmakeRunner::setCMakeExe(const QString &file_path)
 void LosCmakeRunner::initConnect()
 {
     connect(L_cmake, &QProcess::readyReadStandardError, this,
-            [=]() { ERR(QString::fromLocal8Bit(L_cmake->readAllStandardError()), "LosCmakeRunner"); });
+            [this]() { ERR(QString::fromLocal8Bit(L_cmake->readAllStandardError()), "LosCmakeRunner"); });
     connect(L_cmake, &QProcess::readyReadStandardOutput, this,
-            [=]() { INF(QString::fromLocal8Bit(L_cmake->readAllStandardOutput()), "LosCmakeRunner"); });
+            [this]() { INF(QString::fromLocal8Bit(L_cmake->readAllStandardOutput()), "LosCmakeRunner"); });
     connect(L_cmake, &QProcess::finished, this, &LosCmakeRunner::onCMakeFinished);
     connect(L_runner, &QProcess::readyReadStandardError, this,
-            [=]() { ERR(QString::fromLocal8Bit(L_runner->readAllStandardError()), "LosCmakeRunner"); });
+            [this]() { ERR(QString::fromLocal8Bit(L_runner->readAllStandardError()), "LosCmakeRunner"); });
     connect(L_runner, &QProcess::readyReadStandardOutput, this,
-            [=]() { INF(QString::fromLocal8Bit(L_runner->readAllStandardOutput()), "LosCmakeRunner"); });
+            [this]() { INF(QString::fromLocal8Bit(L_runner->readAllStandardOutput()), "LosCmakeRunner"); });
     connect(L_runner, &QProcess::finished, this,
-            [=](int exitCode, QProcess::ExitStatus exitStatus)
+            [this](int exitCode, QProcess::ExitStatus exitStatus)
             {
                 if (exitStatus == QProcess::NormalExit)
                 {

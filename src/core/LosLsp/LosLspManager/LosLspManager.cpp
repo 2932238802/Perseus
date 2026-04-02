@@ -14,7 +14,10 @@ LosLspManager::~LosLspManager() {}
 
 
 
-//
+/**
+-  打开文件 获取 languageId
+-  发送  didopen 信号
+*/
 void LosLspManager::openFile(const QString &file_path, const QString &file_context)
 {
     if (auto client = getClient(file_path))

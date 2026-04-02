@@ -52,7 +52,7 @@ void LosToolMissUi::initStyle(const LosCommon::LosToolChain_Constants::ToolChain
 
     auto *configBtn = new QPushButton("Manual Setup");
     connect(configBtn, &QPushButton::clicked, this,
-            [=]()
+            [this, config]()
             {
                 emit LosCore::LosRouter::instance()._cmd_manuallySet(config);
                 accept();

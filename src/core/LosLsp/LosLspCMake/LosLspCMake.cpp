@@ -230,15 +230,15 @@ void LosLspCMake::initConnect()
     // 开始的时候 发送 初始化 信息
     connect(L_process, &QProcess::started, this, &LosLspCMake::sendInitializeRequest);
     connect(L_process, &QProcess::readyReadStandardError, this,
-            [=]() { INF(QString::fromUtf8(L_process->readAllStandardError()), "LosLspCMake"); });
+            [this]() { INF(QString::fromUtf8(L_process->readAllStandardError()), "LosLspCMake"); });
     connect(L_process, &QProcess::errorOccurred, this,
-            [=](QProcess::ProcessError err) { INF("QProcess error: " + QString::number(err), "LosLspCMake"); });
+            [this](QProcess::ProcessError err) { INF("QProcess error: " + QString::number(err), "LosLspCMake"); });
     connect(L_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
-            [=](int code, QProcess::ExitStatus status)
+            [this](int code, QProcess::ExitStatus status)
             { INF("QProcess finished, code: " + QString::number(code), "LosLspCMake"); });
     auto &router = LosCore::LosRouter::instance();
     connect(&router, &LosRouter::_cmd_lsp_request_hover, this,
-            [=](const QString &filePath, int line, int col) { this->requestHover(filePath, line, col); });
+            [this](const QString &filePath, int line, int col) { this->requestHover(filePath, line, col); });
 }
 
 

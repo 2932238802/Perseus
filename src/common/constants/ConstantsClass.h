@@ -27,16 +27,12 @@ enum class FindFileType
 
 namespace LosCommon
 {
-
 /**
 LosLsp 就是 识别 一些语法 和 补全
 diagnotisc DiagnosticSeverity 程度
 */
 namespace LosLsp_Constants
 {
-
-
-
 enum DiagnosticSeverity
 {
     Error = 1,

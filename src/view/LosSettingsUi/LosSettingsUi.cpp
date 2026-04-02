@@ -32,8 +32,8 @@ void LosSettingsUi::initStyle()
 */
 void LosSettingsUi::initConnect()
 {
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [=]() { accept(); });
-    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, [=]() { reject(); });
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [this]() { accept(); });
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, [this]() { reject(); });
     QPushButton *applyBtn = ui->buttonBox->button(QDialogButtonBox::Apply);
     if (applyBtn)
     {

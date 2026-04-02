@@ -1,9 +1,9 @@
 
 #pragma once
+#include <QFont>
 #include <QRegularExpression>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
-#include <QFont>
 #include <qnamespace.h>
 #include <qtextdocument.h>
 #include <qtextformat.h>

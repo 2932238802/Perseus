@@ -1,4 +1,7 @@
 #include "LosSingleCppRunner.h"
+#include "common/constants/ConstantsStr.h"
+#include "core/LosState/LosState.h"
+#include "models/LosFilePath/LosFilePath.h"
 
 
 namespace LosCore
@@ -42,6 +45,11 @@ void LosSingleCppRunner::stop()
     }
 }
 
+
+
+/**
+- 设置 当前 可执行文件的位置
+*/
 void LosSingleCppRunner::setExePath(const QString &exe_path)
 {
     L_exePath = exe_path;
@@ -49,21 +57,34 @@ void LosSingleCppRunner::setExePath(const QString &exe_path)
 
 
 /*
-运行
+- 运行
+- 先 初始化 文件的位置
+- 先 这是 输出 文件的位置
+- 设置可执行 文件的位置
+- 然后 运行 基础的 g++ 执行 等待 执行成功 然后 再发送完成的信号
 */
 void LosSingleCppRunner::start(const QString &file_path)
 {
     LOS_filePath.loadFile(file_path);
-
-
+    LosModel::LosFilePath dir =
+        LosState::instance().get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
 #ifdef Q_OS_WIN
-    L_outPutPath = LOS_filePath.getAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
+    L_outPutPath = LOS_filePath.getAbsolutePath() + QDir::separator() + LOS_filePath.getBaseFileName() +
+                   QDir::separator() + LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
+                   LosCommon::LosRunner_Constants::OUTPUT_GXX + QDir::separator() +
                    LosCommon::LosRunner_Constants::WIN_EXE;
+
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    L_outPutPath = LOS_filePath.getAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
+    L_outPutPath = dir.getAbsolutePath() + QDir::separator() + LOS_filePath.getBaseFileName() + QDir::separator() +
+                   LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
+                   LosCommon::LosRunner_Constants::OUTPUT_GXX + QDir::separator() +
                    LosCommon::LosRunner_Constants::LINUX_EXE;
+
 #else
-    L_outPutPath = LOS_filePath.getAbsolutePath() + "/" + LOS_filePath.getBaseFileName() +
+    L_outPutPath = LOS_filePath.getAbsolutePath() + QDir::separator() + LOS_filePath.getBaseFileName() +
+                   LosCommon::LosRunner_Constants::WIN_EXE + QDir::separator() +
+                   LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
+                   LosCommon::LosRunner_Constants::OUTPUT_GXX + QDir::separator() +
                    LosCommon::LosRunner_Constants::LINUX_EXE;
 #endif
 
@@ -94,10 +115,10 @@ void LosSingleCppRunner::start(const QString &file_path)
 void LosSingleCppRunner::initConnect()
 {
     connect(L_gxxPro, &QProcess::readyReadStandardError, this,
-            [=]() { INF(QString::fromLocal8Bit(L_gxxPro->readAllStandardError()), "LosSingleCppRunner"); });
+            [this]() { INF(QString::fromLocal8Bit(L_gxxPro->readAllStandardError()), "LosSingleCppRunner"); });
 
     connect(L_gxxPro, &QProcess::finished, this,
-            [=](int exit_code, QProcess::ExitStatus exitStatus)
+            [this](int exit_code, QProcess::ExitStatus exitStatus)
             {
                 if (exit_code == 0)
                 {
@@ -112,7 +133,7 @@ void LosSingleCppRunner::initConnect()
             });
 
     connect(L_gxxPro, &QProcess::errorOccurred, this,
-            [=](QProcess::ProcessError error)
+            [this](QProcess::ProcessError error)
             {
                 ERR("The compiler failed to start (possibly due to "
                     u8"g++ not being installed or an invalid path)",
@@ -120,7 +141,7 @@ void LosSingleCppRunner::initConnect()
             });
 
     connect(L_runPro, &QProcess::readyReadStandardOutput, this,
-            [=]()
+            [this]()
             {
                 QString msg{"\n==== result ===="};
                 while (L_runPro->canReadLine())
@@ -137,7 +158,7 @@ void LosSingleCppRunner::initConnect()
             });
 
     connect(L_runPro, &QProcess::readyReadStandardError, this,
-            [=]() { ERR(QString::fromLocal8Bit(L_runPro->readAllStandardError()), "LosSingleCppRunner"); });
+            [this]() { ERR(QString::fromLocal8Bit(L_runPro->readAllStandardError()), "LosSingleCppRunner"); });
 
     connect(L_runPro, &QProcess::finished, this, [=](int exitCode, QProcess::ExitStatus exitStatus)
             { INF("process terminated (exit code: " + QString::number(exitCode) + ")", "LosSingleCppRunner"); });

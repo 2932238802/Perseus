@@ -323,11 +323,11 @@ void LosLspRust::initConnect()
     // 开始的时候 发送 初始化 信息先
     connect(L_process, &QProcess::started, this, &LosLspRust::sendInitializeRequest);
     connect(L_process, &QProcess::readyReadStandardError, this,
-            [=]() { INF(QString::fromUtf8(L_process->readAllStandardError()), "LosLspClangd"); });
+            [this]() { INF(QString::fromUtf8(L_process->readAllStandardError()), "LosLspClangd"); });
     connect(&router, &LosRouter::_cmd_lsp_msg_didChangeWatchedFiles, this,
-            [=](const QString &compile_commands_path, auto type)
+            [this](const QString &compile_commands_path, auto type)
             { this->didChangeWatchedFiles(compile_commands_path, type); });
     connect(&router, &LosRouter::_cmd_lsp_request_hover, this,
-            [=](const QString &filePath, int line, int col) { this->requestHover(filePath, line, col); });
+            [this](const QString &filePath, int line, int col) { this->requestHover(filePath, line, col); });
 }
 } // namespace LosCore

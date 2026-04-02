@@ -2,9 +2,6 @@
 #pragma once
 namespace LosCommon
 {
-
-
-
 // 最多 能看到 的 补全 字段
 inline const int MAX_VISIBLE_COMPLETION = 10;
 

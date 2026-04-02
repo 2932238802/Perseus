@@ -1,5 +1,6 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
+#include <qtabwidget.h>
 
 
 /**
@@ -220,13 +221,13 @@ void Perseus::initConnect()
     connect(ui->run_singleFile_btn, &QPushButton::clicked, this, &Perseus::onRunSingleFileBtnClicked);
     connect(
         &LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileSystemChanged, this,
-        [=]() { OnFileLoaded(true); }, Qt::QueuedConnection);
+        [=, this]() { OnFileLoaded(true); }, Qt::QueuedConnection);
     connect(ui->project_btn, &QRadioButton::toggled, this, &Perseus::onProjectBtnClicked);
 
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_toolChainMissing, this,
             &Perseus::onToolChainMissing);
     connect(ui->setting_btn, &QPushButton::clicked, this,
-            [=]()
+            [=, this]()
             {
                 LosView::LosSettingsUi settingDialog(this);
                 settingDialog.exec();
@@ -263,15 +264,15 @@ void Perseus::initStyle()
 void Perseus::initShotcut()
 {
     LosCore::LosShortcutManager::instance().reg(
-        LosCommon::ShortCut::RUN_SINGLE_FILE, this, [=]() { onRunSingleFileBtnClicked(); }, "run single file");
+        LosCommon::ShortCut::RUN_SINGLE_FILE, this, [this]() { onRunSingleFileBtnClicked(); }, "run single file");
     LosCore::LosShortcutManager::instance().reg(
-        LosCommon::ShortCut::FILE_OPEN, this, [=]() { onFilesBtnClicked(); }, "open folder");
+        LosCommon::ShortCut::FILE_OPEN, this, [this]() { onFilesBtnClicked(); }, "open folder");
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::CODE_FORMAT, this, [=]() { emit LosCore::LosRouter::instance()._cmd_codeFormat(); },
         "format text");
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::FILE_SAVE, this,
-        [=]()
+        [=, this]()
         {
             if (LOS_tabUi)
                 LOS_tabUi->saveTab();
@@ -286,7 +287,7 @@ void Perseus::initShotcut()
         "run single file");
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::FONT_ZOOM_IN, this,
-        [=]()
+        [=, this]()
         {
             INF("larger...", "Perseus");
             this->onZoomUi(2);
@@ -294,7 +295,7 @@ void Perseus::initShotcut()
         "zoom in");
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::FONT_ZOOM_OUT, this,
-        [=]()
+        [=, this]()
         {
             INF("smaller...", "Perseus");
             this->onZoomUi(-2);
@@ -321,7 +322,7 @@ void Perseus::initSession()
 
     connect(
         &LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileTreeDone, this,
-        [=]()
+        [conf, this]()
         {
             for (const auto &file : conf.L_curFilePaths)
             {

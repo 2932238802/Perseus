@@ -95,6 +95,7 @@ void LosRunManager::onToolChainReady(LosCommon::LosToolChain_Constants::LosLangu
         }
         auto runner =
             qobject_cast<LosSingleCppRunner *>(LOS_runners[LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS]);
+        // 设置可执行 文件的位置
         runner->setExePath(exePath);
         runner->start(L_mainEntryFilePath);
         break;

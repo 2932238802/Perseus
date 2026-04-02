@@ -5,6 +5,8 @@
 #include "core/LosRouter/LosRouter.h"
 #include "models/LosFileContext/LosFileContext.h"
 #include "models/LosFilePath/LosFilePath.h"
+#include <qtabwidget.h>
+#include <qwidget.h>
 
 
 namespace LosView
@@ -265,6 +267,14 @@ void LosEditorTabUi::onResetCheck(LosCommon::LosToolChain_Constants::LosLanguage
 
 
 
+// TODO: 
+void LosEditorTabUi::onTabClicked(int index)
+{
+    
+}
+
+
+
 /**
 初始化
 */
@@ -281,6 +291,8 @@ void LosEditorTabUi::initConnect()
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_codeFormat, this, &LosEditorTabUi::formatTab);
 
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileDirty, this, &LosEditorTabUi::onEditDirty);
+    if (L_tabWidget)
+        connect(L_tabWidget, &QTabWidget::currentChanged, this, &LosEditorTabUi::onTabClicked);
 }
 
 
