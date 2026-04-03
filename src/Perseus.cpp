@@ -280,12 +280,17 @@ void Perseus::initConnect()
             this->OnFileLoaded(true);
         });
     ui->files_btn->addSeparator();
-    ui->files_btn->addOption("new window",
-                             []()
+    ui->files_btn->addOption("version",
+                             [this]()
                              {
-                                 Perseus *newWindow = new Perseus();
-                                 newWindow->setAttribute(Qt::WA_DeleteOnClose);
-                                 newWindow->show();
+                                 QString versionInfo = QString("<h3>Perseus IDE</h3>"
+                                                               "<p><b>Version:</b> 1.0.56 (Build: %1)</p>"
+                                                               "<p><b>Qt version:</b> Qt %2</p>"
+                                                               "<hr>"
+                                                               "<p>Copyright &copy; 2026 LosAngelous</p>")
+                                                           .arg(__DATE__)
+                                                           .arg(QT_VERSION_STR);
+                                 QMessageBox::about(this, tr("About Perseus"), versionInfo);
                              });
 }
 
