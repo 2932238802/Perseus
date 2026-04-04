@@ -243,10 +243,30 @@
           <string/>
          </attribute>
         </widget>
-        <widget class="LosView::LosTerminalUi" name="tab_terminal">
+        <widget class="QWidget" name="tab_terminal">
          <attribute name="title">
-          <string/>
+          <string>Page</string>
          </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>5</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="LosView::LosTerminalTabsUi" name="terminal_tabs"/>
+          </item>
+         </layout>
         </widget>
        </widget>
       </widget>
@@ -268,15 +288,15 @@
    <header>view/LosFileTreeUi/LosFileTreeUi.h</header>
   </customwidget>
   <customwidget>
-   <class>LosView::LosTerminalUi</class>
-   <extends>QWidget</extends>
-   <header location="global">view/LosTerminalUi/LosTerminalUi.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>LosView::LosDropdownButtonUi</class>
    <extends>QPushButton</extends>
    <header location="global">view/LosDropdownButtonUi/LosDropdownButtonUi.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LosView::LosTerminalTabsUi</class>
+   <extends>QTabWidget</extends>
+   <header>view/LosTerminalTabsUi/LosTerminalTabsUi.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

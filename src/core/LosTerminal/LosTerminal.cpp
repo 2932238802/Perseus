@@ -36,12 +36,12 @@ void LosTerminal::onTerminalReady()
         return;
     }
 #ifdef Q_OS_WIN
-    L_process->start("cmd.exe");
+    L_process->start("powershell.exe"); 
 #else
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("TERM", "xterm-256color");
     L_process->setProcessEnvironment(env);
-    L_process->start("bash", QStringList() << "-i");
+    L_process->start("script", QStringList() << "-q" << "/dev/null");
 #endif
 }
 

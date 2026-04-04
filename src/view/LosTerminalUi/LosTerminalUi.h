@@ -19,6 +19,7 @@ class LosTerminalUi : public QWidget
 
   private: // init
     void initStyle();
+    void initConnect();
 
   private:
     QWebEngineView *L_webView;

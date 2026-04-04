@@ -295,13 +295,14 @@ void Perseus::initConnect()
 }
 
 
+
 /**
 初始化样式F
 */
 void Perseus::initStyle()
 {
     QFont defaultFont = QApplication::font();
-    defaultFont.setPointSize(11);
+    defaultFont.setPointSize(12);
     QApplication::setFont(defaultFont);
     ui->editor_tabwidget->setTabsClosable(true);
     ui->main_splitter->setStretchFactor(0, 1);

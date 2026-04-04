@@ -7,7 +7,6 @@ namespace LosStyle
 inline const QString perseus_getStyle()
 {
     return QString(R"(
-
         QMainWindow {
             background-color: #1e1e2e; 
         }
@@ -31,7 +30,7 @@ inline const QString perseus_getStyle()
             border-bottom: 1px solid #313244;
         }
 
-        #icon_btn, #files_btn, #run_singleFile_btn, #setting_btn{
+        #icon_btn, #files_btn, #run_singleFile_btn, #setting_btn {
             border: 1px solid transparent; 
             background-color: rgba(255, 255, 255, 0.01);
             color: #cdd6f4; 
@@ -56,7 +55,7 @@ inline const QString perseus_getStyle()
             color: #ffffff; 
         }
 
-        #icon_btn:pressed, #files_btn:pressed, #run_singleFile_btn:pressed, #setting_btn:pressed{
+        #icon_btn:pressed, #files_btn:pressed, #run_singleFile_btn:pressed, #setting_btn:pressed {
             background-color: #45475a;
             border: 1px solid #45475a;
         }
@@ -129,20 +128,24 @@ inline const QString perseus_getStyle()
             border: none;
             show-decoration-selected: 1; 
         }
+        
         QTreeView::item {
             padding: 4px 0px;
             border-radius: 4px;
             margin: 0px 4px; 
         }
+        
         QTreeView::item:hover {
             background-color: #313244;
             color: #cdd6f4;
         }
+        
         QTreeView::item:selected {
             background-color: #45475a;
             color: #89b4fa; 
             font-weight: bold;
         }
+        
         QTreeView::branch {
             background-color: transparent;
         }
@@ -151,9 +154,11 @@ inline const QString perseus_getStyle()
             border: none;
             background-color: #1e1e2e;
         }
+        
         #editor_tabwidget QTabBar {
             background-color: #181825;
         }
+        
         #editor_tabwidget QTabBar::tab {
             background-color: #181825;
             color: #6c7086;
@@ -162,19 +167,23 @@ inline const QString perseus_getStyle()
             border-right: 1px solid #1e1e2e; 
             min-width: 90px;
         }
+        
         #editor_tabwidget QTabBar::tab:selected {
             background-color: #1e1e2e;
             color: #89b4fa; 
             border-top: 2px solid #89b4fa; 
         }
+        
         #editor_tabwidget QTabBar::tab:hover:!selected {
             background-color: #313244;
             color: #cdd6f4;
         }
+        
         #editor_tabwidget QTabBar::close-button {
             subcontrol-position: right;
             margin-right: 2px;
         }
+        
         #editor_tabwidget QTabBar::close-button:hover {
             background-color: #f38ba8; 
             border-radius: 2px;
@@ -184,10 +193,12 @@ inline const QString perseus_getStyle()
             border-top: 1px solid #313244; 
             background-color: #181825;
         }
-        #bottom_tabwidget QTabBar {
+        
+        #bottom_tabwidget > QTabBar {
             background-color: #1e1e2e;
         }
-        #bottom_tabwidget QTabBar::tab {
+        
+        #bottom_tabwidget > QTabBar::tab {
             background-color: transparent;
             color: #6c7086;
             padding: 4px 16px 2px 16px; 
@@ -196,11 +207,13 @@ inline const QString perseus_getStyle()
             font-size: 0.9em;
             text-transform: uppercase; 
         }
-        #bottom_tabwidget QTabBar::tab:selected {
+        
+        #bottom_tabwidget > QTabBar::tab:selected {
             color: #cdd6f4;
             border-bottom: 2px solid #89b4fa; 
         }
-        #bottom_tabwidget QTabBar::tab:hover:!selected {
+        
+        #bottom_tabwidget > QTabBar::tab:hover:!selected {
             color: #a6adc8;
         }
 
@@ -219,54 +232,119 @@ inline const QString perseus_getStyle()
             background-color: #181825;
         }
 
+        #terminal_tabs::pane {
+            border: none;
+            background-color: #1e1e2e;
+        }
+        
+        #terminal_tabs QTabBar {
+            background-color: #181825;
+        }
+        
+        #terminal_tabs QTabBar::tab {
+            background-color: #181825;
+            color: #6c7086;
+            padding: 6px 12px;
+            border: none;
+            border-right: 1px solid #313244;
+            min-width: 60px;
+            font-family: "JetBrains Mono", "Consolas", monospace;
+            font-size: 12px;
+        }
+        
+        #terminal_tabs QTabBar::tab:selected {
+            background-color: #1e1e2e;
+            color: #a6e3a1;
+            border-bottom: 2px solid #a6e3a1; 
+        }
+        
+        #terminal_tabs QTabBar::tab:hover:!selected {
+            background-color: #313244;
+            color: #cdd6f4;
+        }
+        
+        #terminal_tabs QTabBar::close-button {
+            subcontrol-position: right;
+            margin-right: 4px;
+        }
+        
+        #terminal_tabs QTabBar::close-button:hover {
+            background-color: #f38ba8;
+            border-radius: 2px;
+        }
+
+        QPushButton#addTermBtn {
+            background-color: transparent;
+            color: #cdd6f4;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            margin-top: 2px;
+            margin-right: 4px;
+        }
+        
+        QPushButton#addTermBtn:hover {
+            color: #a6e3a1;
+            background-color: #313244;
+            border-radius: 4px;
+        }
+        
+        QPushButton#addTermBtn:pressed {
+            background-color: #45475a;
+        }
+
         QScrollBar:vertical {
             background-color: transparent;
             width: 12px;
             border: none;
             margin: 0px;
         }
+        
         QScrollBar::handle:vertical {
             background-color: rgba(69, 71, 90, 0.6); 
             border-radius: 6px;
             min-height: 30px;
             margin: 2px; 
         }
+        
         QScrollBar::handle:vertical:hover {
             background-color: rgba(88, 91, 112, 0.9);
         }
+        
         QScrollBar:horizontal {
             background-color: transparent;
             height: 12px;
             border: none;
             margin: 0px;
         }
+        
         QScrollBar::handle:horizontal {
             background-color: rgba(69, 71, 90, 0.6);
             border-radius: 6px;
             min-width: 30px;
             margin: 2px;
         }
+        
         QScrollBar::handle:horizontal:hover {
             background-color: rgba(88, 91, 112, 0.9);
         }
+        
         QScrollBar::add-line, QScrollBar::sub-line {
             height: 0px; width: 0px; 
         }
+        
         QScrollBar::add-page, QScrollBar::sub-page {
             background-color: transparent; 
         }
-
-
-
 
         QDialog#LosSettingsUi {
             background-color: #1e1e2e;
         }
 
         #category_list {
-            background-color: #181825;  /* 比主背景稍微深一点，制造层次感 */
+            background-color: #181825;
             border: none;
-            border-right: 1px solid #313244; /* 右侧分割线 */
+            border-right: 1px solid #313244;
             padding-top: 10px;
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 14px;
@@ -285,10 +363,10 @@ inline const QString perseus_getStyle()
         }
 
         #category_list::item:selected {
-            background-color: #1e1e2e; /* 选中时背景色和右侧主区域融为一体 */
-            color: #89b4fa;            /* 选中的文字变成主题蓝 */
+            background-color: #1e1e2e;
+            color: #89b4fa;
             font-weight: bold;
-            border-left: 3px solid #89b4fa; /* 左侧蓝色高亮粗线条 */
+            border-left: 3px solid #89b4fa;
         }
 
         #pages_stack {
@@ -298,7 +376,7 @@ inline const QString perseus_getStyle()
 
         #label_title_build {
             color: #cdd6f4;
-            border-bottom: 1px solid #313244; /* 标题下方的华丽分割线 */
+            border-bottom: 1px solid #313244;
             padding-bottom: 5px;
             font-family: "Microsoft YaHei", sans-serif;
         }
@@ -310,19 +388,21 @@ inline const QString perseus_getStyle()
         }
 
         #edit_cmake_path {
-            background-color: #11111b; /* 最深的底色，制造凹陷感 */
+            background-color: #11111b;
             color: #cdd6f4;
             border: 1px solid #313244;
             border-radius: 4px;
             padding: 6px 10px;
-            font-family: "JetBrains Mono", "Consolas", monospace; /* 路径使用等宽字体更专业 */
+            font-family: "JetBrains Mono", "Consolas", monospace;
             font-size: 13px;
         }
+        
         #edit_cmake_path:hover {
             border: 1px solid #45475a;
         }
+        
         #edit_cmake_path:focus {
-            border: 1px solid #89b4fa; /* 获取焦点时，边框变成亮蓝色 */
+            border: 1px solid #89b4fa;
             background-color: #181825;
         }
 
@@ -336,13 +416,15 @@ inline const QString perseus_getStyle()
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 13px;
         }
+        
         #buttonBox QPushButton:hover {
             background-color: #45475a;
             color: #ffffff;
         }
+        
         #buttonBox QPushButton:pressed {
             background-color: #585b70;
-            border: 1px solid #89b4fa; /* 按下时给个蓝边反馈 */
+            border: 1px solid #89b4fa;
         }
 
         #buttonBox QPushButton[text="OK"] {
@@ -350,10 +432,10 @@ inline const QString perseus_getStyle()
             color: #11111b;
             font-weight: bold;
         }
+        
         #buttonBox QPushButton[text="OK"]:hover {
-            background-color: #74c7ec; /* 悬停时稍微变亮 */
+            background-color: #74c7ec;
         }
-
     )");
 }
 
