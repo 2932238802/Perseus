@@ -1,12 +1,7 @@
 #include "LosEditorUi.h"
-#include "core/LosRouter/LosRouter.h"
-#include <algorithm>
-#include <qcoreevent.h>
-#include <qevent.h>
-#include <qkeysequence.h>
-#include <qplaintextedit.h>
-#include <qtextcursor.h>
-#include <qtooltip.h>
+#include "view/LosLineNumberUi/LosLineNumberUi.h"
+#include <qglobal.h>
+#include <qtextobject.h>
 
 
 
@@ -226,6 +221,60 @@ void LosEditorUi::insertCompletion(const QString &completion)
 
 
 
+void LosEditorUi::lineNumberAreaPaintEvent(QPaintEvent *event)
+{
+    QPainter painter(LOS_lineNumber);
+    painter.fillRect(event->rect(), QColor("#181825"));
+
+    QTextBlock block = firstVisibleBlock(); // 第一个 编辑区域
+    int blockNumber  = block.blockNumber();
+
+    // qRound 是 四舍五入
+    // blockBoundingGeometry QTextBlock
+    // 获取 当前 textblock的边界框
+    int top    = qRound(blockBoundingGeometry(block).translated(contentOffset()).top());
+    int bottom = top + qRound(blockBoundingRect(block).height());
+
+    // event->rect().bottom()
+    // 当前要画的 矩形 的 最下边 如果算出来的比 top 要小
+    // 就不用画了
+    while (block.isValid() && top <= event->rect().bottom())
+    {
+        if (block.isVisible() && bottom >= event->rect().top())
+        {
+            // 将内部从 0 开始的索引，
+            // 转成人类习惯的从 1 开始的字符串
+            QString number = QString::number(blockNumber + 1);
+
+            // 准备颜料（高亮当前行）
+            // 就是 当前 这一行的数据 
+            if (textCursor().blockNumber() == blockNumber)
+            {
+                painter.setPen(QColor("#cdd6f4"));
+            }
+            else
+            {
+                painter.setPen(QColor("#6c7086"));
+            }
+
+            // x坐标, y坐标, 宽度, 高度,
+            // 对齐方式, 要写的字
+            painter.drawText(0, top, LOS_lineNumber->width() - 5, fontMetrics().height(),
+                             Qt::AlignRight | Qt::AlignVCenter, number);
+        }
+
+        // 准备画下一行
+        // 推进链表和坐标）
+        block = block.next();
+        top   = bottom;
+        //
+        bottom = top + qRound(blockBoundingRect(block).height());
+        ++blockNumber;
+    }
+}
+
+
+
 /**
 调用 LosContext 接口
 */
@@ -286,6 +335,25 @@ bool LosEditorUi::isDirty() const
 
 
 /**
+- 获取 尺寸 宽度
+*/
+int LosEditorUi::getLineNumberWidth() const
+{
+    int digit = 1;
+    int max   = qMax(1, blockCount());
+    while (max >= 10)
+    {
+        max /= 10;
+        digit++;
+    }
+    int space = LosCommon::LosLineNumberUi_Constants::BASE_LINEWIDTH +
+                fontMetrics().horizontalAdvance(QLatin1Char('9')) * digit;
+    return space;
+}
+
+
+
+/**
 - 文字稍微 变动 就变脏
 - 绑定 悬停效果
 */
@@ -301,6 +369,9 @@ void LosEditorUi::initConnect()
     // 语法高亮
     LOS_highlighter = new LosCore::LosHighlighter(this->document());
 
+    // 行 号
+    LOS_lineNumber = new LosView::LosLineNumberUi(this); 
+    
     // activated 有两种
     auto &router = LosCore::LosRouter::instance();
     connect(LOS_completer, QOverload<const QString &>::of(&QCompleter::activated), this,
@@ -312,6 +383,11 @@ void LosEditorUi::initConnect()
     connect(&router, &LosCore::LosRouter::_cmd_lsp_result_hover, this, &LosEditorUi::onHover_Clangd);
     connect(&router, &LosCore::LosRouter::_cmd_lsp_result_semanticLegend, this, &LosEditorUi::onSemanticLegend);
     connect(&router, &LosCore::LosRouter::_cmd_lsp_result_semanticTokens, this, &LosEditorUi::onSemanticTokens);
+    connect(this, &LosEditorUi::blockCountChanged, this, &LosEditorUi::updateLineNumberAreaWidth);
+    connect(this, &LosEditorUi::updateRequest, this, &LosEditorUi::updateLineNumberArea);
+    connect(this, &LosEditorUi::cursorPositionChanged, this, [this](){
+        LOS_lineNumber->update(); 
+    });
 }
 
 
@@ -324,6 +400,7 @@ void LosEditorUi::initStyle()
     QFontMetrics met(this->font());
     int tab = 4 * met.horizontalAdvance(" ");
     this->setTabStopDistance(tab);
+    updateLineNumberAreaWidth(0);
 }
 
 
@@ -363,6 +440,33 @@ void LosEditorUi::copyCurrentLine()
     setTextCursor(cursor);
     copy();
     setTextCursor(originalCursor);
+}
+
+
+
+void LosEditorUi::updateLineNumberArea(const QRect &rect, int dy)
+{
+    if (dy)
+    {
+        LOS_lineNumber->scroll(0, dy);
+    }
+    else
+    {
+        LOS_lineNumber->update(0, rect.y(), LOS_lineNumber->width(), rect.height());
+    }
+    if (rect.contains(viewport()->rect()))
+    {
+        updateLineNumberAreaWidth(0);
+    }
+}
+
+
+
+void LosEditorUi::updateLineNumberAreaWidth(int)
+{
+    // 左、上、右、下
+    // getLineNumberWidth 获取一个 左侧的长度
+    setViewportMargins(getLineNumberWidth(), 0, 0, 0);
 }
 
 
@@ -551,6 +655,7 @@ void LosEditorUi::mousePressEvent(QMouseEvent *event)
 }
 
 
+
 /**
 - 暂时先 监听 字体变化 然后修改 tab 按键的效果
 */
@@ -584,5 +689,15 @@ bool LosEditorUi::event(QEvent *event)
     }
     return QPlainTextEdit::event(event);
 }
+
+
+
+void LosEditorUi::resizeEvent(QResizeEvent *e)
+{
+    QRect cr = contentsRect();
+    LOS_lineNumber->setGeometry(QRect(cr.left(), cr.top(), getLineNumberWidth(), cr.height()));
+    QPlainTextEdit::resizeEvent(e);
+}
+
 
 } // namespace LosView

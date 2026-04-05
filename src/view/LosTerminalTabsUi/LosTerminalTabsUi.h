@@ -2,10 +2,10 @@
 
 
 #include <QTabBar>
+#include <QTimer>
 #include <qobject.h>
 #include <qtabwidget.h>
 #include <qwidget.h>
-#include <QTimer>
 
 namespace LosView
 {
@@ -24,5 +24,6 @@ class LosTerminalTabsUi : public QTabWidget
     void addNewTerminal();
 
   private:
+    QSet<int> L_usedTerminalIds;
 };
 } // namespace LosView

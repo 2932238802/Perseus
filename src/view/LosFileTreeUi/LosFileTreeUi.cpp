@@ -242,6 +242,7 @@ void LosFileTreeUi::deleteFileOrFolder(const QString &file_path)
 }
 
 
+
 /**
 - 展开到 指定的文件
 */
@@ -261,6 +262,7 @@ bool LosFileTreeUi::expandToFile(const QString &file_path)
     scrollTo(index, QAbstractItemView::EnsureVisible);
     return true;
 }
+
 
 
 /**

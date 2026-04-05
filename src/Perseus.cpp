@@ -1,6 +1,8 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/LosRouter/LosRouter.h"
+#include "core/LosShortcutManager/LosShortcutManager.h"
 #include "core/LosState/LosState.h"
 #include "models/LosFilePath/LosFilePath.h"
 #include <qfiledialog.h>
@@ -361,6 +363,37 @@ void Perseus::initShotcut()
             this->onZoomUi(-2);
         },
         "zoom out");
+
+    LosCore::LosShortcutManager::instance().reg(
+        LosCommon::ShortCut::GOTO_LINE, this,
+        [this]()
+        {
+            auto editor = LOS_tabUi->getCurEditor();
+            if (!editor)
+                return;
+            int maxLines                               = editor->document()->blockCount();
+            LosView::LosGotoLinePopupUi *contentWidget = new LosView::LosGotoLinePopupUi();
+            LosView::LosFloatingPanelUi *dialog        = new LosView::LosFloatingPanelUi(contentWidget, true, this);
+            connect(contentWidget->getLineEdit(), &QLineEdit::returnPressed, dialog, &QDialog::accept);
+            dialog->showAtPosition(editor, LosCommon::LosFloatingPanelUi_Constants::PositionMode::TopRight);
+            contentWidget->getLineEdit()->setFocus();
+            if (dialog->exec() == QDialog::Accepted)
+            {
+                int line = contentWidget->getLineNumber();
+                if (line > 0)
+                {
+                    if (line > maxLines)
+                    {
+                        line = maxLines;
+                    }
+
+                    // 底层行号减 1
+                    editor->gotoLine(line - 1);
+                }
+            }
+            dialog->deleteLater();
+        },
+        "go to line");
 }
 
 

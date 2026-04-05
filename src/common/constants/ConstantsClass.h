@@ -194,4 +194,15 @@ struct SemanticToken
     int L_tokenType;
 };
 } // namespace LosHighligher_Constants
+
+
+
+
+namespace LosFloatingPanelUi_Constants{
+    enum class PositionMode{
+        Center,
+        TopRight,
+        TopCenter,
+    };
+}
 } // namespace LosCommon

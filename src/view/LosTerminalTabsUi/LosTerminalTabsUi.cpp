@@ -24,7 +24,7 @@ void LosTerminalTabsUi::initStyle()
     // 清空一开始的站位
     clear();
 
-    addTab(new QWidget(), "+");
+    addTab(new QWidget(), "add new");
 
     // 当前空间 里面的 所有 子控件
     // 右侧 关闭按钮 (×)、菜单按钮、扩展操作
@@ -48,6 +48,12 @@ void LosTerminalTabsUi::initStyle()
                 if (index == lastIndex)
                     return;
                 QWidget *w = widget(index);
+                bool ok;
+                int id = w->property("terminal_id").toInt(&ok);
+                if (ok)
+                {
+                    L_usedTerminalIds.remove(id);
+                }
                 removeTab(index);
                 w->deleteLater();
             });
@@ -62,15 +68,23 @@ void LosTerminalTabsUi::initStyle()
 void LosTerminalTabsUi::addNewTerminal()
 {
     LosView::LosTerminalUi *newOne = new LosView::LosTerminalUi(this);
-    int insertIndex                = count() - 1;
-    // 0 1 2
+
+    int newId = 1;
+    while (L_usedTerminalIds.contains(newId))
+    {
+        newId++;
+    }
+    L_usedTerminalIds.insert(newId);
+
+    // 设置属性
+    newOne->setProperty("terminal_id", newId);
+
+    int insertIndex = count() - 1;
     if (insertIndex < 0)
         insertIndex = 0;
 
-    // 命名
-    int number = insertIndex + 1;
     this->blockSignals(true);
-    insertTab(insertIndex, newOne, QString("sh - %1").arg(number));
+    insertTab(insertIndex, newOne, QString("sh - %1").arg(newId));
     setCurrentIndex(insertIndex);
     this->blockSignals(false);
 }

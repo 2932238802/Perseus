@@ -16,6 +16,8 @@
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
 #include "view/LosEditorUi/LosEditorUi.h"
+#include "view/LosFloatingPanelUi/LosFloatingPanelUi.h"
+#include "view/LosFloatingPanelUi/LosGotoLinePopupUi/LosGotoLinePopupUi.h"
 #include "view/LosSettingsUi/LosSettingsUi.h"
 #include "view/LosToolMissUi/LosToolMissUi.h"
 #include "view/style/perseus_style.h"

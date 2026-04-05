@@ -30,4 +30,10 @@ inline const int ZOOM_MIN                 = 8;
 
 } // namespace Perseus_Constants
 
+
+namespace LosLineNumberUi_Constants
+{
+    const int BASE_LINEWIDTH = 15;
+}
+
 } // namespace LosCommon

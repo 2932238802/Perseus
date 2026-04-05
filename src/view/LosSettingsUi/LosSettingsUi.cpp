@@ -4,6 +4,9 @@
 
 namespace LosView
 {
+/**
+- construct
+*/
 LosSettingsUi::LosSettingsUi(QWidget *parent) : QDialog(parent), ui(new Ui::LosSettingsUi)
 {
     ui->setupUi(this);
