@@ -1,6 +1,8 @@
 #include "LosEditorUi.h"
 #include "view/LosLineNumberUi/LosLineNumberUi.h"
 #include <qglobal.h>
+#include <qtextedit.h>
+#include <qtextformat.h>
 #include <qtextobject.h>
 
 
@@ -118,7 +120,9 @@ void LosEditorUi::showDiagnostic(const QString &file_path,
 
         selectionsList.append(selections);
     }
-    this->setExtraSelections(selectionsList);
+    // this->setExtraSelections(selectionsList);
+    L_diagnosticSelections = selectionsList;
+    highlightCurrentLine();
 }
 
 
@@ -247,7 +251,7 @@ void LosEditorUi::lineNumberAreaPaintEvent(QPaintEvent *event)
             QString number = QString::number(blockNumber + 1);
 
             // 准备颜料（高亮当前行）
-            // 就是 当前 这一行的数据 
+            // 就是 当前 这一行的数据
             if (textCursor().blockNumber() == blockNumber)
             {
                 painter.setPen(QColor("#cdd6f4"));
@@ -370,8 +374,8 @@ void LosEditorUi::initConnect()
     LOS_highlighter = new LosCore::LosHighlighter(this->document());
 
     // 行 号
-    LOS_lineNumber = new LosView::LosLineNumberUi(this); 
-    
+    LOS_lineNumber = new LosView::LosLineNumberUi(this);
+
     // activated 有两种
     auto &router = LosCore::LosRouter::instance();
     connect(LOS_completer, QOverload<const QString &>::of(&QCompleter::activated), this,
@@ -385,9 +389,12 @@ void LosEditorUi::initConnect()
     connect(&router, &LosCore::LosRouter::_cmd_lsp_result_semanticTokens, this, &LosEditorUi::onSemanticTokens);
     connect(this, &LosEditorUi::blockCountChanged, this, &LosEditorUi::updateLineNumberAreaWidth);
     connect(this, &LosEditorUi::updateRequest, this, &LosEditorUi::updateLineNumberArea);
-    connect(this, &LosEditorUi::cursorPositionChanged, this, [this](){
-        LOS_lineNumber->update(); 
-    });
+    connect(this, &LosEditorUi::cursorPositionChanged, this,
+            [this]()
+            {
+                LOS_lineNumber->update();
+                highlightCurrentLine();
+            });
 }
 
 
@@ -467,6 +474,23 @@ void LosEditorUi::updateLineNumberAreaWidth(int)
     // 左、上、右、下
     // getLineNumberWidth 获取一个 左侧的长度
     setViewportMargins(getLineNumberWidth(), 0, 0, 0);
+}
+
+
+
+void LosEditorUi::highlightCurrentLine()
+{
+    QList<QTextEdit::ExtraSelection> extra = L_diagnosticSelections;
+    if (isReadOnly())
+        return;
+    QTextEdit::ExtraSelection selection;
+    QColor lineColor = QColor("#313244");
+    selection.format.setBackground(lineColor);
+    selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+    selection.cursor = textCursor();
+    selection.cursor.clearSelection();
+    extra.append(selection);
+    setExtraSelections(extra);
 }
 
 

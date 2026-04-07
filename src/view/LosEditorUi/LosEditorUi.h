@@ -87,6 +87,7 @@ class LosEditorUi : public QPlainTextEdit
     void copyCurrentLine();
     void updateLineNumberArea(const QRect &rect, int dy);
     void updateLineNumberAreaWidth(int);
+    void highlightCurrentLine();
 
   private slots: // chs
     void onTextChanged();
@@ -111,6 +112,7 @@ class LosEditorUi : public QPlainTextEdit
     QPoint L_lastHoverGlobal = QPoint();
     QSharedPointer<LosModel::LosFileContext> LOS_context;
     QSharedPointer<LosModel::LosFilePath> LOS_filePath;
+    QList<QTextEdit::ExtraSelection> L_diagnosticSelections;
     LosView::LosCompleterUi *LOS_completer;
     LosCore::LosHighlighter *LOS_highlighter = nullptr;
     LosView::LosLineNumberUi *LOS_lineNumber = nullptr;
