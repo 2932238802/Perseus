@@ -7,6 +7,8 @@
 #include <QLineEdit>
 #include <qwidget.h>
 
+#include "common/constants/ConstantsStr.h"
+
 namespace LosView
 {
 
