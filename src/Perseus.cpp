@@ -6,6 +6,8 @@
 #include "core/LosState/LosState.h"
 #include "models/LosFilePath/LosFilePath.h"
 #include <qfiledialog.h>
+#include <qpushbutton.h>
+#include <qstackedwidget.h>
 
 
 
@@ -251,6 +253,10 @@ void Perseus::initConnect()
                 LosView::LosSettingsUi settingDialog(this);
                 settingDialog.exec();
             });
+    connect(ui->act_explorer_btn, &QPushButton::clicked, this, [this]() { ui->left_panel_stack->setCurrentIndex(0); });
+    connect(ui->act_extensions_btn, &QPushButton::clicked, this,
+            [this]() { ui->left_panel_stack->setCurrentIndex(1); });
+
     ui->files_btn->addOption("choose a file",
                              [this]()
                              {

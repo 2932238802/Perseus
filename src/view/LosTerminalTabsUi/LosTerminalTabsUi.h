@@ -6,6 +6,8 @@
 #include <qobject.h>
 #include <qtabwidget.h>
 #include <qwidget.h>
+#include <QToolButton> 
+#include "core/LosLog/LosLog.h"
 
 namespace LosView
 {

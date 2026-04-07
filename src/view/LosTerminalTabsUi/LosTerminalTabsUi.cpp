@@ -15,38 +15,40 @@ LosTerminalTabsUi::LosTerminalTabsUi(QWidget *parent) : QTabWidget(parent)
 /**
 - 初始化 样式
 */
+
 void LosTerminalTabsUi::initStyle()
 {
-    // 能被关闭
     setTabsClosable(true);
     setDocumentMode(true);
-
-    // 清空一开始的站位
     clear();
 
-    addTab(new QWidget(), "add new");
+    QToolButton *addBtn = new QToolButton(this);
+    addBtn->setText("+ add new");
+    addBtn->setCursor(Qt::PointingHandCursor);
+    addBtn->setStyleSheet(R"(
+        QToolButton { 
+            background-color: transparent;
+            color: #888888; 
+            border: none; 
+            padding: 6px 12px; 
+            font-family: "JetBrains Mono", "Consolas", monospace;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        QToolButton:hover { 
+            background-color: #2a2d2e;
+            color: #ffffff; 
+        }
+        QToolButton:pressed {
+            background-color: #37373d;
+        }
+    )");
+    setCornerWidget(addBtn, Qt::TopRightCorner);
 
-    // 当前空间 里面的 所有 子控件
-    // 右侧 关闭按钮 (×)、菜单按钮、扩展操作
-    // 左侧 图标、状态红点、固定按钮、类型标识
-    tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
-    connect(this, &QTabWidget::currentChanged, this,
-            [this](int index)
-            {
-                int lastIndex = count() - 1;
-                if (index == lastIndex)
-                {
-                    // 任务 队列
-                    QTimer::singleShot(0, this, [this]() { addNewTerminal(); });
-                }
-            });
-
+    connect(addBtn, &QToolButton::clicked, this, &LosTerminalTabsUi::addNewTerminal);
     connect(this, &QTabWidget::tabCloseRequested, this,
             [this](int index)
             {
-                int lastIndex = count() - 1;
-                if (index == lastIndex)
-                    return;
                 QWidget *w = widget(index);
                 bool ok;
                 int id = w->property("terminal_id").toInt(&ok);
@@ -68,24 +70,15 @@ void LosTerminalTabsUi::initStyle()
 void LosTerminalTabsUi::addNewTerminal()
 {
     LosView::LosTerminalUi *newOne = new LosView::LosTerminalUi(this);
-
-    int newId = 1;
+    int newId                      = 1;
     while (L_usedTerminalIds.contains(newId))
     {
         newId++;
     }
     L_usedTerminalIds.insert(newId);
-
-    // 设置属性
     newOne->setProperty("terminal_id", newId);
-
-    int insertIndex = count() - 1;
-    if (insertIndex < 0)
-        insertIndex = 0;
-
-    this->blockSignals(true);
-    insertTab(insertIndex, newOne, QString("sh - %1").arg(newId));
-    setCurrentIndex(insertIndex);
-    this->blockSignals(false);
+    int newIndex = addTab(newOne, QString("sh - %1").arg(newId));
+    setCurrentIndex(newIndex);
 }
+
 } // namespace LosView
