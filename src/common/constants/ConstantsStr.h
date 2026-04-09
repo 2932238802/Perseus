@@ -11,6 +11,7 @@ namespace LosCommon
     {
         inline constexpr const char *FILE_SAVE           = "Ctrl+S";         // 保存当前文件
         inline constexpr const char *FILE_SAVE_ALL       = "Ctrl+Shift+S";   // 保存所有文件
+        inline constexpr const char *COMMANDS            = "Ctrl+Shift+P";   // 打开指令
         inline constexpr const char *FILE_OPEN           = "Ctrl+O";         // 打开文件/文件夹
         inline constexpr const char *FILE_NEW            = "Ctrl+N";         // 新建文件
         inline constexpr const char *TAB_CLOSE           = "Ctrl+W";         // 关闭当前标签页
@@ -114,8 +115,8 @@ namespace LosCommon
 
         namespace API
         {
-            inline constexpr const char *PLUGIN_API = "api/plugins"; // 修正：去掉了前面多余的 LosAngelous/
-            inline constexpr const char *ROOT_API   = "/";
+            inline constexpr const char *PLUGIN_API = "LosAngelous/api/plugins";
+            inline constexpr const char *ROOT_API   = "";
         } // namespace API
 
         namespace HEADER_TYPE

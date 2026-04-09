@@ -14,6 +14,7 @@
 #include "models/LosFileNode/LosFileNode.h"
 #include "models/LosFilePath/LosFilePath.h"
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
+#include "view/LosCommandUi/LosCommandUi.h"
 #include "view/LosEditorTabUi/LosEditorTabUi.h"
 #include "view/LosEditorUi/LosEditorUi.h"
 #include "view/LosFloatingPanelUi/LosFloatingPanelUi.h"
@@ -40,7 +41,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
-class Perseus;
+    class Perseus;
 }
 QT_END_NAMESPACE
 
@@ -84,4 +85,5 @@ class Perseus : public QMainWindow
     LosCore::LosLspManager *LOS_lspMgr             = nullptr;
     LosCore::LosConfigManager *LOS_configMgr       = nullptr;
     LosCore::LosToolChainManager *LOS_toolChainMgr = nullptr;
+    LosView::LosCommandUi *L_cmdPalette            = nullptr;
 };

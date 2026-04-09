@@ -527,6 +527,72 @@ inline const QString perseus_getStyle()
             background-color: #d4d4d4;
         }
 
+
+            #LosPluginDetailUi {
+            background-color: #121212;
+        }
+
+        #LosPluginDetailUi {
+            background-color: #121212;
+        }
+
+        #LosPluginDetailUi #label_icon {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+        }
+
+        #LosPluginDetailUi #label_name {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        #LosPluginDetailUi #label_version {
+            color: #888888;
+            font-size: 13px;
+            font-family: "JetBrains Mono", "Consolas", monospace;
+        }
+
+        #LosPluginDetailUi #btn_install {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: bold;
+            border-radius: 3px;
+            padding: 6px 28px;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 13px;
+            min-width: 100px;
+            border: none;
+        }
+
+        #LosPluginDetailUi #btn_install:hover {
+            background-color: #e0e0e0;
+        }
+
+        #LosPluginDetailUi #btn_install:pressed {
+            background-color: #cccccc;
+        }
+
+        #LosPluginDetailUi #btn_install:disabled {
+            background-color: #2a2d2e;
+            color: #666666;
+            font-weight: normal;
+        }
+
+        #LosPluginDetailUi #text_description {
+            background-color: transparent;
+            color: #d4d4d4;
+            border: none;
+            border-top: 1px solid #2a2d2e;
+            margin-top: 20px;
+            padding-top: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
     )");
 }
 

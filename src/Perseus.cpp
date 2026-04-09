@@ -6,6 +6,7 @@
 #include "core/LosShortcutManager/LosShortcutManager.h"
 #include "core/LosState/LosState.h"
 #include "models/LosFilePath/LosFilePath.h"
+#include "view/LosCommandUi/LosCommandUi.h"
 #include <qfiledialog.h>
 #include <qpushbutton.h>
 #include <qstackedwidget.h>
@@ -234,10 +235,11 @@ void Perseus::initConnect()
 {
     connect(&LosCore::LosLog::instance(), &LosCore::LosLog::_sendLog, this, &Perseus::onLog);
     LOS_tabUi        = new LosView::LosEditorTabUi(ui->editor_tabwidget, this);
+    L_cmdPalette     = new LosView::LosCommandUi(this);
     LOS_runMgr       = new LosCore::LosRunManager(this);
     LOS_lspMgr       = new LosCore::LosLspManager(this);
     LOS_configMgr    = new LosCore::LosConfigManager(this);
-    LOS_toolChainMgr = new LosCore::LosToolChainManager(this);
+    LOS_toolChainMgr = new LosCore::LosToolChainManager(ui->editor_tabwidget);
     connect(ui->files_btn, &QPushButton::clicked, this, &Perseus::onFilesBtnClicked);
     // enter 自动触发 actived
     connect(ui->explorer_treeview, &QTreeView::activated, this, &Perseus::onExplorerFileDoubleClicked);
@@ -374,7 +376,8 @@ void Perseus::initShotcut()
             this->onZoomUi(-2);
         },
         "zoom out");
-
+    LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::COMMANDS, this,
+                                                [this]() { L_cmdPalette->showPalette(); });
     LosCore::LosShortcutManager::instance().reg(
         LosCommon::ShortCut::GOTO_LINE, this,
         [this]()

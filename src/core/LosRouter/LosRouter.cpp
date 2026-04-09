@@ -6,11 +6,11 @@
 namespace LosCore
 {
 
-LosRouter &LosRouter::instance()
-{
-    static LosRouter s;
-    return s;
-}
+    LosRouter &LosRouter::instance()
+    {
+        static LosRouter s;
+        return s;
+    }
 
-LosRouter::LosRouter(QObject *parent) : QObject(parent) {}
+    LosRouter::LosRouter(QObject *parent) : QObject(parent) {}
 } // namespace LosCore

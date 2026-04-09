@@ -132,14 +132,14 @@
           </size>
          </property>
          <property name="text">
-          <string>Run</string>
+          <string>Run cpp</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QRadioButton" name="project_btn">
          <property name="text">
-          <string>Pro</string>
+          <string>CMake Pro?</string>
          </property>
         </widget>
        </item>
@@ -201,9 +201,6 @@
             <height>48</height>
            </size>
           </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
           <property name="text">
            <string/>
           </property>
@@ -240,9 +237,6 @@
             <width>48</width>
             <height>48</height>
            </size>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
           </property>
           <property name="text">
            <string/>
@@ -345,7 +339,7 @@
          </widget>
          <widget class="QTabWidget" name="bottom_tabwidget">
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="documentMode">
            <bool>true</bool>

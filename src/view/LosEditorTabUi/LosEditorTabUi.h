@@ -51,6 +51,7 @@ class LosEditorTabUi : public QWidget
     void onDoubleClickedOnIssue(const QString &file_path, int line);
     void onResetCheck(LosCommon::LosToolChain_Constants::LosLanguage lan, const QString &curFile = "");
     void onTabClicked(int index);
+    void onOpenPlugin(const LosCommon::LosNet_Constants::PluginInfo& info);
 
   private: // init
     void initConnect();

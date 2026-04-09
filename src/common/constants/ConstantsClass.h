@@ -216,6 +216,8 @@ namespace LosCommon
             QString L_id;
             QString L_name;
             QString L_version;
+            QString L_downloadUrl;
+            QString L_readmeUrl;
         };
     } // namespace LosNet_Constants
 

@@ -1,6 +1,5 @@
 #include "LosSettingsUi.h"
 #include "ui_LosSettingsUi.h"
-#include <qdialogbuttonbox.h>
 
 namespace LosView
 {
