@@ -132,5 +132,8 @@ namespace LosCore
         void _cmd_openPluginDetail(const LosCommon::LosNet_Constants::PluginInfo &);
         void _cmd_net_downloadFinished(const QString &downpath);
         void _cmd_command_exeScript(const QString &script_path);
+
+        // 插件路径
+        void _cmd_net_PluginPath(const QString &plugin_path);
     };
 } // namespace LosCore

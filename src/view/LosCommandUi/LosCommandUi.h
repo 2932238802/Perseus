@@ -1,14 +1,22 @@
 #pragma once
 
 #include "common/constants/ConstantsClass.h"
+#include "core/LosLog/LosLog.h"
+#include "core/LosRouter/LosRouter.h"
 #include "view/style/LosCommandUi_style.h"
-
+#include <QDir>
+#include <QFileInfo>
 #include <QGraphicsDropShadowEffect>
 #include <QKeyEvent>
 #include <QString>
+#include <qboxlayout.h>
+#include <qdebug.h>
 #include <qdialog.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
 #include <qlineedit.h>
 #include <qlistwidget.h>
+#include <qnamespace.h>
 #include <qtmetamacros.h>
 #include <qwidget.h>
 
@@ -23,7 +31,6 @@ namespace LosView
         ~LosCommandUi() = default;
 
       public:
-        void regis(const QString &display, const QString &cmd);
         void showPalette();
 
       private: // init
@@ -33,7 +40,12 @@ namespace LosView
       private slots:
         void onSearchTextChanged(const QString &text);
         void executeSelectedItem();
-        
+        void onPluginPath(const QString &plugin_path);
+
+      private: // tool
+        void regis(const QString &display, const QString &cmd);
+        // void initRegis(const QList<LosCommon::LosNet_Constants::PluginInfo> &);
+
       protected slots:
         bool eventFilter(QObject *watched, QEvent *event) override;
         void focusOutEvent(QFocusEvent *event) override;

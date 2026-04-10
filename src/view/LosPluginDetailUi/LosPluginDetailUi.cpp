@@ -111,6 +111,8 @@ namespace LosView
                             safeThis->ui->btn_install->setStyleSheet(
                                 "background-color: #2a2d2e; color: #d4d4d4; border: 1px solid #333333;");
                             QFile::remove(zip_path);
+                            emit LosCore::LosRouter::instance()._cmd_net_PluginPath(
+                                QDir(fileInfo.absolutePath()).filePath(fileInfo.baseName()));
                         }
                         else
                         {

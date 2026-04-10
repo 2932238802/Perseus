@@ -132,7 +132,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Run cpp</string>
+          <string>Run</string>
          </property>
         </widget>
        </item>

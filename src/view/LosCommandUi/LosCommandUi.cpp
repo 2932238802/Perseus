@@ -1,13 +1,5 @@
 
 #include "LosCommandUi.h"
-#include "core/LosRouter/LosRouter.h"
-#include "view/style/LosCommandUi_style.h"
-#include <qboxlayout.h>
-#include <qlineedit.h>
-#include <qlistwidget.h>
-#include <qnamespace.h>
-
-
 namespace LosView
 {
 
@@ -55,7 +47,6 @@ namespace LosView
     /**
     - 初始化 央视
     */
-
     void LosCommandUi::initStyle()
     {
         setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
@@ -91,8 +82,10 @@ namespace LosView
     */
     void LosCommandUi::initConnect()
     {
+        auto &router = LosCore::LosRouter::instance();
         connect(L_searchBox, &QLineEdit::textChanged, this, &LosCommandUi::onSearchTextChanged);
         connect(L_lists, &QListWidget::itemClicked, this, &LosCommandUi::executeSelectedItem);
+        connect(&router, &LosCore::LosRouter::_cmd_net_PluginPath, this, &LosCommandUi::onPluginPath);
     }
 
 
@@ -138,7 +131,88 @@ namespace LosView
 
 
 
+    /**
+    - 解析 这个json
+    {
+    "id": "perseus-rust",
+    "name": "Rust Support For create and build",
+    "version": "1.0.0",
+    "description": "provides Cargo project creation and building support",
+    "contributes": {
+        "commands": {
+        "rust.create.linux": "./scripts/create.sh",
+        "rust.create.windows": "./scripts/create.bat",
+        "rust.build.linux": "./scripts/build.sh"
+        }
+    }
+    }
+    */
+    void LosCommandUi::onPluginPath(const QString &plugin_path)
+    {
+        // plugin_path =  /home/losangelous/.perseus/extensions/rust-extension
+        QFileInfo file(plugin_path);
+        if (!file.exists())
+        {
+            ERR("file:" + plugin_path + " is not exist!", "LosCommandUi");
+            return;
+        }
 
+        QDir dir(plugin_path);
+        QString jsonPath = dir.filePath("package.json");
+        QFile f(jsonPath);
+        if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            ERR("open file failed!", "LosCommandUi");
+            return;
+        }
+
+        QJsonDocument dic = QJsonDocument::fromJson(f.readAll());
+        if (!dic.isObject())
+        {
+            ERR("dic is not QJsonDocument!", "LosCommandUi");
+            return;
+        }
+
+        QJsonObject obj = dic.object();
+        if (!obj.contains("contributes"))
+        {
+            ERR("obj is not contain contributes", "LosCommandUi");
+            return;
+        }
+
+        QJsonObject contributesObj = obj["contributes"].toObject();
+        if (!contributesObj.contains("commands"))
+        {
+            ERR("contributesObj is not contain commands", "LosCommandUi");
+            return;
+        }
+
+        QJsonObject commandsObj = contributesObj["commands"].toObject();
+        for (auto i = commandsObj.begin(); i != commandsObj.end(); i++)
+        {
+            QString cmdName            = i.key();
+            QString scriptRelativePath = i.value().toString();
+#ifdef Q_OS_WIN
+            if (cmdName.endsWith(".linux"))
+                continue;
+#else
+            if (cmdName.endsWith(".windows"))
+                continue;
+#endif
+            if (scriptRelativePath.startsWith("./"))
+            {
+                scriptRelativePath = scriptRelativePath.mid(0, 2);
+            }
+            QString scriptAbsolutePath = QDir(plugin_path).filePath(scriptRelativePath);
+            regis(cmdName, scriptAbsolutePath);
+        }
+    }
+
+
+
+    /**
+    - 过滤掉 一些 按键
+    */
     bool LosCommandUi::eventFilter(QObject *watched, QEvent *event)
     {
         if (watched == L_searchBox && event->type() == QEvent::KeyPress)
