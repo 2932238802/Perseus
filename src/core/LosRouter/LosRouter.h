@@ -1,13 +1,9 @@
-
-
 #pragma once
-
 #include <QObject>
 #include <qglobal.h>
 #include <qjsonarray.h>
 #include <qobject.h>
 #include <qtmetamacros.h>
-
 #include "common/constants/ConstantsClass.h"
 
 namespace LosCore

@@ -1,8 +1,3 @@
-/* 
-    Geek Black & White Theme 
-    Atmospheric, sleek, high-contrast, professional
-*/
-
 QMainWindow {
     background-color: #121212;
 }
@@ -11,7 +6,6 @@ QMainWindow {
     outline: none;
 }
 
-/* ----- Global QTabWidget fixes for documentMode white lines ----- */
 QTabWidget {
     border: none;
 }
@@ -22,7 +16,6 @@ QTabBar::base {
     border-top: 0px;
 }
 
-/* ----- Tooltips ----- */
 QToolTip {
     background-color: #1e1e1e;
     color: #ffffff;
@@ -33,7 +26,6 @@ QToolTip {
     font-size: 0.9em;
 }
 
-/* ----- Toolbars ----- */
 #toolbar_widget {
     background-color: #1e1e1e;
     border-bottom: 1px solid #333333;

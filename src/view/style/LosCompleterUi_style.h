@@ -1,10 +1,11 @@
 #pragma once
 #include <QString>
 
-namespace LosStyle {
-
-inline const QString LosCompleterUi_getStyle() {
-    return QString(R"(
+namespace LosStyle
+{
+    inline const QString LosCompleterUi_getStyle()
+    {
+        return QString(R"(
         QListView {
             background-color: #1E1E1E;
             color: #D4D4D4;
@@ -49,6 +50,6 @@ inline const QString LosCompleterUi_getStyle() {
             background-color: transparent; 
         }
     )");
-}
+    }
 
 } // namespace LosStyle

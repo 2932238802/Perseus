@@ -4,8 +4,8 @@
 namespace LosCommon
 {
 
-    /**
-     全局快捷键设置
+    /*
+     * 全局快捷键设置
      */
     namespace ShortCut
     {
@@ -38,8 +38,8 @@ namespace LosCommon
     } // namespace ShortCut
 
 
-    /**
-     clang-format 文本格式化配置
+    /*
+     * clang-format 文本格式化配置
      */
     namespace LLVM_formatStyle
     {
@@ -65,8 +65,8 @@ namespace LosCommon
     } // namespace LLVM_formatStyle
 
 
-    /**
-     单文件的运行配置参数
+    /*
+     * 单文件的运行配置参数
      */
     namespace LosRunner_Constants
     {
@@ -81,8 +81,8 @@ namespace LosCommon
 
 
 
-    /**
-     LSP (Language Server Protocol) 通信常量
+    /*
+     * LSP (Language Server Protocol) 通信常量
      */
     namespace LosLsp_Constants
     {
