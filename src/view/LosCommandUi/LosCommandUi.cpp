@@ -269,7 +269,7 @@ namespace LosView
 
                 QStringList paramsList;
                 if (!cmdValue.contains("params"))
-                    return;
+                    continue;
                 QJsonArray params = cmdValue["params"].toArray();
                 for (auto param : params)
                 {

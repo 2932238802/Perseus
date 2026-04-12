@@ -158,7 +158,8 @@ namespace LosView
     {
         QString out{""};
         QString currentText = toPlainText();
-        if (!LosCore::LosFormatManager::instance().format(&out, LOS_filePath->getFilePath(), toPlainText()))
+        if (LOS_filePath &&
+            !LosCore::LosFormatManager::instance().format(&out, LOS_filePath->getFilePath(), toPlainText()))
         {
             return;
         }
@@ -502,7 +503,7 @@ namespace LosView
     {
         if (!LOS_context)
             return;
-        if (!L_dirty && this->document()->isModified())
+        if (!L_dirty && LOS_filePath && this->document()->isModified())
         {
             L_dirty          = true;
             QString filePath = LOS_filePath->getFilePath();
@@ -520,6 +521,8 @@ namespace LosView
     */
     void LosEditorUi::onDebounceTimeout()
     {
+        if (!LOS_filePath)
+            return;
         QTextCursor cursor = this->textCursor();
         int line           = cursor.blockNumber();
         int col            = cursor.positionInBlock();
@@ -662,6 +665,8 @@ namespace LosView
     void LosEditorUi::mousePressEvent(QMouseEvent *event)
     {
         // QApplication::keyboardModifiers()  获取当前所有 被 按住的键
+        if (!LOS_filePath)
+            return;
         if (LOS_completer && LOS_completer->popup())
         {
             LOS_completer->popup()->hide();
@@ -701,6 +706,8 @@ namespace LosView
     */
     bool LosEditorUi::event(QEvent *event)
     {
+        if (!LOS_filePath)
+            return false;
         if (event->type() == QEvent::ToolTip)
         {
             QHelpEvent *help   = static_cast<QHelpEvent *>(event);

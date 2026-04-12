@@ -61,49 +61,64 @@ void Perseus::keyPressEvent(QKeyEvent *e)
 /**
 文件 加载完毕
 */
+/**
+文件 加载完毕
+*/
 void Perseus::OnFileLoaded(bool isc)
 {
-    if (isc)
-    {
-        // 左侧的文件树
-        LosModel::LosFilePath projectPath = LosCore::LosState::instance().get<LosModel::LosFilePath>(
-            LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
-        ui->project_dir_label->setText(projectPath.getFilePath());
-        if (!projectPath.isExist())
-        {
-            ERR("project path does not exist in global state!", "Perseus");
-            return;
-        }
-        QString curPath{projectPath.getFilePath()};
-        auto oldModel = LOS_treeModel;
-        LOS_rootNode  = LosModel::LosFileNode::create(curPath, nullptr);
-        LosModel::LosFileNode::build(LOS_rootNode, curPath,
-                                     [this, curPath]()
-                                     {
-                                         LOS_treeModel = new LosModel::LosFileTreeModel(LOS_rootNode, this);
-                                         ui->explorer_treeview->updateExplorer(LOS_treeModel);
-                                         INF("load project suc:" + curPath, "Perseus");
-                                         LOS_configMgr->create(curPath);
-                                         LOS_configMgr->analyse(curPath);
-                                         if (L_filesWatcher)
-                                         {
-                                             if (!L_filesWatcher->directories().isEmpty())
-                                                 L_filesWatcher->removePaths(L_filesWatcher->directories());
-                                             L_filesWatcher->addPath(curPath);
-                                             QDirIterator it(curPath, QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden,
-                                                             QDirIterator::Subdirectories);
-                                             while (it.hasNext())
-                                             {
-                                                 L_filesWatcher->addPath(it.next());
-                                             }
-                                         }
-                                         emit LosCore::LosRouter::instance()._cmd_fileTreeDone();
-                                     });
-    }
-    else
+    if (!isc)
     {
         ERR("load file failed!", "Perseus");
+        return;
     }
+
+    LosModel::LosFilePath projectPath =
+        LosCore::LosState::instance().get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
+
+    ui->project_dir_label->setText(projectPath.getFilePath());
+
+    if (!projectPath.isExist())
+    {
+        ERR("project path does not exist in global state!", "Perseus");
+        return;
+    }
+
+    QString curPath{projectPath.getFilePath()};
+    auto *newRootNode = LosModel::LosFileNode::create(curPath, nullptr);
+    LosModel::LosFileNode::build(newRootNode, curPath,
+                                 [this, curPath, newRootNode]() // 把 newRootNode 传进 Lambda
+                                 {
+                                     auto oldModel = LOS_treeModel;
+                                     auto oldRoot  = LOS_rootNode;
+                                     LOS_rootNode  = newRootNode;
+                                     LOS_treeModel = new LosModel::LosFileTreeModel(LOS_rootNode, this);
+                                     ui->explorer_treeview->updateExplorer(LOS_treeModel);
+                                     INF("load project suc:" + curPath, "Perseus");
+                                     LOS_configMgr->create(curPath);
+                                     LOS_configMgr->analyse(curPath);
+
+                                     if (L_filesWatcher)
+                                     {
+                                         if (!L_filesWatcher->directories().isEmpty())
+                                             L_filesWatcher->removePaths(L_filesWatcher->directories());
+                                         L_filesWatcher->addPath(curPath);
+                                         QDirIterator it(curPath, QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden,
+                                                         QDirIterator::Subdirectories);
+                                         while (it.hasNext())
+                                         {
+                                             L_filesWatcher->addPath(it.next());
+                                         }
+                                     }
+                                     emit LosCore::LosRouter::instance()._cmd_fileTreeDone();
+                                     if (oldModel)
+                                     {
+                                         oldModel->deleteLater();
+                                     }
+                                     if (oldRoot)
+                                     {
+                                         delete oldRoot;
+                                     }
+                                 });
 }
 
 

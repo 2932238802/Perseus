@@ -17,35 +17,35 @@
 
 namespace LosCore
 {
-class LosLspManager : public QObject
-{
-    Q_OBJECT
-  public:
-    explicit LosLspManager(QObject *parent = nullptr);
-    ~LosLspManager() override;
+    class LosLspManager : public QObject
+    {
+        Q_OBJECT
+      public:
+        explicit LosLspManager(QObject *parent = nullptr);
+        ~LosLspManager() override;
 
 
-  public:  // tool
-  private: // init
-    void initConnect();
+      public:  // tool
+      private: // init
+        void initConnect();
 
-  private: // tool
-    void openFile(const QString &file_path, const QString &file_context);
-    void changeFile(const QString &file_path, const QString &file_context);
-    void requestCompletion(const QString &file_path, int line, int col);
-    void toDefineRequest(int line, int col, const QString &file_path);
-    void didChangeWatchedFiles(const QString &file_path, int type);
-    void onSemantic(const QString &);
-    QString getLangId(LosCommon::LosToolChain_Constants::LosLanguage);
-    LosLspClient *getClient(const QString &);
+      private: // tool
+        void openFile(const QString &file_path, const QString &file_context);
+        void changeFile(const QString &file_path, const QString &file_context);
+        void requestCompletion(const QString &file_path, int line, int col);
+        void toDefineRequest(int line, int col, const QString &file_path);
+        void didChangeWatchedFiles(const QString &file_path, int type);
+        void onSemantic(const QString &);
+        QString getLangId(LosCommon::LosToolChain_Constants::LosLanguage);
+        LosLspClient *getClient(const QString &);
 
-  private slots:
-    void onLspReady(LosCommon::LosToolChain_Constants::LosTool, const QString &, const QStringList &);
+      private slots:
+        void onLspReady(LosCommon::LosToolChain_Constants::LosTool, const QString &, const QStringList &);
 
-  private:
-    // 一个语言对应一个解释器
-    // LosTool 指定工具
-    QMap<LosCommon::LosToolChain_Constants::LosTool, LosLspClient *> LOS_clients;
-};
+      private:
+        // 一个语言对应一个解释器
+        // LosTool 指定工具
+        QMap<LosCommon::LosToolChain_Constants::LosTool, LosLspClient *> LOS_clients;
+    };
 
 } // namespace LosCore

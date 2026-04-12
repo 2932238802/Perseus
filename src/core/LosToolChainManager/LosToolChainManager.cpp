@@ -203,6 +203,7 @@ namespace LosCore
         LosCommon::LosToolChain_Constants::ToolChainConfig config;
         config.L_category = stringToCategory(toolObj["category"].toString());
         config.L_name     = toolName;
+        // config.LOS_language = stringToLanguage(toolObj["language"].toString()); json 暂时没有设置 字段 先留着吧
 
         if (toolObj.contains("executables") && toolObj["executables"].isArray())
         {

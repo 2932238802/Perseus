@@ -43,6 +43,7 @@ namespace LosCore
         if (!doc.isArray())
         {
             ERR("json 格式错误!", "dealPluginReply");
+            return;
         }
         QJsonArray arr(doc.array());
         QList<LosCommon::LosNet_Constants::PluginInfo> infos;
