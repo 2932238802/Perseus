@@ -120,7 +120,9 @@ namespace LosView
             return;
         }
         LosEditorUi *editor = new LosEditorUi(this);
-        auto contextCopy    = QSharedPointer<LosModel::LosFileContext>::create();
+        // 这里 会 读写 磁盘 两次
+        // 可以 优化的
+        auto contextCopy = QSharedPointer<LosModel::LosFileContext>::create();
         contextCopy->load(filePath);
         auto fileCopy = QSharedPointer<LosModel::LosFilePath>::create(filePath);
         editor->loadContextAndPath(contextCopy, fileCopy);

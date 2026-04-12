@@ -558,15 +558,25 @@ namespace LosView
             QToolTip::hideText();
             return;
         }
+
         QString html = markdownContent;
-        html.replace("```cpp", "<pre style='color:#569cd6; font-family:Consolas;'>");
-        html.replace("```c", "<pre style='color:#569cd6; font-family:Consolas;'>");
+        html.replace("<", "&lt;");
+        html.replace(">", "&gt;");
+        html.replace("```cpp\n", "<pre style='color:#569cd6; font-family:Consolas; margin: 5px 0;'>");
+        html.replace("```c\n", "<pre style='color:#569cd6; font-family:Consolas; margin: 5px 0;'>");
         html.replace("```", "</pre>");
+
+        // 这里的 ? 是非 贪婪模式 匹配到 下一个 ** 就停止
+        QRegularExpression boldRegex("\\*\\*(.*?)\\*\\*");
+
+        html.replace(boldRegex, "<b>\\1</b>");
+        QRegularExpression inlineCodeRegex("`([^`]+)`");
+        html.replace(
+            inlineCodeRegex,
+            "<code style='color:#ce9178; background-color:#2a2d2e; padding:2px 4px; border-radius:3px;'>\\1</code>");
         html.replace("\n", "<br>");
-        html.replace("**", "<b>");
         QToolTip::showText(L_lastHoverGlobal, html, this);
     }
-
 
 
     /**

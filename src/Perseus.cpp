@@ -285,7 +285,7 @@ void Perseus::initConnect()
     LOS_runMgr       = new LosCore::LosRunManager(this);
     LOS_lspMgr       = new LosCore::LosLspManager(this);
     LOS_configMgr    = new LosCore::LosConfigManager(this);
-    LOS_toolChainMgr = new LosCore::LosToolChainManager(ui->editor_tabwidget);
+    LOS_toolChainMgr = new LosCore::LosToolChainManager(this);
     LOS_scriptRunner = new LosCore::LosScriptRunner(this);
     L_timer          = new QTimer(this);
     L_timer->setSingleShot(true);
