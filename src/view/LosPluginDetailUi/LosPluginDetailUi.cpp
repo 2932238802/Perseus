@@ -155,7 +155,10 @@ namespace LosView
         process->start("powershell", args);
 #else
         QStringList args;
-        args << "-o" << zip_path << "-d" << targetDir;
+        args << "-O"
+             << "UTF-8"
+                "-o"
+             << zip_path << "-d" << targetDir;
         process->start("unzip", args);
 #endif
     }
