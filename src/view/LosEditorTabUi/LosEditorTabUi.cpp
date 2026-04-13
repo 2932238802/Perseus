@@ -58,6 +58,7 @@ namespace LosView
         {
             return;
         }
+        
         auto widget = qobject_cast<LosEditorUi *>(L_tabWidget->currentWidget());
         if (!widget || !widget->isDirty())
         {

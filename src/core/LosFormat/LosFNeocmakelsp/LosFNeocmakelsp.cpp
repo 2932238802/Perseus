@@ -5,7 +5,7 @@ namespace LosCore
     LosFNeocmakelsp::LosFNeocmakelsp(QObject *parent) : LosFormatBase(parent) {}
     bool LosFNeocmakelsp::format(QString *out, const QString &file_path, const QString &raw_content)
     {
-        QProcess *L_process;
+        QProcess L_process;
         if (raw_content.isEmpty())
         {
             WAR("the content to be formatted is empty", "LosFormatManage");
@@ -31,21 +31,21 @@ namespace LosCore
         QStringList args;
         args << "format" << tempFile.fileName();
 
-        L_process->start(*opt, args);
-        if (!L_process->waitForStarted(LosCommon::LosFormatManager_Constants::WAITFORSTARTED_TIME_MS))
+        L_process.start(*opt, args);
+        if (!L_process.waitForStarted(LosCommon::LosFormatManager_Constants::WAITFORSTARTED_TIME_MS))
         {
             ERR("failed to start neocmakelsp", "LosFormatManager");
             return false;
         }
-        if (!L_process->waitForFinished(LosCommon::LosFormatManager_Constants::WAITFORFINISHED_TIME_MS))
+        if (!L_process.waitForFinished(LosCommon::LosFormatManager_Constants::WAITFORFINISHED_TIME_MS))
         {
             ERR("neocmakelsp timeout!", "LosFormatManager");
-            L_process->kill();
+            L_process.kill();
             return false;
         }
 
-        QByteArray output = L_process->readAllStandardOutput();
-        QByteArray error  = L_process->readAllStandardError();
+        QByteArray output = L_process.readAllStandardOutput();
+        QByteArray error  = L_process.readAllStandardError();
 
         if (!error.isEmpty() && output.isEmpty())
         {

@@ -52,7 +52,7 @@ void Perseus::keyPressEvent(QKeyEvent *e)
 /*
  * 文件 加载完毕
  */
-void Perseus::OnFileLoaded(bool isc)
+void Perseus::OnFileLoaded(bool isc, bool run_analysis)
 {
     if (!isc)
     {
@@ -74,50 +74,77 @@ void Perseus::OnFileLoaded(bool isc)
     QString curPath{projectPath.getFilePath()};
     int L_curGen      = ++L_buildGeneration; /* 记录本次构建的代次 */
     auto *newRootNode = LosModel::LosFileNode::create(curPath, nullptr);
-    LosModel::LosFileNode::build(newRootNode, curPath,
-                                 [this, curPath, newRootNode, L_curGen]()
-                                 {
-                                     /*
-                                      * 代次守卫：若当前代次已不是最新（说明在本次 build 完成前
-                                      * OnFileLoaded 又被调用了），则丢弃本次结果，避免竞争
-                                      */
-                                     if (L_curGen != L_buildGeneration)
-                                     {
-                                         delete newRootNode;
-                                         return;
-                                     }
-                                     auto oldModel = LOS_treeModel;
-                                     auto oldRoot  = LOS_rootNode;
-                                     LOS_rootNode  = newRootNode;
-                                     LOS_treeModel = new LosModel::LosFileTreeModel(LOS_rootNode, this);
-                                     ui->explorer_treeview->updateExplorer(LOS_treeModel);
-                                     INF("load project suc:" + curPath, "Perseus");
-                                     LOS_configMgr->create(curPath);
-                                     LOS_configMgr->analyse(curPath);
+    LosModel::LosFileNode::build(
+        newRootNode, curPath,
+        [this, curPath, newRootNode, L_curGen, run_analysis]()
+        {
+            /*
+             * 代次守卫
+             * - 若当前代次已不是最新（说明在本次 build 完成前OnFileLoaded 又被调用了）
+             * - 则丢弃本次结果，避免竞争
+             */
+            if (L_curGen != L_buildGeneration)
+            {
+                delete newRootNode;
+                return;
+            }
+            auto oldModel = LOS_treeModel;
+            auto oldRoot  = LOS_rootNode;
+            LOS_rootNode  = newRootNode;
+            LOS_treeModel = new LosModel::LosFileTreeModel(LOS_rootNode, this);
+            ui->explorer_treeview->updateExplorer(LOS_treeModel);
+            INF("load project suc:" + curPath, "Perseus");
 
-                                     if (L_filesWatcher)
-                                     {
-                                         if (!L_filesWatcher->directories().isEmpty())
-                                             L_filesWatcher->removePaths(L_filesWatcher->directories());
-                                         L_filesWatcher->addPath(curPath);
-                                         QDirIterator it(curPath, QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden,
-                                                         QDirIterator::Subdirectories);
-                                         while (it.hasNext())
-                                         {
-                                             L_filesWatcher->addPath(it.next());
-                                         }
-                                     }
-                                     emit LosCore::LosRouter::instance()._cmd_fileTreeDone();
-                                     if (oldModel)
-                                     {
-                                         oldModel->deleteLater();
-                                     }
-                                 });
+            /*
+             * 只在用户主动打开项目时运行 cmake 分析
+             * 文件系统变化（_cmd_fileSystemChanged）仅刷新文件树，不重跑 cmake
+             * 避免 cmake 写入 build/ → 触发 watcher → 再次 analyse → 死循环
+             */
+            if (run_analysis)
+            {
+                LOS_configMgr->create(curPath);
+                LOS_configMgr->analyse(curPath);
+            }
+
+            if (L_filesWatcher)
+            {
+                if (!L_filesWatcher->directories().isEmpty())
+                    L_filesWatcher->removePaths(L_filesWatcher->directories());
+                L_filesWatcher->addPath(curPath);
+
+                /*
+                 * 递归监听所有子目录
+                 * - 避免 cmake 写 build/ 时触发 directoryChanged  _cmd_fileSystemChanged 死循环
+                 * - 但排除构建输出目录及版本控制目录
+                 */
+                const QString buildDirPath = QDir(curPath).filePath(LosCommon::LosConfig_Constants::BUILD_NAME);
+                QDirIterator it(curPath, QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden,
+                                QDirIterator::Subdirectories);
+                while (it.hasNext())
+                {
+                    QString dir     = it.next();
+                    QString dirName = QFileInfo(dir).fileName();
+                    /* 跳过 build/ 及其所有子目录 */
+                    if (dir == buildDirPath || dir.startsWith(buildDirPath + QDir::separator()))
+                        continue;
+                    /* 跳过 .git 版本控制目录 */
+                    if (dirName == ".git")
+                        continue;
+                    L_filesWatcher->addPath(dir);
+                }
+            }
+            emit LosCore::LosRouter::instance()._cmd_fileTreeDone();
+            if (oldModel)
+            {
+                oldModel->deleteLater();
+            }
+        });
 }
 
 
 
 /*
+ * onFilesBtnClicked
  * - 文件按钮 被点击
  * - 支持导入文件和文件夹
  * - 以文件夹所在的绝对位置 作为 项目根目录
@@ -214,9 +241,10 @@ void Perseus::onLog(const QString &log)
 
 
 /*
- * - 字体缩放实现
- * - this->setStyleSheet(this->styleSheet()); 增加对应的 格式 修复
- *
+ * 字体缩放实现
+ * - this->setStyleSheet(this->styleSheet());
+ * - 增加对应的 格式 修复
+ * -
  */
 void Perseus::onZoomUi(int delta)
 {
@@ -238,6 +266,7 @@ void Perseus::onZoomUi(int delta)
 
 
 /*
+ * onToolChainMissing
  * - 工具 丢失 请求 安装
  */
 void Perseus::onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig &config)
@@ -249,8 +278,8 @@ void Perseus::onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolCh
 
 
 /*
- * 时间到了 发送信号
- *
+ * onDebounceTimeOut
+ * - 时间到了 发送信号
  */
 void Perseus::onDebounceTimeOut()
 {
@@ -267,6 +296,7 @@ void Perseus::onDirectoryChanged()
 {
     L_timer->start();
 }
+
 
 
 /*
@@ -297,7 +327,15 @@ void Perseus::initConnect()
     connect(ui->run_singleFile_btn, &QPushButton::clicked, this, &Perseus::onRunSingleFileBtnClicked);
     connect(
         &LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_fileSystemChanged, this,
-        [=, this]() { OnFileLoaded(true); }, Qt::QueuedConnection);
+        [=, this]()
+        {
+            /*
+             * 文件系统变化仅刷新文件树，不重新运行 cmake analyse
+             * 防止 cmake 写 build/ → watcher 触发 → 再次 analyse → 死循环
+             */
+            OnFileLoaded(true, false);
+        },
+        Qt::QueuedConnection);
     connect(ui->project_btn, &QRadioButton::toggled, this, &Perseus::onProjectBtnClicked);
     connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_toolChainMissing, this,
             &Perseus::onToolChainMissing);
@@ -363,7 +401,7 @@ void Perseus::initConnect()
 
 
 /*
- * 初始化样式F
+ * 初始化样式
  */
 void Perseus::initStyle()
 {

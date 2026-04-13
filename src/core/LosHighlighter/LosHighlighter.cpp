@@ -80,6 +80,7 @@ namespace LosCore
 
 
     /*
+     * highlightByRegex
      * - 通过 正则 匹配颜色
      */
     void LosHighlighter::highlightByRegex(const QString &str)
@@ -234,15 +235,27 @@ namespace LosCore
             QStringLiteral("\\btemplate\\b"), QStringLiteral("\\btypedef\\b"),   QStringLiteral("\\btypename\\b"),
             QStringLiteral("\\bunion\\b"),    QStringLiteral("\\bunsigned\\b"),  QStringLiteral("\\bvirtual\\b"),
             QStringLiteral("\\bvoid\\b"),     QStringLiteral("\\bvolatile\\b"),  QStringLiteral("\\bbool\\b"),
-            QStringLiteral("\\btrue\\b"),     QStringLiteral("\\bfalse\\b"),     QStringLiteral("\\bauto\\b")};
-
-        L_keyword.setForeground(QColor("#E17899")); /* 霓虹粉 */
+            QStringLiteral("\\btrue\\b"),     QStringLiteral("\\bfalse\\b"),     QStringLiteral("\\bauto\\b"),
+            QStringLiteral("\\breturn\\b"),   QStringLiteral("\\busing\\b"),     QStringLiteral("\\bnew\\b"),
+            QStringLiteral("\\bdelete\\b"),   QStringLiteral("\\bnullptr\\b"),   QStringLiteral("\\bif\\b"),
+            QStringLiteral("\\belse\\b"),     QStringLiteral("\\bfor\\b"),       QStringLiteral("\\bwhile\\b"),
+            QStringLiteral("\\bdo\\b"),       QStringLiteral("\\bswitch\\b"),    QStringLiteral("\\bcase\\b"),
+            QStringLiteral("\\bbreak\\b"),    QStringLiteral("\\bcontinue\\b"),  QStringLiteral("\\bdefault\\b"),
+            QStringLiteral("\\bgoto\\b"),     QStringLiteral("\\bconstexpr\\b"), QStringLiteral("\\bcatch\\b"),
+            QStringLiteral("\\btry\\b"),      QStringLiteral("\\bthrow\\b")};
+        L_keyword.setForeground(QColor("#E17899"));
         for (const auto &str : keywordPatterns)
         {
             rule.L_regex  = QRegularExpression(str);
             rule.L_format = L_keyword;
             L_rules.append(rule);
         }
+
+        QTextCharFormat preprocessorFormat;
+        preprocessorFormat.setForeground(QColor("#B97EE6"));
+        rule.L_regex  = QRegularExpression(QStringLiteral("#[a-zA-Z_]+\\b"));
+        rule.L_format = preprocessorFormat;
+        L_rules.append(rule);
 
         L_class.setForeground(QColor("#F5B83D"));
         rule.L_regex  = QRegularExpression(QStringLiteral("\\b[Q]?[A-Z][a-zA-Z0-9_]+\\b"));
@@ -252,6 +265,11 @@ namespace LosCore
         L_func.setForeground(QColor("#2DCCCF"));
         rule.L_regex  = QRegularExpression(QStringLiteral("\\b[A-Za-z0-9_]+(?=\\()"));
         rule.L_format = L_func;
+        L_rules.append(rule);
+
+        L_str.setForeground(QColor("#42E6A4"));
+        rule.L_regex  = QRegularExpression(QStringLiteral("\"[^\"]*\"|(?<=#include )<[^>]+>"));
+        rule.L_format = L_str;
         L_rules.append(rule);
 
         L_str.setForeground(QColor("#42E6A4"));

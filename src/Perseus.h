@@ -104,7 +104,7 @@ class Perseus : public QMainWindow
     LosCommon::LosSession_Constants::Config collectConfig();
 
   public slots: // xhc
-    void OnFileLoaded(bool isc);
+    void OnFileLoaded(bool isc, bool runAnalysis = true);
     void onFilesBtnClicked();                                   /* 打开本地文件夹 */
     void onExplorerFileDoubleClicked(const QModelIndex &index); /* 打开本地文件夹 */
     void onRunSingleFileBtnClicked();                           /* 运行一个文本 */
