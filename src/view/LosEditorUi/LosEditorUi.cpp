@@ -644,12 +644,9 @@ namespace LosView
 
 
     /*
-     * - 光标拦截
+     * 光标拦截
      * - 弹出 语法补全
      * - 同时 支持 括号补全
-     */
-    /*
-     * 在 LosEditorUi.cpp 中
      */
     void LosEditorUi::keyPressEvent(QKeyEvent *event)
     {

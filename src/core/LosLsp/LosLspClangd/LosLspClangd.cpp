@@ -181,13 +181,13 @@ namespace LosCore
             case LosCore::LosLspType::REQ_SEMANTIC_HIGHLIGHT:
             {
                 /*
-                 * 这里是 语法 高亮
-                 * [deltaLine, deltaChar, length, tokenType, modifiers]
-                 * json 返回的 只是 数组 没有对应的字段
-                 * 就是 纯 数字 所以需要自己进行解析
+                 * LosLspClangd
+                 * - 这里是 语法 高亮
+                 * - [deltaLine, deltaChar, length, tokenType, modifiers]
+                 * - json 返回的 只是 数组 没有对应的字段
+                 * - 就是纯数字 所以需要自己进行解析
+                 * - data 数组 把这个信号发出来
                  */
-                INF("11", "11");
-
                 if (obj.contains("result") && !obj["result"].isNull())
                 {
                     QJsonObject result = obj["result"].toObject();

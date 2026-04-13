@@ -151,14 +151,15 @@ namespace LosCore
 
 
     /*
-     * - 更新一下
+     * 更新一下
+     * - [deltaLine, deltaChar, length, tokenType, modifiers]
+     * - 分别是五个 
      */
     void LosHighlighter::updateSemanticTokens(const QJsonArray &data)
     {
         L_semanticData.clear();
         int currentLine = 0;
         int currentChar = 0;
-
         for (int i = 0; i + 4 < data.size(); i += 5)
         {
             int deltaLine = data[i].toInt();
@@ -166,9 +167,7 @@ namespace LosCore
             int length    = data[i + 2].toInt();
             int tokenType = data[i + 3].toInt();
             int modifiers = data[i + 4].toInt();
-
             currentLine += deltaLine;
-
             if (deltaLine > 0)
             {
                 currentChar = deltaChar;
@@ -177,7 +176,6 @@ namespace LosCore
             {
                 currentChar += deltaChar;
             }
-
             L_semanticData[currentLine].append({currentChar, length, tokenType, modifiers});
         }
 

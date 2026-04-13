@@ -56,7 +56,6 @@ namespace LosCore
         void
         _cmd_lsp_msg_didChangeWatchedFiles(const QString &,
                                            LosCommon::LosLsp_Constants::LspJson_didChangeWatchedFiles_changes_type);
-
         /*
          * 补全的结果 返回
          */
