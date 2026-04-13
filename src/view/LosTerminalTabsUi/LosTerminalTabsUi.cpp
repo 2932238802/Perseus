@@ -15,7 +15,6 @@ namespace LosView
     /*
      * 初始化 样式
      */
-
     void LosTerminalTabsUi::initStyle()
     {
         setTabsClosable(true);

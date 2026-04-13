@@ -128,7 +128,7 @@ namespace LosCommon
 
 
     /*
-     * @brief CMake 构建系统配置常量
+     * CMake 构建系统配置常量
      */
     namespace LosConfig_Constants
     {
@@ -157,7 +157,7 @@ namespace LosCommon
 
 
     /*
-     * @brief 悬浮面板与弹窗的 UI 样式常量
+     * 悬浮面板与弹窗的 UI 样式常量
      */
     namespace LosFloatingPanelUi_Constants
     {
@@ -186,5 +186,17 @@ namespace LosCommon
                                                                         )";
         } /* namespace LosGotoLinePopupUi_Constants */
     } /* namespace LosFloatingPanelUi_Constants */
+
+
+    /*
+     * LosPluginDetailUi
+     * - PLUGIN_EXTENSION_SAVE_PATH
+     *   - 保存的路径位置
+     *   - TODO: 要跨平台修改
+     */
+    namespace LosPluginDetailUi_Constants
+    {
+        inline constexpr const char *PLUGIN_EXTENSION_SAVE_PATH = "/.perseus/extensions/";
+    }
 
 } /* namespace LosCommon */

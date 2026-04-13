@@ -53,14 +53,45 @@ namespace Ui
 }
 QT_END_NAMESPACE
 
+/*
+ * Perseus
+ * - 根本类
+ *
+ * keyPressEvent
+ * - TODO: 加入 关闭应用程序的快捷键
+ *
+ * initConnect
+ * - 初始化 连接
+ * - 初始化 各种类
+ *
+ * initStyle
+ * - 初始化 样式
+ *
+ * initShotcut
+ * - 初始化 快捷键
+ *
+ * initSession
+ * - 初始化 历史会话
+ *
+ * collectConfig
+ * - 收集 当前的文件信息
+ * - 保存到本地
+ * - 形成记忆
+ *
+ * OnFileLoaded
+ * - 文件加载状态
+ * - 完毕
+ *   - 建立左侧的文件树
+ *   - 更新左侧的文件结构 并打开历史节点
+ */
 class Perseus : public QMainWindow
 {
     Q_OBJECT
   public:
-    Perseus(QWidget *parent = nullptr);
+    explicit Perseus(QWidget *parent = nullptr);
     ~Perseus();
 
-  protected:
+  protected: // override
     void keyPressEvent(QKeyEvent *) override;
 
   private:
@@ -69,10 +100,10 @@ class Perseus : public QMainWindow
     void initShotcut();
     void initSession();
 
-  private: /* tool */
+  private: // tool
     LosCommon::LosSession_Constants::Config collectConfig();
 
-  public slots:
+  public slots: // xhc
     void OnFileLoaded(bool isc);
     void onFilesBtnClicked();                                   /* 打开本地文件夹 */
     void onExplorerFileDoubleClicked(const QModelIndex &index); /* 打开本地文件夹 */
@@ -86,8 +117,8 @@ class Perseus : public QMainWindow
 
   private:
     Ui::Perseus *ui;
-    bool L_project = false;
-
+    bool L_project                                 = false;
+    int L_buildGeneration                          = 0; /* 代次守卫：防止异步 build 回调竞争 */
     QFileSystemWatcher *L_filesWatcher             = nullptr;
     QTimer *L_timer                                = nullptr;
     LosModel::LosFileNode *LOS_rootNode            = nullptr;

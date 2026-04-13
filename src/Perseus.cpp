@@ -1,19 +1,5 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
-#include "common/constants/ConstantsStr.h"
-#include "core/LosNet/LosNet.h"
-#include "core/LosRouter/LosRouter.h"
-#include "core/LosRunner/LosScriptRunner/LosScriptRunner.h"
-#include "core/LosShortcutManager/LosShortcutManager.h"
-#include "core/LosState/LosState.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include "view/LosCommandArgsUi/LosCommandArgsUi.h"
-#include "view/LosCommandUi/LosCommandUi.h"
-#include <qfiledialog.h>
-#include <qfilesystemwatcher.h>
-#include <qpushbutton.h>
-#include <qstackedwidget.h>
-#include <qtimer.h>
 
 
 
@@ -86,10 +72,20 @@ void Perseus::OnFileLoaded(bool isc)
     }
 
     QString curPath{projectPath.getFilePath()};
+    int L_curGen      = ++L_buildGeneration; /* 记录本次构建的代次 */
     auto *newRootNode = LosModel::LosFileNode::create(curPath, nullptr);
     LosModel::LosFileNode::build(newRootNode, curPath,
-                                 [this, curPath, newRootNode]() /* 把 newRootNode 传进 Lambda */
+                                 [this, curPath, newRootNode, L_curGen]()
                                  {
+                                     /*
+                                      * 代次守卫：若当前代次已不是最新（说明在本次 build 完成前
+                                      * OnFileLoaded 又被调用了），则丢弃本次结果，避免竞争
+                                      */
+                                     if (L_curGen != L_buildGeneration)
+                                     {
+                                         delete newRootNode;
+                                         return;
+                                     }
                                      auto oldModel = LOS_treeModel;
                                      auto oldRoot  = LOS_rootNode;
                                      LOS_rootNode  = newRootNode;
@@ -115,10 +111,6 @@ void Perseus::OnFileLoaded(bool isc)
                                      if (oldModel)
                                      {
                                          oldModel->deleteLater();
-                                     }
-                                     if (oldRoot)
-                                     {
-                                         delete oldRoot;
                                      }
                                  });
 }
@@ -474,7 +466,7 @@ void Perseus::initShotcut()
 
 
 /*
- * - 初始化会话
+ * 初始化会话
  */
 void Perseus::initSession()
 {
@@ -509,10 +501,23 @@ void Perseus::initSession()
                 LOS_tabUi->openFile(file);
                 LOS_tabUi->blockSignals(false);
             }
+
+            /*
+             * 恢复上次激活的标签页
+             * 优先使用保存的 L_curActiveFile
+             * 若为空则回退到打开列表的第一个文件
+             */
+            if (!conf.L_curActiveFile.isEmpty())
+            {
+                LOS_tabUi->openFile(conf.L_curActiveFile);
+            }
+            else if (!conf.L_curFilePaths.isEmpty())
+            {
+                LOS_tabUi->openFile(conf.L_curFilePaths.first());
+            }
             if (conf.L_curProDir.isEmpty() || conf.L_curFilePaths.isEmpty())
                 return;
             ui->explorer_treeview->expandToFile(conf.L_curFilePaths.first());
-            QString currentActiveFile = conf.L_curFilePaths.first();
         },
         Qt::SingleShotConnection);
     OnFileLoaded(isSuc);
@@ -533,5 +538,6 @@ LosCommon::LosSession_Constants::Config Perseus::collectConfig()
     conf.L_curProDir = LosCore::LosState::instance()
                            .get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR)
                            .getFilePath();
+    conf.L_curActiveFile = LOS_tabUi->getCurFilePath(); /* 保存当前激活的标签页路径 */
     return conf;
 }

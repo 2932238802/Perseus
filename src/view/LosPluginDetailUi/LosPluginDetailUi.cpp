@@ -1,12 +1,6 @@
 #include "LosPluginDetailUi.h"
-#include "core/LosNet/LosNet.h"
-#include "core/LosRouter/LosRouter.h"
 #include "ui_LosPluginDetailUi.h"
-#include <QDir>
-#include <QPointer>
-#include <QProcess>
-#include <qpushbutton.h>
-#include <qstandardpaths.h>
+
 
 namespace LosView
 {
@@ -63,7 +57,17 @@ namespace LosView
 
     void LosPluginDetailUi::onDownloadBtnClicked()
     {
-        QString extDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.perseus/extensions/";
+        /*
+         * extDir
+         * - 保存的位置
+         * L_id
+         * - 默认是 文件的名字
+         *
+         * 如果是卸载操作
+         * - removeRecursively 递归删除
+         */
+        QString extDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) +
+                         LosCommon::LosPluginDetailUi_Constants::PLUGIN_EXTENSION_SAVE_PATH;
         if (ui->btn_install->text() == "Uninstall")
         {
             QString pluginPath = extDir + LOS_info.L_id;
@@ -77,6 +81,9 @@ namespace LosView
             return;
         }
 
+        /*
+         *
+         */
         ui->btn_install->setEnabled(false);
         ui->btn_install->setText("Downloading...");
         QString savePath = extDir + LOS_info.L_id + ".zip";
@@ -87,10 +94,22 @@ namespace LosView
 
     void LosPluginDetailUi::onDownloadFinished(const QString &zip_path)
     {
+        /*
+         * 打印 下载的zip 信息
+         * - 可删
+         */
         INF(zip_path, "LosPluginDetailUi");
         if (!zip_path.contains(LOS_info.L_id))
             return;
 
+        /*
+         * 设置下载的ui
+         * 当前的 tab ui可能会被删除
+         * - 所以使用  QPointer 进行保护
+         * - unzip Linux
+         * - Expand-Archive windows
+         * - 运行成功之后 删掉 zip文件 QFile::remove(zip_path);
+         */
         ui->btn_install->setText("Extracting...");
         QFileInfo fileInfo(zip_path);
         QString targetDir = fileInfo.absolutePath();
@@ -143,6 +162,9 @@ namespace LosView
 
 
 
+    /*
+     * 初始化连接
+     */
     void LosPluginDetailUi::initConnect()
     {
         /*
@@ -151,6 +173,10 @@ namespace LosView
          * - 下载这个zip 到本地
          * - 然后 更新一下 指令集
          *   -  指令集 就是 ctrl + shift + p 弹出的窗口
+         *
+         * _cmd_net_downloadFinished 下载完成的信号
+         * - 下载完成之后 提取对应的zip文件
+         * - 解压到 .perseus 的extension 文件夹里面
          */
         connect(ui->btn_install, &QPushButton::clicked, this, &LosPluginDetailUi::onDownloadBtnClicked);
         connect(&LosCore::LosRouter::instance(), &LosCore::LosRouter::_cmd_net_downloadFinished, this,

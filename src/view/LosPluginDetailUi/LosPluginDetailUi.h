@@ -1,8 +1,15 @@
 #pragma once
 #include "common/constants/ConstantsClass.h"
+#include "common/constants/ConstantsStr.h"
 #include "core/LosNet/LosNet.h"
+#include "core/LosRouter/LosRouter.h"
+
+#include <QDir>
+#include <QPointer>
 #include <QProcess>
 #include <QWidget>
+#include <qpushbutton.h>
+#include <qstandardpaths.h>
 #include <qtmetamacros.h>
 
 QT_BEGIN_NAMESPACE
