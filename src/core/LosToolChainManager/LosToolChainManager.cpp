@@ -38,6 +38,7 @@ namespace LosCore
     {
         if (!LOS_toolConfigs.contains(tool))
         {
+            WAR("toolConfigs can't find anymore~", "LosToolChainManager");
             return;
         }
         auto config = LOS_toolConfigs.value(tool);
@@ -310,6 +311,8 @@ namespace LosCore
             return LosTool::NEOCMAKELSP;
         if (s == "rustc")
             return LosTool::RUSTC;
+        if (s == "python")
+            return LosTool::PYTHON;
         return LosTool::UNKNOWN;
     }
 

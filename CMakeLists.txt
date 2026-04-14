@@ -24,6 +24,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     WebEngineWidgets
     WebChannel
     Test
+    Core5Compat
 )
 
 file(GLOB_RECURSE CORE_SOURCES
@@ -46,6 +47,7 @@ target_link_libraries(PerseusCore PUBLIC
     Qt${QT_VERSION_MAJOR}::WebEngineWidgets
     Qt${QT_VERSION_MAJOR}::WebChannel
     Qt${QT_VERSION_MAJOR}::Test
+    Qt6::Core5Compat
 )
 
 

@@ -173,27 +173,21 @@ namespace LosCore
 
 
 
+        // ----------------------------------------------------------------------------
         /*
-         * ----------------------------------------------------------------------------
+         * _cmd_runScript
+         * - 第一个参数 就是 在哪个 工作目录下面运行
+         * - 第二个参数 就是 脚本在哪
+         * - 第三个参数 就是 脚本参数
+         *
+         * _cmd_command_exeScript
+         * - 启动命令行 参数的UI的
          */
-
         void _cmd_net_pluginReply(const QList<LosCommon::LosNet_Constants::PluginInfo> &);
         void _cmd_openPluginDetail(const LosCommon::LosNet_Constants::PluginInfo &);
         void _cmd_net_downloadFinished(const QString &downpath);
-        /*
-         * 启动 命令行 参数的 ui 的
-         */
         void _cmd_command_exeScript(const QString &script_path, const QStringList &params);
-
-        /*
-         *
-         */
         void _cmd_net_PluginPath(const QString &plugin_path);
-        /*
-         * 第一个参数 就是 在哪个 工作目录下面运行
-         * 第二个参数 就是 脚本在哪
-         * 第三个参数 就是 脚本参数
-         */
         void _cmd_runScript(const QString &working_dir, const QString &script_path, const QStringList &args);
     };
 } /* namespace LosCore */

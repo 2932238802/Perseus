@@ -1,8 +1,6 @@
 
 #include "LosRunManager.h"
 #include "common/constants/ConstantsClass.h"
-#include "core/LosRunner/LosRustcRunner/LosRustcRunner.h"
-
 
 namespace LosCore
 {
@@ -29,6 +27,7 @@ namespace LosCore
         if (lang != LosCommon::LosToolChain_Constants::LosLanguage::UNKNOWN)
             L_mainEntryFilePath = file_path;
 
+        auto &router = LosCore::LosRouter::instance();
         switch (lang)
         {
         case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
@@ -37,8 +36,7 @@ namespace LosCore
             {
                 if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::CMAKE))
                 {
-                    emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
-                        lang, LosCommon::LosToolChain_Constants::LosTool::CMAKE);
+                    emit router._cmd_checkLanguageToolchain(lang, LosCommon::LosToolChain_Constants::LosTool::CMAKE);
                     return;
                 }
                 LOS_runners[LosCommon::LosToolChain_Constants::LosTool::CMAKE]->start(file_path);
@@ -47,8 +45,8 @@ namespace LosCore
             {
                 if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS))
                 {
-                    emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
-                        lang, LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS);
+                    emit router._cmd_checkLanguageToolchain(lang,
+                                                            LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS);
                     return;
                 }
                 LOS_runners[LosCommon::LosToolChain_Constants::LosTool::G_PLUS_PLUS]->start(file_path);
@@ -56,14 +54,24 @@ namespace LosCore
             break;
         }
         case LosCommon::LosToolChain_Constants::LosLanguage::RUST:
+        {
             if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::RUSTC))
             {
-                emit LosCore::LosRouter::instance()._cmd_checkLanguageToolchain(
-                    lang, LosCommon::LosToolChain_Constants::LosTool::RUSTC);
+                emit router._cmd_checkLanguageToolchain(lang, LosCommon::LosToolChain_Constants::LosTool::RUSTC);
                 return;
             }
             LOS_runners[LosCommon::LosToolChain_Constants::LosTool::RUSTC]->start(file_path);
             break;
+        }
+        case LosCommon::LosToolChain_Constants::LosLanguage::PYTHON:
+        {
+            if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::PYTHON))
+            {
+                emit router._cmd_checkLanguageToolchain(lang, LosCommon::LosToolChain_Constants::LosTool::PYTHON);
+                return;
+            }
+            LOS_runners[LosCommon::LosToolChain_Constants::LosTool::PYTHON]->start(file_path);
+        }
         default:
         {
             break;
@@ -120,6 +128,19 @@ namespace LosCore
             }
             auto *runner =
                 qobject_cast<LosRustcRunner *>(LOS_runners[LosCommon::LosToolChain_Constants::LosTool::RUSTC]);
+            runner->setExePath(exePath);
+            runner->start(L_mainEntryFilePath);
+            break;
+        }
+        case LosCommon::LosToolChain_Constants::LosTool::PYTHON:
+        {
+            INF("python!", "onToolChainReady");
+            if (!LOS_runners.contains(LosCommon::LosToolChain_Constants::LosTool::PYTHON))
+            {
+                LOS_runners[LosCommon::LosToolChain_Constants::LosTool::PYTHON] = new LosPythonRunner(this);
+            }
+            auto *runner =
+                qobject_cast<LosPythonRunner *>(LOS_runners[LosCommon::LosToolChain_Constants::LosTool::PYTHON]);
             runner->setExePath(exePath);
             runner->start(L_mainEntryFilePath);
             break;

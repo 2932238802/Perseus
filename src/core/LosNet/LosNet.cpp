@@ -118,7 +118,7 @@ namespace LosCore
         if (url_str.isEmpty())
         {
             func(R"(
-                <p style='color:#888;'> No des ... </p>
+                _No description available from server._
                 )");
             return;
         }

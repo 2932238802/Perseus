@@ -147,6 +147,11 @@ namespace LosCommon
 
 
 
+        /*
+         * PYTHON
+         * - windows python
+         * - Linux python3
+         */
         enum class LosTool
         {
             CMAKE,
@@ -159,7 +164,8 @@ namespace LosCommon
             RUST_ANALYZER,
             CARGO,
             RUSTC,
-            UNKNOWN
+            UNKNOWN,
+            PYTHON,
         };
 
 

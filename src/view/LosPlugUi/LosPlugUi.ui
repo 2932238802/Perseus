@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
+    <width>596</width>
     <height>600</height>
    </rect>
   </property>
@@ -31,27 +31,23 @@
    </property>
    <item>
     <widget class="QLabel" name="titleLabel">
-     <property name="text">
-      <string>EXTENSIONS</string>
-     </property>
      <property name="font">
       <font>
        <family>JetBrains Mono</family>
        <pointsize>10</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="styleSheet">
       <string>color: #cccccc;</string>
      </property>
+     <property name="text">
+      <string>EXTENSIONS</string>
+     </property>
     </widget>
    </item>
    <item>
     <widget class="QLineEdit" name="searchLineEdit">
-     <property name="placeholderText">
-      <string>Search extensions in Marketplace...</string>
-     </property>
      <property name="styleSheet">
       <string>
         QLineEdit {
@@ -68,13 +64,13 @@
         }
       </string>
      </property>
+     <property name="placeholderText">
+      <string>Search extensions in Marketplace...</string>
+     </property>
     </widget>
    </item>
    <item>
     <widget class="QListWidget" name="extensionsList">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
      <property name="styleSheet">
       <string>
         QListWidget {
@@ -96,6 +92,9 @@
             color: #ffffff;
         }
       </string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
     </widget>
    </item>

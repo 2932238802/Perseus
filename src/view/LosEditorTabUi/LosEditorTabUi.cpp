@@ -234,6 +234,8 @@ namespace LosView
         wi->deleteLater();
     }
 
+
+    
     /*
      * 如果编辑器 修改
      */

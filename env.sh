@@ -23,6 +23,7 @@ sudo apt-get install -y \
 echo -e "${GREEN}[3/6] 正在安装 Qt 6 基础框架及图形库依赖...${NC}"
 sudo apt-get install -y \
     qt6-base-dev qt6-base-dev-tools \
+    libqt6core5compat6-dev \
     libgl1-mesa-dev libxcb-cursor0 \
     libxkbcommon-x11-0 libxkbcommon-dev
 

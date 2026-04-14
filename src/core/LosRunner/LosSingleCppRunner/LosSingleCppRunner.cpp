@@ -69,34 +69,15 @@ namespace LosCore
         LOS_filePath.loadFile(file_path);
         LosModel::LosFilePath dir =
             LosState::instance().get<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR);
-        /*
-         * #ifdef Q_OS_WIN
-         * L_outPutPath = LOS_filePath.getAbsolutePath() + QDir::separator() + LOS_filePath.getBaseFileName() +
-         * QDir::separator() + LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
-         * LosCommon::LosRunner_Constants::OUTPUT_GXX + QDir::separator() +
-         * LosCommon::LosRunner_Constants::WIN_EXE;
-         */
 
-        /*
-         * #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-         */
         QString outDirPath = dir.getAbsoluteFilePath() + QDir::separator() +
                              LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
                              LosCommon::LosRunner_Constants::OUTPUT_GXX;
+                             
         QDir().mkpath(outDirPath);
         QString outputExe =
             outDirPath + QDir::separator() + LOS_filePath.getBaseFileName() + LosCommon::LosRunner_Constants::LINUX_EXE;
         L_outPutPath = outputExe;
-
-        /*
-         * #else
-         * L_outPutPath = LOS_filePath.getAbsolutePath() + QDir::separator() + LOS_filePath.getBaseFileName() +
-         * LosCommon::LosRunner_Constants::WIN_EXE + QDir::separator() +
-         * LosCommon::LosRunner_Constants::OUTPUT_BUILD + QDir::separator() +
-         * LosCommon::LosRunner_Constants::OUTPUT_GXX + QDir::separator() +
-         * LosCommon::LosRunner_Constants::LINUX_EXE;
-         * #endif
-         */
 
         if (!LOS_filePath.isExist())
         {

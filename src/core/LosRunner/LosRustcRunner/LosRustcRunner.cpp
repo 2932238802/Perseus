@@ -37,8 +37,7 @@ namespace LosCore
 
 
     /*
-     * - 开始运行
-     * -
+     * 开始运行
      */
     void LosRustcRunner::start(const QString &file_path)
     {

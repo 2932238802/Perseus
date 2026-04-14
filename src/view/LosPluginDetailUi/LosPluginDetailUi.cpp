@@ -23,7 +23,14 @@ namespace LosView
         ui->label_version->setText(info.L_version);
 
         /*
-         * 这里 检测 一下 是不是 已经安装了
+         * - 检测是否已经安装
+         * - 默认设置 基础加载样式
+         * - 调用单例 fetchPluginReadme
+         * - setHtml 样式更为美观
+         *
+         * 1.080 修改
+         * - 统一使用 md
+         * - 依然存在乱码的问题
          */
         QString extDir     = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.perseus/extensions/";
         QString pluginPath = extDir + info.L_id;
@@ -40,15 +47,17 @@ namespace LosView
             ui->btn_install->setEnabled(true);
             ui->btn_install->setStyleSheet("");
         }
-        ui->text_description->setHtml("<p style='color: #888888; font-family: \"Microsoft YaHei\";'>"
-                                      "Loading description from server...</p>");
+        ui->text_description->setMarkdown("> Loading description from server...");
         QPointer<LosPluginDetailUi> safeThis(this);
         LosCore::LosNet::instance().fetchPluginReadme(info.L_readmeUrl,
-                                                      [safeThis](const QString &htmlContent)
+                                                      [safeThis, this](const QString &htmlContent)
                                                       {
                                                           if (safeThis)
                                                           {
-                                                              safeThis->ui->text_description->setHtml(htmlContent);
+                                                              QFont font = ui->text_description->font();
+                                                              font.setFamily("Microsoft YaHei");
+                                                              ui->text_description->setFont(font);
+                                                              safeThis->ui->text_description->setMarkdown(htmlContent);
                                                           }
                                                       });
     }

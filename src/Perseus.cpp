@@ -271,6 +271,7 @@ void Perseus::onZoomUi(int delta)
  */
 void Perseus::onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig &config)
 {
+    SUC("open download windows...","OnToolChainMissing");
     LosView::LosToolMissUi dialog(config, this);
     dialog.exec();
 }
@@ -320,9 +321,6 @@ void Perseus::initConnect()
     connect(L_timer, &QTimer::timeout, this, &Perseus::onDebounceTimeOut);
     connect(L_filesWatcher, &QFileSystemWatcher::directoryChanged, this, &Perseus::onDirectoryChanged);
     connect(ui->files_btn, &QPushButton::clicked, this, &Perseus::onFilesBtnClicked);
-    /*
-     * enter 自动触发 actived
-     */
     connect(ui->explorer_treeview, &QTreeView::activated, this, &Perseus::onExplorerFileDoubleClicked);
     connect(ui->run_singleFile_btn, &QPushButton::clicked, this, &Perseus::onRunSingleFileBtnClicked);
     connect(

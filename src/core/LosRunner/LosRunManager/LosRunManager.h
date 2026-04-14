@@ -5,9 +5,12 @@
 #include "core/LosRouter/LosRouter.h"
 #include "core/LosRunner/LosAbstractRunner/LosAbstractRunner.h"
 #include "core/LosRunner/LosCmakeRunner/LosCmakeRunner.h"
+#include "core/LosRunner/LosPythonRunner/LosPythonRunner.h"
+#include "core/LosRunner/LosRustcRunner/LosRustcRunner.h"
 #include "core/LosRunner/LosSingleCppRunner/LosSingleCppRunner.h"
 #include "core/LosState/LosState.h"
 #include "models/LosFilePath/LosFilePath.h"
+
 #include <QObject>
 #include <qsharedpointer.h>
 #include <qtmetamacros.h>
