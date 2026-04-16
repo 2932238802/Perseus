@@ -74,7 +74,7 @@ namespace LosCore
 
 
     /*
-     * - 读取 json
+     * 读取 json
      */
     void LosToolChainManager::initConfig()
     {

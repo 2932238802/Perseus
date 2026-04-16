@@ -177,7 +177,10 @@ namespace LosCore
 
 
     /*
-     * -
+     * onLspReady
+     * - _cmd_lspReady
+     * - 这个信号进行触发
+     * - onCheckSingleTool 这个函数会触发
      */
     void LosLspManager::onLspReady(LosCommon::LosToolChain_Constants::LosTool tool, const QString &exePath,
                                    const QStringList &asgs)
@@ -188,21 +191,25 @@ namespace LosCore
             {
             case LosCommon::LosToolChain_Constants::LosTool::CLANGD:
             {
+                SUC("init c++ lsp","LosLspManager");
                 LOS_clients[tool] = new LosLspClangd(this);
                 break;
             }
             case LosCommon::LosToolChain_Constants::LosTool::NEOCMAKELSP:
             {
+                SUC("init cmake lsp","LosLspManager");
                 LOS_clients[tool] = new LosLspCMake(this);
                 break;
             }
             case LosCommon::LosToolChain_Constants::LosTool::RUST_ANALYZER:
             {
+                SUC("init rust lsp","LosLspManager");
                 LOS_clients[tool] = new LosLspRust(this);
                 break;
             }
             case LosCommon::LosToolChain_Constants::LosTool::PYRIGHT:
             {
+                SUC("init python lsp","LosLspManager");
                 LOS_clients[tool] = new LosLspPython(this);
                 break;
             }
