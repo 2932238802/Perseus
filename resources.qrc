@@ -23,6 +23,7 @@
         <file alias="chajian_black.png">resources/icons/chajian_black.png</file>
         <file alias="files_black.png">resources/icons/files_black.png</file>
         <file alias="files_white.png">resources/icons/files_white.png</file>
+        <file alias="theme.png">resources/icons/theme.png</file>
     </qresource>
     <qresource prefix="/web">
         <file>resources/web/xterm/addon-fit.min.js</file>

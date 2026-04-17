@@ -1,14 +1,6 @@
 
 #include "LosEditorTabUi.h"
-#include "common/constants/ConstantsClass.h"
-#include "common/util/CheckLang.h"
-#include "core/LosRouter/LosRouter.h"
-#include "models/LosFileContext/LosFileContext.h"
-#include "models/LosFilePath/LosFilePath.h"
-#include "view/LosEditorUi/LosEditorUi.h"
-#include "view/LosPluginDetailUi/LosPluginDetailUi.h"
-#include <qtabwidget.h>
-#include <qwidget.h>
+
 
 
 namespace LosView
@@ -17,6 +9,7 @@ namespace LosView
     LosEditorTabUi::LosEditorTabUi(QTabWidget *tab_widget, QWidget *parent) : L_tabWidget{tab_widget}, QWidget{parent}
     {
         initConnect();
+        initTabBar();
     }
 
     LosEditorTabUi::~LosEditorTabUi() {}
@@ -26,8 +19,9 @@ namespace LosView
     /*
      * 关闭标签页
      */
-    void LosEditorTabUi::closeTab(int index) {
-        L_tabWidget->removeTab(index);
+    void LosEditorTabUi::closeTab(int index)
+    {
+        onTabCloseRequested(index);
     }
 
 
@@ -36,14 +30,15 @@ namespace LosView
      * @brief closeAllTabs
      * - 关闭所有的标签
      */
-       void LosEditorTabUi::closeAllTabs()
+    void LosEditorTabUi::closeAllTabs()
     {
         while (L_tabWidget->count() > 0)
         {
             QWidget *wi = L_tabWidget->widget(0);
             L_tabWidget->removeTab(0);
-            if (wi) {
-                wi->deleteLater(); 
+            if (wi)
+            {
+                wi->deleteLater();
             }
         }
         LOS_pathToUi.clear();
@@ -191,13 +186,12 @@ namespace LosView
 
 
 
-
     /**
      * @brief getCurEditIndex
      * - 获取当前edit的index
      * - 便于之后的关闭操作
-     * 
-     * @return int 
+     *
+     * @return int
      */
     int LosEditorTabUi::getCurEditIndex() const
     {
@@ -410,6 +404,51 @@ namespace LosView
         {
             connect(L_tabWidget, &QTabWidget::currentChanged, this, &LosEditorTabUi::onTabClicked);
         }
+    }
+
+
+    /**
+     * @brief
+     *
+     */
+    void LosEditorTabUi::initTabBar()
+    {
+        auto *tabBar = L_tabWidget->findChild<QTabBar *>();
+        if (!tabBar)
+            return;
+
+        tabBar->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(tabBar, &QTabBar::customContextMenuRequested, this,
+                [this, tabBar](const QPoint &pos)
+                {
+                    int index = tabBar->tabAt(pos);
+                    if (index < 0)
+                        return;
+                    QMenu menu;
+
+                    QAction *pin           = new QAction("固定");
+                    QAction *copyLocalPath = new QAction("复制本地路径");
+                    menu.addAction(pin);
+                    menu.addAction(copyLocalPath);
+                    QAction *ac = menu.exec(tabBar->mapToGlobal(pos));
+                    if (ac == pin)
+                    {
+                        tabBar->moveTab(index, 0);
+                        QString curText = tabBar->tabText(0);
+                        if (!curText.startsWith("[pin]"))
+                            tabBar->setTabText(0, "[pin]" + curText);
+                    }
+                    else if (ac == copyLocalPath)
+                    {
+                        QWidget *tab        = L_tabWidget->widget(index);
+                        LosEditorUi *editor = qobject_cast<LosEditorUi *>(tab);
+                        if (!editor)
+                            return;
+                        QString filePath = LOS_pathToUi.key(editor);
+                        QClipboard *cp   = QApplication::clipboard();
+                        cp->setText(filePath);
+                    }
+                });
     }
 
 

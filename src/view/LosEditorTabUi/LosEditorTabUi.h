@@ -7,20 +7,28 @@
 #include "core/LosRouter/LosRouter.h"
 #include "core/LosShortcutManager/LosShortcutManager.h"
 #include "models/LosFileContext/LosFileContext.h"
+#include "models/LosFilePath/LosFilePath.h"
 #include "view/LosEditorUi/LosEditorUi.h"
+#include "view/LosPluginDetailUi/LosPluginDetailUi.h"
 
 #include <QDebug>
 #include <QObject>
 #include <QSharedPointer>
 #include <QWidget>
+#include <qaction.h>
+#include <qapplication.h>
+#include <qclipboard.h>
 #include <qglobal.h>
+#include <qmenu.h>
 #include <qmessagebox.h>
 #include <qset.h>
 #include <qsharedpointer.h>
 #include <qstringliteral.h>
+#include <qtabbar.h>
 #include <qtablewidget.h>
 #include <qtabwidget.h>
 #include <qtextcursor.h>
+#include <qwidget.h>
 
 namespace LosView
 {
@@ -58,6 +66,7 @@ namespace LosView
 
       private: /* init */
         void initConnect();
+        void initTabBar();
 
 
       private: /* tool */

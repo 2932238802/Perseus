@@ -10,10 +10,11 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_LINUX
     qputenv("QT_QPA_PLATFORM", "xcb");
 #endif
-
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
-
     QApplication a(argc, argv);
+    QApplication::setApplicationName("Perseus");
+    QApplication::setApplicationDisplayName("Perseus Editor");
+    a.setWindowIcon(QIcon(":/icons/theme.png"));
     Perseus w;
     w.show();
     return a.exec();

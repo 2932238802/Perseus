@@ -405,6 +405,7 @@ void Perseus::initConnect()
  */
 void Perseus::initStyle()
 {
+    this->setWindowIcon(QIcon(":/icons/theme.png"));
     QFont defaultFont = QApplication::font();
     defaultFont.setPointSize(12);
     QApplication::setFont(defaultFont);
