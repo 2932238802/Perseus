@@ -2,7 +2,9 @@
 #pragma once
 #include "core/LosLog/LosLog.h"
 #include <QDialog>
+#include <QListWidget>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <memory>
 #include <qdialog.h>
 #include <qdialogbuttonbox.h>
@@ -31,6 +33,9 @@ namespace LosView
 
       private slots:
         void onSaveSettings();
+
+      public slots:
+        void onCMakeInstallBtnClicked();
 
       private:
         Ui::LosSettingsUi *ui;

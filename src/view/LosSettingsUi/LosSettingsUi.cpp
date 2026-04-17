@@ -1,5 +1,8 @@
 #include "LosSettingsUi.h"
+#include "core/LosRouter/LosRouter.h"
 #include "ui_LosSettingsUi.h"
+#include <qpushbutton.h>
+
 
 namespace LosView
 {
@@ -46,21 +49,35 @@ namespace LosView
     {
         connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [this]() { accept(); });
         connect(ui->buttonBox, &QDialogButtonBox::rejected, this, [this]() { reject(); });
+        connect(ui->category_list, &QListWidget::currentRowChanged, ui->pages_stack, &QStackedWidget::setCurrentIndex);
         QPushButton *applyBtn = ui->buttonBox->button(QDialogButtonBox::Apply);
         if (applyBtn)
         {
             connect(applyBtn, &QPushButton::clicked, this, &LosSettingsUi::onSaveSettings);
         }
+        connect(ui->btn_install_cmake, &QPushButton::clicked, this, &LosSettingsUi::onCMakeInstallBtnClicked);
     }
 
 
 
-    /*
-     * - 保存 设置
+    /**
+     * @brief onSaveSettings
+     *
+     *
+     * 保存 设置
      */
     void LosSettingsUi::onSaveSettings()
     {
         INF("保存", "LosSettingsUi");
+    }
+
+    /**
+     * @brief
+     *
+     *
+     */
+    void LosSettingsUi::onCMakeInstallBtnClicked() {
+                
     }
 
 } /* namespace LosView */

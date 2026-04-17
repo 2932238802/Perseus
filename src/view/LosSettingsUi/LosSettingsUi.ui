@@ -13,7 +13,9 @@
   <property name="windowTitle">
    <string>Perseus Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="main_layout">
+  
+  <!-- 核心修改 1：根布局改为水平布局 QHBoxLayout -->
+  <layout class="QHBoxLayout" name="main_layout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -27,46 +29,66 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>10</number>
+    <number>0</number>
    </property>
+
+   <!-- 左侧：导航列表 -->
    <item>
-    <layout class="QHBoxLayout" name="content_layout">
+    <widget class="QListWidget" name="category_list">
+     <property name="maximumSize">
+      <size>
+       <width>160</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <!-- 核心修改 2：强制关闭水平滚动条，消除截图底部的灰条 -->
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="currentRow">
+      <number>-1</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Editor</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Terminal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Build &amp; Run</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Install Tools</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+
+   <!-- 核心修改 3：右侧打包成一个垂直布局，包含内容区和底部按钮 -->
+   <item>
+    <layout class="QVBoxLayout" name="right_layout">
      <property name="spacing">
       <number>0</number>
      </property>
-     <item>
-      <widget class="QListWidget" name="category_list">
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="currentRow">
-        <number>-1</number>
-       </property>
-       <item>
-        <property name="text">
-         <string>Editor</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Terminal</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Build &amp; Run</string>
-        </property>
-       </item>
-      </widget>
-     </item>
+     <property name="bottomMargin">
+      <number>10</number>
+     </property>
+     
+     <!-- 右侧上部：内容切换区 -->
      <item>
       <widget class="QStackedWidget" name="pages_stack">
        <property name="currentIndex">
         <number>0</number>
        </property>
+       
+       <!-- Build & Run 设置页 -->
        <widget class="QWidget" name="page_build">
         <layout class="QVBoxLayout" name="verticalLayout_build">
          <property name="leftMargin">
@@ -91,7 +113,6 @@
             <number>15</number>
            </property>
            
-           <!-- CMake 设置行 -->
            <item row="0" column="0">
             <widget class="QLabel" name="label_cmake">
              <property name="text">
@@ -101,6 +122,7 @@
            </item>
            <item row="0" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout_cmake">
+             <property name="spacing"><number>8</number></property>
              <item>
               <widget class="QLineEdit" name="edit_cmake_path">
                <property name="placeholderText">
@@ -118,7 +140,6 @@
             </layout>
            </item>
 
-           <!-- Cargo 设置行 -->
            <item row="1" column="0">
             <widget class="QLabel" name="label_cargo">
              <property name="text">
@@ -128,6 +149,7 @@
            </item>
            <item row="1" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout_cargo">
+             <property name="spacing"><number>8</number></property>
              <item>
               <widget class="QLineEdit" name="edit_cargo_path">
                <property name="placeholderText">
@@ -145,7 +167,6 @@
             </layout>
            </item>
 
-           <!-- Rustc 设置行 -->
            <item row="2" column="0">
             <widget class="QLabel" name="label_rustc">
              <property name="text">
@@ -155,6 +176,7 @@
            </item>
            <item row="2" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout_rustc">
+             <property name="spacing"><number>8</number></property>
              <item>
               <widget class="QLineEdit" name="edit_rustc_path">
                <property name="placeholderText">
@@ -172,7 +194,6 @@
             </layout>
            </item>
 
-           <!-- Python 设置行 -->
            <item row="3" column="0">
             <widget class="QLabel" name="label_python">
              <property name="text">
@@ -182,6 +203,7 @@
            </item>
            <item row="3" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout_python">
+             <property name="spacing"><number>8</number></property>
              <item>
               <widget class="QLineEdit" name="edit_python_path">
                <property name="placeholderText">
@@ -198,7 +220,6 @@
              </item>
             </layout>
            </item>
-
           </layout>
          </item>
          <item>
@@ -207,31 +228,104 @@
             <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
+            <size><width>20</width><height>40</height></size>
            </property>
           </spacer>
          </item>
         </layout>
        </widget>
+
+       <!-- Install 页面 -->
+       <widget class="QWidget" name="page_install">
+        <layout class="QVBoxLayout" name="verticalLayout_install">
+         <property name="leftMargin"><number>20</number></property>
+         <property name="topMargin"><number>20</number></property>
+         <property name="rightMargin"><number>20</number></property>
+         <property name="spacing"><number>15</number></property>
+         <item>
+          <widget class="QLabel" name="label_title_install">
+           <property name="text">
+            <string>&lt;h2&gt;Install Environment &amp; Tools&lt;/h2&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_desc_install">
+           <property name="text">
+            <string>Click 'Install' to automatically run setup scripts in the background.</string>
+           </property>
+           <property name="styleSheet">
+            <string>color: #888888; margin-bottom: 10px;</string>
+           </property>
+          </widget>
+         </item>
+         
+         <item>
+          <layout class="QHBoxLayout" name="hLayout_inst_cmake">
+           <item><widget class="QLabel" name="lbl_inst_cmake"><property name="text"><string>CMake (C++ Build Tool)</string></property></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+           <item><widget class="QPushButton" name="btn_install_cmake"><property name="text"><string>Install</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+
+         <item>
+          <layout class="QHBoxLayout" name="hLayout_inst_rust">
+           <item><widget class="QLabel" name="lbl_inst_rust"><property name="text"><string>Rust Toolchain (Cargo &amp; Rustc)</string></property></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+           <item><widget class="QPushButton" name="btn_install_rust"><property name="text"><string>Install</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+
+         <item>
+          <layout class="QHBoxLayout" name="hLayout_inst_python">
+           <item><widget class="QLabel" name="lbl_inst_python"><property name="text"><string>Python 3</string></property></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+           <item><widget class="QPushButton" name="btn_install_python"><property name="text"><string>Install</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+
+         <item>
+          <layout class="QHBoxLayout" name="hLayout_inst_clangd">
+           <item><widget class="QLabel" name="lbl_inst_clangd"><property name="text"><string>Clangd (C++ Language Server)</string></property></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+           <item><widget class="QPushButton" name="btn_install_clangd"><property name="text"><string>Install</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+
+         <item>
+          <layout class="QHBoxLayout" name="hLayout_inst_pyright">
+           <item><widget class="QLabel" name="lbl_inst_pyright"><property name="text"><string>Pyright (Python Language Server)</string></property></widget></item>
+           <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+           <item><widget class="QPushButton" name="btn_install_pyright"><property name="text"><string>Install</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+
+         <item>
+          <spacer name="verticalSpacer_install">
+           <property name="orientation"><enum>Qt::Vertical</enum></property>
+           <property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+
       </widget>
      </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="bottom_layout">
-     <property name="rightMargin">
-      <number>15</number>
-     </property>
+     
      <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="bottom_layout">
+       <property name="topMargin"><number>10</number></property>
+       <property name="rightMargin"><number>15</number></property>
+       <item>
+        <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="standardButtons">
+          <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
+     
     </layout>
    </item>
   </layout>

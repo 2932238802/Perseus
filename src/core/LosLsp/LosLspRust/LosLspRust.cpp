@@ -139,6 +139,7 @@ namespace LosCore
      */
     void LosLspRust::dealLspMessage(const QJsonObject &obj)
     {
+        INF("1","1");
         if (obj.contains("id"))
         {
             int id = obj["id"].toInt();

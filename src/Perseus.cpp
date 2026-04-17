@@ -1,5 +1,7 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
+#include "common/constants/ConstantsStr.h"
+#include "core/LosShortcutManager/LosShortcutManager.h"
 
 /*
  * 构造
@@ -269,7 +271,7 @@ void Perseus::onZoomUi(int delta)
  */
 void Perseus::onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig &config)
 {
-    SUC("open download windows...","OnToolChainMissing");
+    SUC("open download windows...", "OnToolChainMissing");
     LosView::LosToolMissUi dialog(config, this);
     dialog.exec();
 }
@@ -298,8 +300,8 @@ void Perseus::onDirectoryChanged()
 
 
 
-/** 
- * @brief 
+/**
+ * @brief
  * initConnect
  * - 初始化连接
  */
@@ -497,6 +499,9 @@ void Perseus::initShotcut()
             dialog->deleteLater();
         },
         "go to line");
+
+    LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::TAB_CLOSE, this,
+                                                [this]() { LOS_tabUi->closeTab(LOS_tabUi->getCurEditIndex()); });
 }
 
 

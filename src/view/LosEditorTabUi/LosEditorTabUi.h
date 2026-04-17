@@ -44,6 +44,7 @@ namespace LosView
         int tabCount() const;
         QString getCurFilePath() const;
         QStringList getOpenFiles() const;
+        int getCurEditIndex() const;
 
       private slots: /* chs */
         void onTabCloseRequested(int index);

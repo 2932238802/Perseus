@@ -21,28 +21,30 @@ namespace LosView
 
     LosEditorTabUi::~LosEditorTabUi() {}
 
+
+
     /*
      * 关闭标签页
      */
-    void LosEditorTabUi::closeTab(int index) {}
+    void LosEditorTabUi::closeTab(int index) {
+        L_tabWidget->removeTab(index);
+    }
 
 
 
-    /*
-     * - 关闭 所有的 标签
+    /**
+     * @brief closeAllTabs
+     * - 关闭所有的标签
      */
-    void LosEditorTabUi::closeAllTabs()
+       void LosEditorTabUi::closeAllTabs()
     {
-        for (auto editor : LOS_pathToUi.values())
-        {
-            if (editor)
-            {
-                editor->deleteLater();
-            }
-        }
         while (L_tabWidget->count() > 0)
         {
+            QWidget *wi = L_tabWidget->widget(0);
             L_tabWidget->removeTab(0);
+            if (wi) {
+                wi->deleteLater(); 
+            }
         }
         LOS_pathToUi.clear();
     }
@@ -186,6 +188,26 @@ namespace LosView
     {
         return LOS_pathToUi.keys();
     }
+
+
+
+
+    /**
+     * @brief getCurEditIndex
+     * - 获取当前edit的index
+     * - 便于之后的关闭操作
+     * 
+     * @return int 
+     */
+    int LosEditorTabUi::getCurEditIndex() const
+    {
+        if (L_tabWidget)
+        {
+            return L_tabWidget->currentIndex();
+        }
+        return -1;
+    }
+
 
 
     /*

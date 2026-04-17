@@ -63,7 +63,7 @@ QToolTip {
 #files_btn:pressed,
 #run_singleFile_btn:pressed,
 #setting_btn:pressed {
-    background-color: #007acc;
+    background-color: #444444;
     color: #ffffff;
 }
 
@@ -78,7 +78,7 @@ QToolTip {
 }
 
 #activity_bar QPushButton:checked {
-    border-left: 3px solid #007acc;
+    border-left: 3px solid #ffffff;
     background: transparent;
     background-color: transparent;
 }
@@ -136,8 +136,8 @@ QToolTip {
 }
 
 #project_btn::indicator:checked {
-    border-color: #007acc;
-    background-color: #007acc;
+    border-color: #ffffff;
+    background-color: #ffffff;
 }
 
 QSplitter::handle {
@@ -147,7 +147,7 @@ QSplitter::handle {
 
 QSplitter::handle:horizontal:hover,
 QSplitter::handle:vertical:hover {
-    background-color: #007acc;
+    background-color: #555555;
 }
 
 QTreeView {
@@ -169,9 +169,9 @@ QTreeView::item:hover {
 }
 
 QTreeView::item:selected {
-    background-color: #04395e;
+    background-color: #37373d;
     color: #ffffff;
-    border: 1px solid #0f5280;
+    border: 1px solid #454545;
 }
 
 QTreeView::branch {
@@ -201,7 +201,7 @@ QTreeView::branch {
 #editor_tabwidget QTabBar::tab:selected {
     background-color: #1e1e1e;
     color: #ffffff;
-    border-top: 2px solid #007acc;
+    border-top: 2px solid #ffffff;
 }
 
 #editor_tabwidget QTabBar::tab:hover:!selected {
@@ -253,7 +253,7 @@ QPlainTextEdit {
     color: #d4d4d4;
     border: none;
     font-family: "JetBrains Mono", "Consolas", monospace;
-    selection-background-color: #264f78;
+    selection-background-color: #444444;
     selection-color: #ffffff;
     padding: 6px;
 }
@@ -322,7 +322,7 @@ QPlainTextEdit {
 }
 
 #LosPlugUi QLineEdit#searchLineEdit:focus {
-    border: 1px solid #007acc;
+    border: 1px solid #888888;
     background-color: #252526;
 }
 
@@ -345,9 +345,10 @@ QPlainTextEdit {
 }
 
 #LosPlugUi QListWidget::item:selected {
-    background-color: #04395e;
+    background-color: #37373d;
     color: #ffffff;
-    border: 1px solid #0f5280;
+    border-left: 3px solid #ffffff;
+    border-radius: 0px;
 }
 
 QScrollBar:vertical {
@@ -423,7 +424,7 @@ QDialog#LosSettingsUi {
     background-color: #1e1e1e;
     color: #ffffff;
     font-weight: bold;
-    border-left: 3px solid #007acc;
+    border-left: 3px solid #ffffff;
 }
 
 #pages_stack {
@@ -431,7 +432,8 @@ QDialog#LosSettingsUi {
     border: none;
 }
 
-#label_title_build {
+#label_title_build,
+#label_title_install {
     color: #ffffff;
     border-bottom: 1px solid #3c3c3c;
     padding-bottom: 8px;
@@ -440,9 +442,14 @@ QDialog#LosSettingsUi {
     font-weight: bold;
 }
 
-#page_build QLabel {
+#page_build QLabel,
+#page_install QLabel {
     color: #cccccc;
     padding-right: 10px;
+}
+
+#label_desc_install {
+    color: #888888;
 }
 
 #page_build QLineEdit {
@@ -459,7 +466,7 @@ QDialog#LosSettingsUi {
 }
 
 #page_build QLineEdit:focus {
-    border: 1px solid #007acc;
+    border: 1px solid #ffffff;
     background-color: #252526;
 }
 
@@ -470,6 +477,7 @@ QDialog#LosSettingsUi {
     border-radius: 4px;
     padding: 5px 14px;
     font-weight: bold;
+    margin-left: 8px;
 }
 
 #page_build QToolButton:hover {
@@ -479,13 +487,33 @@ QDialog#LosSettingsUi {
 }
 
 #page_build QToolButton:pressed {
-    background-color: #007acc;
+    background-color: #444444;
     color: #ffffff;
-    border: 1px solid #007acc;
+    border: 1px solid #555555;
 }
 
 #buttonBox {
     margin-top: 10px;
+}
+
+#page_install QPushButton {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+#page_install QPushButton:hover {
+    background-color: #555555;
+    border: 1px solid #777777;
+}
+
+#page_install QPushButton:pressed {
+    background-color: #2a2d2e;
+    border: 1px solid #444444;
 }
 
 #buttonBox QPushButton {
@@ -505,21 +533,24 @@ QDialog#LosSettingsUi {
 
 #buttonBox QPushButton:pressed {
     background-color: #252526;
-    border: 1px solid #007acc;
+    border: 1px solid #555555;
 }
 
 #buttonBox QPushButton[text="OK"] {
-    background-color: #007acc;
+    background-color: #444444;
     color: #ffffff;
     font-weight: bold;
+    border: 1px solid #555555;
 }
 
 #buttonBox QPushButton[text="OK"]:hover {
-    background-color: #1177bb;
+    background-color: #555555;
+    border: 1px solid #777777;
 }
 
 #buttonBox QPushButton[text="OK"]:pressed {
-    background-color: #0d5484;
+    background-color: #2a2d2e;
+    border: 1px solid #444444;
 }
 
 #LosPluginDetailUi {
@@ -544,26 +575,29 @@ QDialog#LosSettingsUi {
 }
 
 #LosPluginDetailUi #btn_install {
-    background-color: #007acc;
+    background-color: #3c3c3c;
     color: #ffffff;
     font-weight: bold;
     border-radius: 4px;
     padding: 6px 28px;
     min-width: 100px;
-    border: none;
+    border: 1px solid #555555;
 }
 
 #LosPluginDetailUi #btn_install:hover {
-    background-color: #1177bb;
+    background-color: #555555;
+    border: 1px solid #777777;
 }
 
 #LosPluginDetailUi #btn_install:pressed {
-    background-color: #0d5484;
+    background-color: #2a2d2e;
+    border: 1px solid #444444;
 }
 
 #LosPluginDetailUi #btn_install:disabled {
-    background-color: #333333;
+    background-color: #252526;
     color: #666666;
+    border: 1px solid #333333;
 }
 
 #LosPluginDetailUi #text_description {
@@ -579,13 +613,14 @@ QDialog#LosSettingsUi {
 #project_dir_label {
     color: #ffffff;
     font-family: "JetBrains Mono", "Consolas", monospace;
-    background-color: #007acc;
-    border: none;
+    background-color: #3c3c3c;
+    border: 1px solid #555555;
     border-radius: 4px;
     padding: 4px 12px;
     margin-right: 10px;
 }
 
 #project_dir_label:hover {
-    background-color: #1177bb;
+    background-color: #555555;
+    border: 1px solid #777777;
 }
