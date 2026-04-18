@@ -1,5 +1,6 @@
 
 #include "LosEditorTabUi.h"
+#include "common/constants/ConstantsStr/LosEditorTableUiStr.h"
 
 
 
@@ -426,8 +427,8 @@ namespace LosView
                         return;
                     QMenu menu;
 
-                    QAction *pin           = new QAction(QStringLiteral("pin"));
-                    QAction *copyLocalPath = new QAction(QStringLiteral("open local path"));
+                    QAction *pin           = new QAction(LosCommon::LosEditorTableUi_Constants::ACTION_PIN);
+                    QAction *copyLocalPath = new QAction(LosCommon::LosEditorTableUi_Constants::ACTION_COPY_LOCAL_PATH);
                     menu.addAction(pin);
                     menu.addAction(copyLocalPath);
                     QAction *ac  = menu.exec(tabBar->mapToGlobal(pos));

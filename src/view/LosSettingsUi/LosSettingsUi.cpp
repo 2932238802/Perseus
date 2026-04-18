@@ -6,8 +6,11 @@
 
 namespace LosView
 {
-    /*
-     * - construct
+    /**
+     * @brief 构造函数
+     *
+     * @param in parent
+     * @return * construct
      */
     LosSettingsUi::LosSettingsUi(QWidget *parent) : QDialog(parent), ui(new Ui::LosSettingsUi)
     {
@@ -63,12 +66,11 @@ namespace LosView
     /**
      * @brief onSaveSettings
      *
-     *
      * 保存 设置
      */
     void LosSettingsUi::onSaveSettings()
     {
-        INF("保存", "LosSettingsUi");
+        INF("save ...", "LosSettingsUi");
     }
 
     /**
@@ -76,8 +78,6 @@ namespace LosView
      *
      *
      */
-    void LosSettingsUi::onCMakeInstallBtnClicked() {
-                
-    }
+    void LosSettingsUi::onCMakeInstallBtnClicked() {}
 
 } /* namespace LosView */

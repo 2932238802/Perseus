@@ -57,9 +57,6 @@ namespace LosCore
         QString outputExe = outDirPath + QDir::separator() + LOS_targetFilePath.getBaseFileName() +
                             LosCommon::LosRunner_Constants::LINUX_EXE;
         L_outPutPath = outputExe;
-        /*
-         * 判断路径存不存在
-         */
         if (!LOS_targetFilePath.isExist())
         {
             ERR("The file to be executed does not exist...", "LosRustcRunner");

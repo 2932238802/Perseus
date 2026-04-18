@@ -1,6 +1,7 @@
 
 #pragma once
 #include "core/LosLog/LosLog.h"
+#include "core/LosRouter/LosRouter.h"
 #include <QDialog>
 #include <QListWidget>
 #include <QPushButton>
@@ -8,6 +9,7 @@
 #include <memory>
 #include <qdialog.h>
 #include <qdialogbuttonbox.h>
+#include <qpushbutton.h>
 #include <qtmetamacros.h>
 #include <qwidget.h>
 
