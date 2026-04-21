@@ -1,4 +1,5 @@
 #include "LosFileTreeUi.h"
+#include "core/LosRouter/LosRouter.h"
 
 
 namespace LosView
@@ -10,7 +11,13 @@ namespace LosView
         initConnect();
         setHeaderHidden(true);
         setAnimated(true);
-        setIndentation(15);
+        setIndentation(18);
+        setUniformRowHeights(true);
+        setExpandsOnDoubleClick(true);
+        setFocusPolicy(Qt::StrongFocus);
+        setSelectionBehavior(QAbstractItemView::SelectRows);
+        setSelectionMode(QAbstractItemView::SingleSelection);
+        setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     }
 
 
@@ -165,7 +172,10 @@ namespace LosView
             if (ok && !folderName.trimmed().isEmpty())
             {
                 QString newFolderPath = QDir(targetDir).filePath(folderName.trimmed());
-                LosCore::LosFileSystem::instance().createDir(newFolderPath);
+                if (LosCore::LosFileSystem::instance().createDir(newFolderPath))
+                {
+                    emit LosCore::LosRouter::instance()._cmd_fileSystemChanged();
+                }
             }
         }
         else if (selectedAction == copyAct)
@@ -252,8 +262,12 @@ namespace LosView
 
 
 
-    /*
-     * - 增加 delete 按键 效果
+    /**
+     * @brief keyPressEvent
+     * - 重命名 f2
+     * - 删除 delete
+     *
+     * @param key
      */
     void LosFileTreeUi::keyPressEvent(QKeyEvent *key)
     {

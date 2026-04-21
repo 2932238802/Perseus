@@ -14,6 +14,14 @@ namespace LosView
     {
         initConnect();
         initTabBar();
+        if (L_tabWidget)
+        {
+            /*
+             * 用自绘按钮代替 Qt 原生关闭按钮,
+             * 关闭 setTabsClosable 防止两者同时出现
+             */
+            L_tabWidget->setTabsClosable(false);
+        }
     }
 
     LosEditorTabUi::~LosEditorTabUi() {}
@@ -129,7 +137,8 @@ namespace LosView
         contextCopy->load(filePath);
         auto fileCopy = QSharedPointer<LosModel::LosFilePath>::create(filePath);
         editor->loadContextAndPath(contextCopy, fileCopy);
-        L_tabWidget->addTab(editor, QFileInfo(filePath).fileName());
+        int newIndex = L_tabWidget->addTab(editor, QFileInfo(filePath).fileName());
+        installCloseButton(newIndex);
         LOS_pathToUi.insert(filePath, editor);
         L_tabWidget->setCurrentWidget(editor);
     }
@@ -255,6 +264,7 @@ namespace LosView
 
     /*
      * 如果编辑器 修改
+     * - 使用 ● 作为脏标记,视觉上比 * 更清爽
      */
     void LosEditorTabUi::onEditDirty(const QString &file_path, bool is_dirty)
     {
@@ -264,16 +274,16 @@ namespace LosView
         int index = L_tabWidget->indexOf(LOS_pathToUi[file_path]);
         if (index == -1)
             return;
-        QString currentTitle = L_tabWidget->tabText(index);
+        QString currentTitle            = L_tabWidget->tabText(index);
+        static const QString DIRTY_MARK = QStringLiteral(" \u25CF"); /* ● */
 
-
-        if (is_dirty && !currentTitle.endsWith("*"))
+        if (is_dirty && !currentTitle.endsWith(DIRTY_MARK))
         {
-            L_tabWidget->setTabText(index, currentTitle + " *");
+            L_tabWidget->setTabText(index, currentTitle + DIRTY_MARK);
         }
-        else if (!is_dirty && currentTitle.endsWith("*"))
+        else if (!is_dirty && currentTitle.endsWith(DIRTY_MARK))
         {
-            L_tabWidget->setTabText(index, currentTitle.left(currentTitle.length() - 2));
+            L_tabWidget->setTabText(index, currentTitle.left(currentTitle.length() - DIRTY_MARK.length()));
         }
     }
 
@@ -361,6 +371,7 @@ namespace LosView
         plugin->setPluginInfo(info);
         int newIndex = L_tabWidget->addTab(plugin, "Ext: " + info.L_name);
         L_tabWidget->setTabToolTip(newIndex, "plugin:" + info.L_id);
+        installCloseButton(newIndex);
         L_tabWidget->setCurrentIndex(newIndex);
     }
 
@@ -445,7 +456,7 @@ namespace LosView
     /**
      * @brief initConnect
      * - 初始化 信号槽
-     * 
+     *
      */
     void LosEditorTabUi::initConnect()
     {
@@ -512,6 +523,71 @@ namespace LosView
                         cp->setText(filePath);
                     }
                 });
+    }
+
+
+
+    /**
+     * @brief installCloseButton
+     * - 为 tab 自绘关闭按钮
+     * - 点击后通过 onTabCloseRequested 走统一的关闭流程(包括脏数据提示)
+     */
+    void LosEditorTabUi::installCloseButton(int index)
+    {
+        auto *tabBar = L_tabWidget ? L_tabWidget->findChild<QTabBar *>() : nullptr;
+        if (!tabBar || index < 0 || index >= tabBar->count())
+            return;
+
+        auto *btn = new QToolButton(tabBar);
+        btn->setObjectName("tab_close_btn");
+        btn->setText(QStringLiteral("\u00D7")); /* × */
+        btn->setToolTip(tr("Close"));
+        btn->setCursor(Qt::PointingHandCursor);
+        btn->setFocusPolicy(Qt::NoFocus);
+        btn->setFixedSize(18, 18);
+        btn->setStyleSheet(QStringLiteral(R"(
+            QToolButton#tab_close_btn {
+                background: transparent;
+                color: #6272a4;
+                border: none;
+                border-radius: 4px;
+                padding: 0px;
+                margin: 0px;
+                font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            QToolButton#tab_close_btn:hover {
+                background-color: #ff5555;
+                color: #f8f8f2;
+            }
+            QToolButton#tab_close_btn:pressed {
+                background-color: #c13e3e;
+                color: #f8f8f2;
+            }
+        )"));
+
+        connect(btn, &QToolButton::clicked, this,
+                [this, btn]()
+                {
+                    auto *tb = L_tabWidget ? L_tabWidget->findChild<QTabBar *>() : nullptr;
+                    if (!tb)
+                        return;
+                    /*
+                     * 按钮本身的 index 会随着其他 tab 关闭而变化,
+                     * 不能捕获创建时的 index,必须实时查找
+                     */
+                    for (int i = 0; i < tb->count(); i++)
+                    {
+                        if (tb->tabButton(i, QTabBar::RightSide) == btn)
+                        {
+                            onTabCloseRequested(i);
+                            return;
+                        }
+                    }
+                });
+
+        tabBar->setTabButton(index, QTabBar::RightSide, btn);
     }
 
 

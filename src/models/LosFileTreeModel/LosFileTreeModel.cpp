@@ -1,4 +1,5 @@
 #include "models/LosFileTreeModel/LosFileTreeModel.h"
+#include "core/LosFileSystem/LosFileSystem.h"
 #include "core/LosRouter/LosRouter.h"
 #include "models/LosFileNode/LosFileNode.h"
 #include <qicon.h>
@@ -21,14 +22,14 @@ namespace LosModel
     };
 
 
-    
+
     /**
      * @brief index 获取身份证
-     * 
-     * @param row 
-     * @param column 
-     * @param parent 
-     * @return QModelIndex 
+     *
+     * @param row
+     * @param column
+     * @param parent
+     * @return QModelIndex
      */
     QModelIndex LosFileTreeModel::index(int row, int column, const QModelIndex &parent) const
     {
@@ -243,20 +244,13 @@ namespace LosModel
         {
             return false;
         }
-        bool success = false;
-        if (node->getFileType() == LosCommon::LOS_ENUM_FileType::FT_FOLDER)
-        {
-            success = QDir().rename(oldPath, newPath);
-        }
-        else
-        {
-            success = QFile::rename(oldPath, newPath);
-        }
-        if (!success)
+        if (!LosCore::LosFileSystem::instance().renameFile(oldPath, newPath))
             return false;
         node->getFile().setFilePath(newPath);
+
         emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
         emit LosCore::LosRouter::instance()._cmd_fileRenamed(oldPath, newPath);
+        emit LosCore::LosRouter::instance()._cmd_fileSystemChanged();
         return true;
     }
 
@@ -274,8 +268,10 @@ namespace LosModel
 
 
 
-    /*
-     * - 获取 根节点
+    /**
+     * @brief getRoot 获取根节点
+     * 
+     * @return LosModel::LosFileNode* 
      */
     LosModel::LosFileNode *LosFileTreeModel::getRoot() const
     {

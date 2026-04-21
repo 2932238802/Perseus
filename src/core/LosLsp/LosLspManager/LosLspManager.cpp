@@ -23,7 +23,7 @@ namespace LosCore
     {
         if (auto client = getClient(file_path))
         {
-            QString langStr = getLangId(LosCommon::CheckLang(file_path));
+            QString langStr = LosCommon::getLangId(LosCommon::CheckLang(file_path));
             client->didOpen(file_path, file_context, langStr);
         }
     }
@@ -102,33 +102,6 @@ namespace LosCore
         connect(&router, &LosRouter::_cmd_lspReady, this, &LosLspManager::onLspReady);
         connect(&router, &LosRouter::_cmd_lsp_request_semantic, this, &LosLspManager::onSemantic);
         connect(&router, &LosRouter::_cmd_fileRenamed, this, &LosLspManager::onFileRenamed);
-    }
-
-
-
-    QString LosLspManager::getLangId(LosCommon::LosToolChain_Constants::LosLanguage lang)
-    {
-        switch (lang)
-        {
-        case LosCommon::LosToolChain_Constants::LosLanguage::CXX:
-        {
-            return "cpp";
-        }
-        case LosCommon::LosToolChain_Constants::LosLanguage::PYTHON:
-        {
-            return "python";
-        }
-        case LosCommon::LosToolChain_Constants::LosLanguage::CMAKE:
-        {
-            return "cmake";
-        }
-        case LosCommon::LosToolChain_Constants::LosLanguage::RUST:
-        {
-            return "rust";
-        }
-        default:
-            return "plaintext";
-        }
     }
 
 
@@ -234,8 +207,14 @@ namespace LosCore
     {
         auto oldClient = getClient(oldPath);
         auto newClient = getClient(newPath);
+        if (oldClient && oldClient == newClient)
+        {
+            oldClient->handleFileRenamed(oldPath, newPath);
+            return;
+        }
         if (oldClient)
         {
+            oldClient->didClose(oldPath);
             oldClient->didChangeWatchedFiles(
                 oldPath, LosCommon::LosLsp_Constants::LspJson_didChangeWatchedFiles_changes_type::DELETE);
         }
@@ -243,6 +222,14 @@ namespace LosCore
         {
             newClient->didChangeWatchedFiles(
                 newPath, LosCommon::LosLsp_Constants::LspJson_didChangeWatchedFiles_changes_type::Created);
+            QFile f(newPath);
+            if (f.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                QString content = QString::fromUtf8(f.readAll());
+                f.close();
+                QString langId = LosCommon::getLangId(LosCommon::CheckLang(newPath));
+                newClient->didOpen(newPath, content, langId);
+            }
         }
     }
 

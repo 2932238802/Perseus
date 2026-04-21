@@ -152,10 +152,10 @@ namespace LosCore
 
     /**
      * @brief updateSemanticTokens
-     * 
-     * 
+     *
+     *
      * @param in data
-     * 
+     *
      * 更新一下
      * - [deltaLine, deltaChar, length, tokenType, modifiers]
      * - 分别是五个
@@ -246,7 +246,7 @@ namespace LosCore
             QStringLiteral("\\bbreak\\b"),    QStringLiteral("\\bcontinue\\b"),  QStringLiteral("\\bdefault\\b"),
             QStringLiteral("\\bgoto\\b"),     QStringLiteral("\\bconstexpr\\b"), QStringLiteral("\\bcatch\\b"),
             QStringLiteral("\\btry\\b"),      QStringLiteral("\\bthrow\\b")};
-        L_keyword.setForeground(QColor("#E17899"));
+        L_keyword.setForeground(QColor("#ff79c6"));
         for (const auto &str : keywordPatterns)
         {
             rule.L_regex  = QRegularExpression(str);
@@ -255,37 +255,40 @@ namespace LosCore
         }
 
         QTextCharFormat preprocessorFormat;
-        preprocessorFormat.setForeground(QColor("#B97EE6"));
+        preprocessorFormat.setForeground(QColor("#ff79c6"));
         rule.L_regex  = QRegularExpression(QStringLiteral("#[a-zA-Z_]+\\b"));
         rule.L_format = preprocessorFormat;
         L_rules.append(rule);
 
-        L_class.setForeground(QColor("#F5B83D"));
+        L_class.setForeground(QColor("#8be9fd"));
+        L_class.setFontItalic(true);
         rule.L_regex  = QRegularExpression(QStringLiteral("\\b[Q]?[A-Z][a-zA-Z0-9_]+\\b"));
         rule.L_format = L_class;
         L_rules.append(rule);
 
-        L_func.setForeground(QColor("#2DCCCF"));
+        L_func.setForeground(QColor("#50fa7b"));
         rule.L_regex  = QRegularExpression(QStringLiteral("\\b[A-Za-z0-9_]+(?=\\()"));
         rule.L_format = L_func;
         L_rules.append(rule);
 
-        L_str.setForeground(QColor("#42E6A4"));
+        L_str.setForeground(QColor("#f1fa8c"));
         rule.L_regex  = QRegularExpression(QStringLiteral("\"[^\"]*\"|(?<=#include )<[^>]+>"));
         rule.L_format = L_str;
         L_rules.append(rule);
 
-        L_str.setForeground(QColor("#42E6A4"));
+        L_str.setForeground(QColor("#f1fa8c"));
         rule.L_regex  = QRegularExpression(QStringLiteral("\"[^\"]*\""));
         rule.L_format = L_str;
         L_rules.append(rule);
 
-        L_singleComment.setForeground(QColor("#5B7888"));
+        L_singleComment.setForeground(QColor("#6272a4"));
+        L_singleComment.setFontItalic(true);
         rule.L_regex  = QRegularExpression(QStringLiteral("//[^\n]*"));
         rule.L_format = L_singleComment;
         L_rules.append(rule);
 
-        L_multiComment.setForeground(QColor("#5B7888"));
+        L_multiComment.setForeground(QColor("#6272a4"));
+        L_multiComment.setFontItalic(true);
         L_commentStartExpression = QRegularExpression(QStringLiteral("/\\*"));
         L_commentEndExpression   = QRegularExpression(QStringLiteral("\\*/"));
 
@@ -301,17 +304,17 @@ namespace LosCore
         L_themeConfig["comment"] = L_singleComment;
 
         QTextCharFormat varFormat;
-        varFormat.setForeground(QColor("#C8D4F0"));
+        varFormat.setForeground(QColor("#f8f8f2"));
         L_themeConfig["variable"]  = varFormat;
         L_themeConfig["parameter"] = varFormat;
         L_themeConfig["property"]  = varFormat;
 
         QTextCharFormat macroFormat;
-        macroFormat.setForeground(QColor("#B97EE6"));
+        macroFormat.setForeground(QColor("#ff79c6"));
         L_themeConfig["macro"] = macroFormat;
 
         QTextCharFormat enumMemberFormat;
-        enumMemberFormat.setForeground(QColor("#FF967D"));
+        enumMemberFormat.setForeground(QColor("#bd93f9"));
         L_themeConfig["enumMember"] = enumMemberFormat;
     }
 

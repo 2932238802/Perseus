@@ -7,33 +7,35 @@ namespace LosStyle
     {
         return QString(R"(
             QDialog {
-                background-color: #1e1e1e;
-                border: 1px solid #454545;
+                background-color: #282a36;
+                border: 1px solid #bd93f9;
                 border-radius: 6px;
             }
             QLabel {
-                color: #cccccc;
+                color: #f8f8f2;
                 font-family: "Microsoft YaHei", sans-serif;
                 font-size: 13px;
             }
             QLabel#label_title {
-                color: #ffffff;
+                color: #bd93f9;
                 font-size: 16px;
                 font-weight: bold;
-                border-bottom: 1px solid #333333;
+                border-bottom: 1px solid #44475a;
                 padding-bottom: 8px;
             }
             QLineEdit {
-                background-color: #252526;
-                color: #ffffff;
-                border: 1px solid #333333;
+                background-color: #21222c;
+                color: #f8f8f2;
+                border: 1px solid #44475a;
                 border-radius: 3px;
                 padding: 6px 10px;
                 font-family: "Consolas", monospace;
                 font-size: 13px;
+                selection-background-color: #bd93f9;
+                selection-color: #282a36;
             }
             QLineEdit:focus {
-                border: 1px solid #007acc;
+                border: 1px solid #bd93f9;
             }
             QScrollArea {
                 background-color: transparent;
@@ -42,8 +44,8 @@ namespace LosStyle
                 background-color: transparent;
             }
             QPushButton {
-                background-color: #333333;
-                color: #ffffff;
+                background-color: #44475a;
+                color: #f8f8f2;
                 border: none;
                 border-radius: 3px;
                 padding: 6px 18px;
@@ -51,20 +53,23 @@ namespace LosStyle
                 font-size: 13px;
             }
             QPushButton:hover {
-                background-color: #454545;
+                background-color: #6272a4;
             }
             QPushButton:pressed {
-                background-color: #2a2d2e;
+                background-color: #bd93f9;
+                color: #282a36;
             }
             QPushButton#btn_run {
-                background-color: #007acc;
+                background-color: #bd93f9;
+                color: #282a36;
                 font-weight: bold;
             }
             QPushButton#btn_run:hover {
-                background-color: #005f9e;
+                background-color: #caa9fa;
             }
             QPushButton#btn_run:pressed {
-                background-color: #004a7c;
+                background-color: #9580d4;
+                color: #f8f8f2;
             }
         )");
     }

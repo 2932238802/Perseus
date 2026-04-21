@@ -3,7 +3,7 @@
 
 namespace LosCommon
 {
-    /** 
+    /**
      * 全局快捷键设置
      */
     namespace ShortCut
@@ -15,6 +15,9 @@ namespace LosCommon
         inline constexpr const char *FILE_NEW            = "Ctrl+N";         /* 新建文件 */
         inline constexpr const char *TAB_CLOSE           = "Ctrl+W";         /* 关闭当前标签页 */
         inline constexpr const char *TAB_NEXT            = "Ctrl+Tab";       /* 切换到下一个标签页 */
+        inline constexpr const char *EDIT_UNDO           = "Ctrl+Z";         /* 撤销 */
+        inline constexpr const char *EDIT_REDO           = "Ctrl+Shift+Z";   /* 重做 */
+        inline constexpr const char *EDIT_REDO_ALT       = "Ctrl+Y";         /* 重做(备用) */
         inline constexpr const char *RUN_SINGLE_FILE     = "Ctrl+F5";        /* 运行当前单文件 */
         inline constexpr const char *BUILD_PROJECT       = "Ctrl+B";         /* 编译整个工程 (或 F7) */
         inline constexpr const char *DEBUG_START         = "F5";             /* 启动调试 */
@@ -35,4 +38,4 @@ namespace LosCommon
         inline constexpr const char *FONT_ZOOM_IN        = "Ctrl+>";         /* 放大字体 / 全局缩放增大 */
         inline constexpr const char *FONT_ZOOM_OUT       = "Ctrl+<";         /* 缩小字体 */
     } /* namespace ShortCut */
-}
+} // namespace LosCommon

@@ -29,7 +29,7 @@ namespace LosView
         /*
          * 设置背景 颜色
          */
-        L_webView->page()->setBackgroundColor(QColor("#1e1e1e"));
+        L_webView->page()->setBackgroundColor(QColor("#282a36"));
         L_webView->setUrl(QUrl("qrc:/web/resources/web/terminal.html"));
         layout->addWidget(L_webView);
     }

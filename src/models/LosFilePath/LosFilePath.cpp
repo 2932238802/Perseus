@@ -48,6 +48,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getFilePath 返回存入的数据
+     *
+     * @return const QString&
+     */
     const QString &LosFilePath::getFilePath() const
     {
         return L_filePath;
@@ -55,6 +60,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getFileName 获取文件的名字 包括后缀
+     *
+     * @return const QString&
+     */
     const QString &LosFilePath::getFileName() const
     {
         return L_fileName;
@@ -62,6 +72,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getBaseFileName 获取文件的名字 没有后缀
+     *
+     * @return QString
+     */
     QString LosFilePath::getBaseFileName() const
     {
         return QFileInfo(L_filePath).baseName();
@@ -69,6 +84,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getSuffix 获取后缀
+     *
+     * @return QString
+     */
     QString LosFilePath::getSuffix() const
     {
         return QFileInfo(L_filePath).suffix().toLower();
@@ -76,6 +96,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getAbsolutePath 获取完整的路径 这个是不含文件名的 只有文件夹的名字
+     *
+     * @return QString
+     */
     QString LosFilePath::getAbsolutePath() const
     {
         return QFileInfo(L_filePath).absolutePath();
@@ -83,6 +108,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getAbsoluteFilePath 获取完整的路径
+     *
+     * @return QString
+     */
     QString LosFilePath::getAbsoluteFilePath() const
     {
         return QFileInfo(L_filePath).absoluteFilePath();
@@ -90,6 +120,11 @@ namespace LosModel
 
 
 
+    /**
+     * @brief getFileType 获取文件类型
+     *
+     * @return LosCommon::LOS_ENUM_FileType
+     */
     LosCommon::LOS_ENUM_FileType LosFilePath::getFileType() const
     {
         return LOS_fileType;
@@ -97,6 +132,12 @@ namespace LosModel
 
 
 
+    /**
+     * @brief isDir 判断是不是文件夹
+     *
+     * @return true
+     * @return false
+     */
     bool LosFilePath::isDir() const
     {
         return QFileInfo(L_filePath).isDir();
@@ -104,6 +145,12 @@ namespace LosModel
 
 
 
+    /**
+     * @brief isFile 哦啊
+     *
+     * @return true
+     * @return false
+     */
     bool LosFilePath::isFile() const
     {
         return QFileInfo(L_filePath).isFile();
@@ -111,6 +158,12 @@ namespace LosModel
 
 
 
+    /** 
+     * @brief isExist 是否存在
+     *
+     * @return true
+     * @return false
+     */
     bool LosFilePath::isExist() const
     {
         return QFileInfo(L_filePath).exists();

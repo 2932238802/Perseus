@@ -1,5 +1,6 @@
 #include "Perseus.h"
 #include "./ui_Perseus.h"
+#include "core/LosShortcutManager/LosShortcutManager.h"
 
 /**
  * @brief Construct a new Perseus:: Perseus object
@@ -312,6 +313,55 @@ void Perseus::onDirectoryChanged()
 
 
 /**
+ * @brief OnTogglePanelBtnClicked
+ * Ctrl+J 切换 bottom_tabwidget 的显示/隐藏
+ */
+void Perseus::OnTogglePanelBtnClicked()
+{
+    auto *widget   = ui->bottom_tabwidget;
+    auto *splitter = ui->right_splitter;
+    const int idx  = splitter->indexOf(widget);
+    if (idx < 0)
+        return;
+
+    const auto currentSizes  = splitter->sizes();
+    const bool visuallyShown = widget->isVisible() && currentSizes.value(idx) > 0;
+
+    if (visuallyShown)
+    {
+        L_rightSplitterSizes = currentSizes;
+        widget->setVisible(false);
+    }
+    else
+    {
+        widget->setVisible(true);
+        if (!L_rightSplitterSizes.isEmpty() && L_rightSplitterSizes.size() == currentSizes.size() &&
+            L_rightSplitterSizes.value(idx) > 0)
+        {
+            splitter->setSizes(L_rightSplitterSizes);
+            return;
+        }
+        const int total = splitter->height();
+        if (total <= 0)
+            return;
+        QList<int> newSizes = currentSizes;
+        const int bottomH   = qMax(200, total * 7 / 10);
+        newSizes[idx]       = bottomH;
+        const int others    = newSizes.size() - 1;
+        if (others > 0)
+        {
+            const int each = qMax(100, (total - bottomH) / others);
+            for (int i = 0; i < newSizes.size(); ++i)
+                if (i != idx)
+                    newSizes[i] = each;
+        }
+        splitter->setSizes(newSizes);
+    }
+}
+
+
+
+/**
  * @brief
  * initConnect
  * - 初始化连接
@@ -411,8 +461,9 @@ void Perseus::initConnect()
 
 
 
-/*
- * 初始化样式
+/**
+ * @brief initStyle
+ * - 初始化样式
  */
 void Perseus::initStyle()
 {
@@ -420,22 +471,24 @@ void Perseus::initStyle()
     QFont defaultFont = QApplication::font();
     defaultFont.setPointSize(12);
     QApplication::setFont(defaultFont);
-    ui->editor_tabwidget->setTabsClosable(true);
+    ui->editor_tabwidget->setTabsClosable(false);
+    ui->right_splitter->setSizes({8, 1});
     ui->main_splitter->setStretchFactor(0, 1);
     ui->main_splitter->setStretchFactor(1, 4);
     ui->right_splitter->setStretchFactor(0, 4);
     ui->right_splitter->setStretchFactor(1, 1);
-    ui->bottom_tabwidget->setTabText(0, QString::fromUtf8(u8"output"));
-    ui->bottom_tabwidget->setTabText(1, QString::fromUtf8(u8"issues"));
-    ui->bottom_tabwidget->setTabText(2, QString::fromUtf8(u8"terminal"));
+    ui->bottom_tabwidget->setTabText(0, QString::fromUtf8(u8"Output"));
+    ui->bottom_tabwidget->setTabText(1, QString::fromUtf8(u8"Issues"));
+    ui->bottom_tabwidget->setTabText(2, QString::fromUtf8(u8"Terminal"));
     INF("perseus Engine Initialized ... ", "Perseus");
     this->setStyleSheet(LosStyle::perseus_getStyle());
 }
 
 
 
-/*
- * 快捷键
+/**
+ * @brief initShotcut
+ * 绑定快捷键
  */
 void Perseus::initShotcut()
 {
@@ -480,7 +533,33 @@ void Perseus::initShotcut()
     LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::COMMANDS, this,
                                                 [this]() { LOS_cmdPalette->showPalette(); });
 
-
+    LosCore::LosShortcutManager::instance().reg(
+        LosCommon::ShortCut::EDIT_UNDO, this,
+        [this]()
+        {
+            auto edit = LOS_tabUi ? LOS_tabUi->getCurEditor() : nullptr;
+            if (edit && edit->document()->isUndoAvailable())
+                edit->undo();
+        },
+        "undo");
+    LosCore::LosShortcutManager::instance().reg(
+        LosCommon::ShortCut::EDIT_REDO, this,
+        [this]()
+        {
+            auto edit = LOS_tabUi ? LOS_tabUi->getCurEditor() : nullptr;
+            if (edit && edit->document()->isRedoAvailable())
+                edit->redo();
+        },
+        "redo");
+    LosCore::LosShortcutManager::instance().reg(
+        LosCommon::ShortCut::EDIT_REDO_ALT, this,
+        [this]()
+        {
+            auto edit = LOS_tabUi ? LOS_tabUi->getCurEditor() : nullptr;
+            if (edit && edit->document()->isRedoAvailable())
+                edit->redo();
+        },
+        "redo (alt)");
     LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::TAB_CLOSE, this,
                                                 [this]()
                                                 {
@@ -493,6 +572,8 @@ void Perseus::initShotcut()
                                                         return;
                                                     }
                                                 });
+    LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::TOGGLE_BOTTOM_PANEL, this,
+                                                [this]() { OnTogglePanelBtnClicked(); });
 }
 
 
@@ -503,24 +584,13 @@ void Perseus::initShotcut()
  */
 void Perseus::initSession()
 {
-    /*
-     * 加载 这个 conf
-     */
+
     LosCommon::LosSession_Constants::Config conf;
     if (!LosCore::LosSession::instance().loadConfig(&conf))
         return;
-
-    /*
-     * 打开 file
-     * 存到 全局
-     */
     LosModel::LosFilePath file(conf.L_curProDir);
     bool isSuc = file.isExist();
     LosCore::LosState::instance().set<LosModel::LosFilePath>(LosCommon::LosState_Constants::SG_STR::PROJECT_DIR, file);
-
-    /*
-     * 更新全局 状态
-     */
     if (!LOS_tabUi || !isSuc)
         return;
 
@@ -535,11 +605,6 @@ void Perseus::initSession()
                 LOS_tabUi->blockSignals(false);
             }
 
-            /*
-             * 恢复上次激活的标签页
-             * 优先使用保存的 L_curActiveFile
-             * 若为空则回退到打开列表的第一个文件
-             */
             if (!conf.L_curActiveFile.isEmpty())
             {
                 LOS_tabUi->openFile(conf.L_curActiveFile);

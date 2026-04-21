@@ -3,6 +3,7 @@
 #include "view/style/LosCompleterUi_style.h"
 #include <QAbstractItemView>
 #include <QCompleter>
+#include <QFrame>
 #include <QStringListModel>
 #include <qobject.h>
 #include <qtmetamacros.h>

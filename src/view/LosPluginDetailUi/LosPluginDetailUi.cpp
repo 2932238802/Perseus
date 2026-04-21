@@ -39,7 +39,7 @@ namespace LosView
         {
             ui->btn_install->setText("Uninstall");
             ui->btn_install->setEnabled(true);
-            ui->btn_install->setStyleSheet("background-color: #2a2d2e; color: #d4d4d4; border: 1px solid #333333;");
+            ui->btn_install->setStyleSheet("background-color: #44475a; color: #f8f8f2; border: 1px solid #6272a4;");
         }
         else
         {

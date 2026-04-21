@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QSharedPointer>
+#include <QToolButton>
 #include <QWidget>
 #include <qaction.h>
 #include <qapplication.h>
@@ -75,6 +76,12 @@ namespace LosView
 
       private: /* tool */
         void checkLspAnsFormat(const QString &file_path);
+        /*
+         * 为指定 index 的 tab 装配一个自绘的关闭按钮
+         * - Qt 原生 close-button 依赖系统图标,在深色主题下经常显示为空白/红块
+         * - 用 QToolButton + × 字符完全自绘,保证样式一致
+         */
+        void installCloseButton(int index);
 
 
       private: /* params */

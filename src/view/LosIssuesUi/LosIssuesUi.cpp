@@ -36,7 +36,7 @@ namespace LosView
             bool isErr               = diag.ds == LosCommon::LosLsp_Constants::DiagnosticSeverity::Error;
             QString level            = isErr ? "Err" : "War";
             QTableWidgetItem *item_1 = new QTableWidgetItem(level);
-            item_1->setForeground(isErr ? Qt::red : QColor(255, 165, 0));
+            item_1->setForeground(isErr ? QColor("#ff5555") : QColor("#ffb86c"));
             QTableWidgetItem *item_2 = new QTableWidgetItem(diag.message);
             QTableWidgetItem *item_3 = new QTableWidgetItem(QString::number(diag.startLine + 1));
             item_3->setData(Qt::UserRole, diag.startLine);

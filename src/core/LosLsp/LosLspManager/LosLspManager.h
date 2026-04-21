@@ -1,5 +1,6 @@
 #pragma once
 #include "common/util/CheckLang.h"
+#include "common/util/GetLangId.h"
 #include "core/LosLsp/LosLspCMake/LosLspCMake.h"
 #include "core/LosLsp/LosLspClangd/LosLspClangd.h"
 #include "core/LosLsp/LosLspClient/LosLspClient.h"
@@ -35,7 +36,6 @@ namespace LosCore
         void didChangeWatchedFiles(const QString &file_path, int type);
 
       private: // get
-        QString getLangId(LosCommon::LosToolChain_Constants::LosLanguage);
         LosLspClient *getClient(const QString &);
 
       private slots:

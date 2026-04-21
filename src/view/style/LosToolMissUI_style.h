@@ -6,42 +6,46 @@ namespace LosStyle
     {
         return QString(R"(
             QDialog {
-                background-color: #252526;
-                color: #cccccc;
+                background-color: #282a36;
+                color: #f8f8f2;
             }
-            
-            /* 普通文本标签 */
+
             QLabel {
-                color: #cccccc;
+                color: #f8f8f2;
             }
-            
+
             QPushButton {
-                background-color: #333333;
-                border: 1px solid #3c3c3c;
+                background-color: #44475a;
+                border: 1px solid #44475a;
                 padding: 6px 12px;
                 border-radius: 4px;
-                color: #cccccc;
+                color: #f8f8f2;
             }
             QPushButton:hover {
-                background-color: #404040;
+                background-color: #6272a4;
+                border: 1px solid #bd93f9;
                 color: #ffffff;
             }
             QPushButton:pressed {
-                background-color: #2d2d2d;
+                background-color: #bd93f9;
+                color: #282a36;
             }
-            
+
             QPushButton#primaryBtn {
-                background-color: #0e639c;  /* VS Code 经典的强调蓝 */
-                border: 1px solid #0e639c;
+                background-color: #bd93f9;
+                border: 1px solid #bd93f9;
                 padding: 8px 16px;
                 font-weight: bold;
-                color: #ffffff;
+                color: #282a36;
             }
             QPushButton#primaryBtn:hover {
-                background-color: #1177bb;  /* 悬停时变亮 */
+                background-color: #caa9fa;
+                border: 1px solid #caa9fa;
             }
             QPushButton#primaryBtn:pressed {
-                background-color: #0d5484;  /* 按下时变暗 */
+                background-color: #9580d4;
+                border: 1px solid #9580d4;
+                color: #f8f8f2;
             }
         )");
     };

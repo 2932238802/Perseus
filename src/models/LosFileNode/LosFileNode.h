@@ -16,17 +16,17 @@ namespace LosModel
       public:
         ~LosFileNode();
 
-      public: /* tool */
+      public: // tool
         [[nodiscard]] static LosFileNode *create(const QString &filePath, LosFileNode *parent);
 
-      public: /* set */
+      public: // set
         void appendChild(LosFileNode *node);
         void clear();
         void setParentNode(LosFileNode *node);
         static void build(LosFileNode *root, const QString &cur, std::function<void()> on_finished);
         static void buildImpl(LosFileNode *, const QString &);
 
-      public: /* get */
+      public: // get
         int getChildCount() const;
         LosFileNode *getChild(int index) const;
         LosFileNode *getParent() const;

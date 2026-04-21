@@ -86,14 +86,18 @@ namespace LosCore
 
 
 
-    /*
-     * - 重命名文件
+    /**
+     * @brief renameFile 重命名文件和文件夹
+     *
+     * @param src
+     * @param dst
+     * @return true
+     * @return false
      */
     bool LosFileSystem::renameFile(const QString &src, const QString &dst)
     {
         if (QFile::rename(src, dst))
         {
-            emit LosRouter::instance()._cmd_fileSystemChanged();
             return true;
         }
         return false;

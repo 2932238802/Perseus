@@ -52,7 +52,7 @@ namespace LosView
         if (params.isEmpty())
         {
             QLabel *lable = new QLabel("no need param...", this);
-            lable->setStyleSheet("color: #888888;");
+            lable->setStyleSheet("color: #6272a4;");
             ui->L_dynamicParamsLayout->addWidget(lable);
         }
         else

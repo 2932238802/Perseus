@@ -14,8 +14,11 @@
 #include <QDebug>
 #include <QEvent>
 #include <QFileInfo>
+#include <QGuiApplication>
+#include <QLabel>
 #include <QObject>
 #include <QPainter>
+#include <QScreen>
 #include <QScrollBar>
 #include <QSharedPointer>
 #include <QTextBlock>
@@ -52,6 +55,10 @@ namespace LosModel
 namespace LosView
 {
     class LosLineNumberUi;
+
+    /**
+     * @brief LosEditorUi
+     */
     class LosEditorUi : public QPlainTextEdit
     {
         Q_OBJECT
@@ -77,18 +84,22 @@ namespace LosView
         void insertCompletion(const QString &completion);
         void lineNumberAreaPaintEvent(QPaintEvent *event);
 
-      private: /* init */
+      private: // init
         void initConnect();
         void initStyle();
 
-      private: /* tool */
+      private: // tool
         void updateLineNumberArea(const QRect &rect, int dy);
         void updateLineNumberAreaWidth();
         void highlightCurrentLine();
         void updateHoverUnderline(const QPoint &vpPos);
         void clearHoverUnderline();
+        void hideCompletionPopup();
+        bool repositionCompletionPopup();
+        void showHoverPopup(const QString &html);
+        void hideHoverPopup();
 
-      private slots: /* chs */
+      private slots: // chs
         void onTextChanged();
         void onDebounceTimeout();
         void onHover_Clangd(const QString &markdownContent);
@@ -98,7 +109,7 @@ namespace LosView
         void onCopyCurrentLine();
         void onControlKeyPressed();
 
-      protected: /* override */
+      protected: // override
         void keyPressEvent(QKeyEvent *event) override;
         void keyReleaseEvent(QKeyEvent *event) override;
         void mousePressEvent(QMouseEvent *event) override;
@@ -117,6 +128,9 @@ namespace LosView
         QString L_oldWord                                       = "";
         QTimer *L_timer                                         = nullptr;
         QPoint L_lastHoverGlobal                                = QPoint();
+        QRect L_lastHoverWordRectGlobal                         = QRect();
+        QString L_lastHoverWord                                 = "";
+        QLabel *L_hoverPopup                                    = nullptr;
         QSharedPointer<LosModel::LosFileContext> LOS_context    = {};
         QSharedPointer<LosModel::LosFilePath> LOS_filePath      = {};
         QList<QTextEdit::ExtraSelection> L_diagnosticSelections = {};

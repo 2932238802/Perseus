@@ -115,6 +115,7 @@ class Perseus : public QMainWindow
     void onToolChainMissing(const LosCommon::LosToolChain_Constants::ToolChainConfig &);
     void onDebounceTimeOut();
     void onDirectoryChanged();
+    void OnTogglePanelBtnClicked();
 
   private:
     Ui::Perseus *ui;
@@ -122,6 +123,7 @@ class Perseus : public QMainWindow
     int L_buildGeneration                          = 0;
     QFileSystemWatcher *L_filesWatcher             = nullptr;
     QTimer *L_timer                                = nullptr;
+    QList<int> L_rightSplitterSizes                = {};
     LosModel::LosFileNode *LOS_rootNode            = nullptr;
     LosModel::LosFileTreeModel *LOS_treeModel      = nullptr;
     LosView::LosEditorTabUi *LOS_tabUi             = nullptr;

@@ -2,8 +2,10 @@
 
 namespace LosView
 {
-    /*
-     * const
+    /**
+     * @brief Construct a new Los Completer Ui:: Los Completer Ui object
+     *
+     * @param parent
      */
     LosCompleterUi::LosCompleterUi(QObject *parent) : QCompleter{parent}
     {
@@ -18,9 +20,10 @@ namespace LosView
 
 
 
-    /*
-     * set
-     * - 重复的 就不要 在显示了
+    /**
+     * @brief updateCompletionList 更新补全的内容
+     *
+     * @param list
      */
     void LosCompleterUi::updateCompletionList(const QStringList &list)
     {
@@ -33,13 +36,19 @@ namespace LosView
 
 
 
-    /*
-     * init
+    /**
+     * @brief initStyle
+     * - 初始化样式
      */
     void LosCompleterUi::initStyle()
     {
         auto popup = this->popup();
         popup->setStyleSheet(LosStyle::LosCompleterUi_getStyle());
+        popup->setFrameShape(QFrame::NoFrame);
+        popup->setAttribute(Qt::WA_TranslucentBackground, false);
+        popup->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        popup->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        popup->setTextElideMode(Qt::ElideRight);
     }
 
 } /* namespace LosView */
