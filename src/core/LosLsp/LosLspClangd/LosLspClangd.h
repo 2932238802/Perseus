@@ -24,6 +24,7 @@ namespace LosCore
         void sendInitializedMsg();
 
       private:
+
     };
 
 } /* namespace LosCore */

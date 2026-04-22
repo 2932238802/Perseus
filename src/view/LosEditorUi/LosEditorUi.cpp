@@ -197,9 +197,9 @@ namespace LosView
         }
         /*
          * 加载新文件时必须：
-         * 1. 暂时关闭 undo 记录，避免把 setPlainText 本身计入撤销栈
-         * 2. setPlainText 之后清空历史，防止 Ctrl+Z 退回到旧文件的内容
-         * 3. 恢复 undo 记录
+         * 暂时关闭 undo 记录，避免把 setPlainText 本身计入撤销栈
+         * setPlainText 之后清空历史，防止 Ctrl+Z 退回到旧文件的内容
+         * 恢复 undo 记录
          */
         this->setUndoRedoEnabled(false);
         setPlainText(text);
@@ -210,7 +210,6 @@ namespace LosView
         L_dirty          = false;
         QString filePath = LOS_filePath->getFilePath();
         emit LosCore::LosRouter::instance()._cmd_lsp_request_openFile(filePath, this -> toPlainText());
-        emit LosCore::LosRouter::instance()._cmd_lsp_request_semantic(filePath);
     }
 
 
@@ -442,6 +441,7 @@ namespace LosView
                     LOS_lineNumber->update();
                     highlightCurrentLine();
                 });
+        connect(&router, &LosCore::LosRouter::_cmd_openFile_suc, this, &LosEditorUi::onOpenFileSuc);
     }
 
 
@@ -885,6 +885,21 @@ namespace LosView
         if (viewport()->rect().contains(vpPos))
         {
             updateHoverUnderline(vpPos);
+        }
+    }
+
+
+
+    /**
+     * @brief onOpenFileSuc 异步请求语法高亮
+     *
+     * @param filePath
+     */
+    void LosEditorUi::onOpenFileSuc(const QString &filePath)
+    {
+        if (filePath == LOS_filePath->getAbsoluteFilePath())
+        {
+            emit LosCore::LosRouter::instance()._cmd_lsp_request_semantic(filePath);
         }
     }
 

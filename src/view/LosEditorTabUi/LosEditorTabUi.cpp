@@ -1,9 +1,6 @@
 
 #include "LosEditorTabUi.h"
-#include "common/constants/ConstantsStr/LosEditorTableUiStr.h"
-#include "common/constants/ConstantsStr/ShortCut.h"
-#include "core/LosShortcutManager/LosShortcutManager.h"
-#include "view/LosFloatingPanelUi/LosFindPopupUi/LosFindPopupUi.h"
+
 
 
 
@@ -129,11 +126,7 @@ namespace LosView
             return;
         }
         LosEditorUi *editor = new LosEditorUi(this);
-        /*
-         * 这里会读写 磁盘 两次
-         * 可以优化的
-         */
-        auto contextCopy = QSharedPointer<LosModel::LosFileContext>::create();
+        auto contextCopy    = QSharedPointer<LosModel::LosFileContext>::create();
         contextCopy->load(filePath);
         auto fileCopy = QSharedPointer<LosModel::LosFilePath>::create(filePath);
         editor->loadContextAndPath(contextCopy, fileCopy);
@@ -145,8 +138,9 @@ namespace LosView
 
 
 
-    /*
-     * - 格式化 当前的 tab
+    /**
+     * @brief
+     *
      */
     void LosEditorTabUi::formatTab()
     {
@@ -356,6 +350,9 @@ namespace LosView
     }
 
 
+    
+
+
 
     void LosEditorTabUi::onOpenPlugin(const LosCommon::LosNet_Constants::PluginInfo &info)
     {
@@ -540,32 +537,12 @@ namespace LosView
 
         auto *btn = new QToolButton(tabBar);
         btn->setObjectName("tab_close_btn");
-        btn->setText(QStringLiteral("\u00D7")); /* × */
+        btn->setText(QStringLiteral("\u00D7"));
         btn->setToolTip(tr("Close"));
         btn->setCursor(Qt::PointingHandCursor);
         btn->setFocusPolicy(Qt::NoFocus);
         btn->setFixedSize(18, 18);
-        btn->setStyleSheet(QStringLiteral(R"(
-            QToolButton#tab_close_btn {
-                background: transparent;
-                color: #6272a4;
-                border: none;
-                border-radius: 4px;
-                padding: 0px;
-                margin: 0px;
-                font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-                font-size: 16px;
-                font-weight: bold;
-            }
-            QToolButton#tab_close_btn:hover {
-                background-color: #ff5555;
-                color: #f8f8f2;
-            }
-            QToolButton#tab_close_btn:pressed {
-                background-color: #c13e3e;
-                color: #f8f8f2;
-            }
-        )"));
+        btn->setStyleSheet(LosCommon::LosEditorTableUi_Constants::CLOSE_BTN_STYLE);
 
         connect(btn, &QToolButton::clicked, this,
                 [this, btn]()
@@ -573,10 +550,6 @@ namespace LosView
                     auto *tb = L_tabWidget ? L_tabWidget->findChild<QTabBar *>() : nullptr;
                     if (!tb)
                         return;
-                    /*
-                     * 按钮本身的 index 会随着其他 tab 关闭而变化,
-                     * 不能捕获创建时的 index,必须实时查找
-                     */
                     for (int i = 0; i < tb->count(); i++)
                     {
                         if (tb->tabButton(i, QTabBar::RightSide) == btn)
@@ -586,12 +559,15 @@ namespace LosView
                         }
                     }
                 });
-
         tabBar->setTabButton(index, QTabBar::RightSide, btn);
     }
 
 
 
+    /**
+     * @brief initShortCut
+     * - 初始化 快捷键
+     */
     void LosEditorTabUi::initShortCut()
     {
         LosCore::LosShortcutManager::instance().reg(LosCommon::ShortCut::GOTO_LINE, this,
@@ -602,8 +578,11 @@ namespace LosView
 
 
 
-    /*
-     * 检查 语法 和 自行
+    /**
+     * @brief checkLspAnsFormat
+     * - 检查 lsp 和 格式化
+     *
+     * @param file_path
      */
     void LosEditorTabUi::checkLspAnsFormat(const QString &file_path)
     {

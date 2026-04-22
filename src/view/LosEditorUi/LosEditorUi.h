@@ -108,6 +108,8 @@ namespace LosView
         void onCutKeyClicked();
         void onCopyCurrentLine();
         void onControlKeyPressed();
+        void onOpenFileSuc(const QString &filepath);
+
 
       protected: // override
         void keyPressEvent(QKeyEvent *event) override;
