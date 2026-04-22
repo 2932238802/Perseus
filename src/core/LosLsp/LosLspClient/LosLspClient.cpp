@@ -51,7 +51,8 @@ namespace LosCore
         QJsonObject params;
         params["textDocument"] = textDocument;
         sendNotification("textDocument/didOpen", params);
-        L_openedFiles.insert(file_path);
+        
+        // L_openedFiles.insert(file_path);
     }
 
 

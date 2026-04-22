@@ -32,6 +32,8 @@ namespace LosCore
          * 打开文件 给 lsp 的请求
          */
         void _cmd_lsp_request_openFile(const QString &file_path, const QString &file_content);
+        void _cmd_openFile_suc(const QString &);
+
 
         /*
          * 文本 修改 之后 lsp的请求

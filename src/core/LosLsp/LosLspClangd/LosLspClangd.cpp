@@ -1,4 +1,5 @@
 #include "LosLspClangd.h"
+#include "core/LosRouter/LosRouter.h"
 
 namespace LosCore
 {
@@ -73,8 +74,10 @@ namespace LosCore
 
 
 
-    /*
-     * - 处理 lsp 请求
+    /**
+     * @brief
+     *
+     * @param obj
      */
     void LosLspClangd::dealLspMessage(const QJsonObject &obj)
     {
@@ -214,6 +217,7 @@ namespace LosCore
                 QJsonArray diagnostics = params["diagnostics"].toArray();
 
                 QList<LosCommon::LosLsp_Constants::LosDiagnostic> diagList;
+
                 for (int i = 0; i < diagnostics.size(); i++)
                 {
                     QJsonObject diagObj = diagnostics[i].toObject();
@@ -229,6 +233,13 @@ namespace LosCore
                     d.endChar         = end["character"].toInt();
                     diagList.append(d);
                 }
+
+                if (!L_openedFiles.contains(filePath))
+                {
+                    L_openedFiles.insert(filePath);
+                    emit LosRouter::instance()._cmd_openFile_suc(filePath);
+                }
+
                 emit LosRouter::instance()._cmd_lsp_result_diagnostics(filePath, diagList);
             }
         }
