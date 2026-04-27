@@ -12,42 +12,61 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: 拉取最新代码
-      uses: actions/checkout@v4
-    - name: 启用 MSVC 编译环境
-      uses: ilammy/msvc-dev-cmd@v1
-    - name: 自动配置 Qt 6 环境
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '6.4.2' 
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_msvc2019_64'             
-        modules: 'qtwebengine qtwebchannel qtpositioning' 
+      - name: 拉取最新代码
+        uses: actions/checkout@v4
 
-    - name: 编译项目
-      run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DBUILD_SHARED_LIBS=OFF
-        cmake --build . --config Release
+      - name: 启用 MSVC 编译环境
+        uses: ilammy/msvc-dev-cmd@v1
 
-    - name: 打包依赖
-      run: |
-        cd build
-        windeployqt --release --compiler-runtime Perseus.exe
+      - name: 自动配置 Qt 6 环境
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.4.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          modules: 'qt5compat qtwebengine qtwebchannel qtpositioning'
+          cache: true
 
-    - name: 上传最终的压缩包
-      uses: actions/upload-artifact@v4
-      with:
-        name: Perseus-Windows-Release
-        path: |
-          build/Perseus.exe
-          build/*.dll
-          build/platforms/
-          build/styles/
-          build/QtWebEngineProcess*.exe   
-          build/resources/               
-          build/translations/        
-          build/networkinformation
-          build/tls/ 
+      - name: 检查 Qt 安装内容
+        shell: pwsh
+        run: |
+          qmake -v
+          Get-ChildItem "$env:Qt6_DIR\..\..\.." -Recurse -Filter "Qt6Core5CompatConfig.cmake" | Select-Object FullName
+
+      - name: 配置 CMake
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: 编译项目
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --parallel
+
+      - name: 准备发布目录
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+
+          if (Test-Path "build/Perseus.exe") {
+            Copy-Item "build/Perseus.exe" "dist/Perseus.exe"
+          }
+          elseif (Test-Path "build/Release/Perseus.exe") {
+            Copy-Item "build/Release/Perseus.exe" "dist/Perseus.exe"
+          }
+          else {
+            Write-Error "未找到 Perseus.exe"
+          }
+
+      - name: 打包 Qt 依赖
+        shell: pwsh
+        run: |
+          windeployqt --release --compiler-runtime --verbose 2 dist/Perseus.exe
+
+      - name: 上传最终产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: Perseus-Windows-Release
+          path: dist/
