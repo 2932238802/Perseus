@@ -32,7 +32,7 @@ jobs:
         shell: pwsh
         run: |
           qmake -v
-          Get-ChildItem "$env:Qt6_DIR\..\..\.." -Recurse -Filter "Qt6Core5CompatConfig.cmake" | Select-Object FullName
+          Write-Host "Qt 安装目录: $env:IQTA_TOOLS"
 
       - name: 配置 CMake
         shell: pwsh
