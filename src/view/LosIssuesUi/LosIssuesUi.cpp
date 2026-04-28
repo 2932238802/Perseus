@@ -44,7 +44,7 @@ namespace LosView
 
     /**
      * @brief 重建信息提示表
-     *
+     * - 重建完毕
      */
     void LosIssuesUi::rebuildTable()
     {
@@ -82,7 +82,7 @@ namespace LosView
 
 
     /**
-     * @brief
+     * @brief onTableDoubleClicked 双击跳转的逻辑
      *
      * @param row
      * @param colume

@@ -393,8 +393,8 @@ namespace LosView
 
 
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     void LosEditorUi::initConnect()
     {
@@ -553,43 +553,52 @@ namespace LosView
 
 
 
-
     /**
-     * @brief 
-     * 
-     * @param event 
+     * @brief updateAutoIndent
+     *
+     * @param event
      */
-    bool LosEditorUi::updateAutoIndent(QKeyEvent* event)
+    bool LosEditorUi::updateAutoIndent(QKeyEvent *event)
     {
-        if(event->key() != Qt::Key_Return && event->key() != Qt::Key_Enter)
+        if (event->key() != Qt::Key_Return && event->key() != Qt::Key_Enter)
         {
             return false;
         }
-        QTextCursor cur = textCursor();
-        QTextBlock block = cur.block();
-        const QString lineText = block.text();
-        const int col = cur.positionInBlock();
+        QTextCursor cur          = textCursor();
+        QTextBlock block         = cur.block();
+        const QString lineText   = block.text();
+        const int col            = cur.positionInBlock();
         const QString textBefore = lineText.left(col);
-        const QString textAfter = lineText.mid(col);
+        const QString textAfter  = lineText.mid(col);
 
         // 获得前置缩进
-        QString baseIndent = LosCommon::GetLeadingWhiteSpace(textBefore);
+        QString baseIndent     = LosCommon::GetLeadingWhiteSpace(textBefore);
         QString nextLineIndent = "";
-        if(textBefore.trimmed().endsWith("{"))
+        if (textBefore.trimmed().endsWith("{"))
         {
             nextLineIndent += LosCommon::LosEditorUi_Constants::BASE_INDENT;
         }
         cur.beginEditBlock();
 
-        if(textAfter.trimmed().endsWith("}") && textBefore.trimmed().startsWith("{"))
+        bool endBrack   = textAfter.trimmed().endsWith("}");
+        bool beginBrack = textBefore.trimmed().startsWith("{");
+
+        if (beginBrack && endBrack)
         {
             cur.insertText("\n" + nextLineIndent + "\n" + LosCommon::LosEditorUi_Constants::BASE_INDENT);
             cur.movePosition(QTextCursor::Up);
             cur.movePosition(QTextCursor::EndOfLine);
         }
-        else{
-            QString content{LosCommon::LosEditorUi_Constants::BASE_INDENT};
-            cur.insertText("\n" + content);
+        else if (endBrack && !beginBrack && textAfter.trimmed().isEmpty()) {
+            if(baseIndent.size() >= QString(LosCommon::LosEditorUi_Constants::BASE_INDENT).size())
+            {
+                nextLineIndent = baseIndent.left(baseIndent.size() -QString(LosCommon::LosEditorUi_Constants::BASE_INDENT).size());
+            }
+            cur.insertText("\n" + nextLineIndent);
+        }
+        else
+        {
+            cur.insertText("\n" + baseIndent);
         }
         cur.endEditBlock();
         setTextCursor(cur);
@@ -597,7 +606,6 @@ namespace LosView
     }
 
 
-    
 
     /**
      * @brief clearHoverUnderline 清理下划线
@@ -610,7 +618,7 @@ namespace LosView
     }
 
 
-    
+
     /**
      * @brief hideCompletionPopup
      *
@@ -1019,12 +1027,12 @@ namespace LosView
 
 
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      * 光标拦截
      * 弹出 语法补全
      * 同时 支持 括号补全
-     * @param event 
+     * @param event
      */
     void LosEditorUi::keyPressEvent(QKeyEvent *event)
     {
@@ -1053,7 +1061,7 @@ namespace LosView
             }
         }
 
-        if(updateAutoIndent(event))
+        if (updateAutoIndent(event))
         {
             return;
         }
